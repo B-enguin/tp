@@ -105,25 +105,28 @@
     },
     {
       "src": "UserGuide.md",
-      "title": "User Guide",
       "headings": {
-        "ab-3-user-guide": "AB-3 User Guide",
-        "quick-start": "Quick start",
+        "user-guide-for-homeboss": "User Guide for HomeBoss",
+        "getting-started": "Getting Started",
+        "-2": "",
         "features": "Features",
-        "viewing-help-help": "Viewing help : help",
-        "adding-a-person-add": "Adding a person: add",
-        "listing-all-persons-list": "Listing all persons : list",
-        "editing-a-person-edit": "Editing a person : edit",
-        "locating-persons-by-name-find": "Locating persons by name: find",
-        "deleting-a-person-delete": "Deleting a person : delete",
-        "clearing-all-entries-clear": "Clearing all entries : clear",
-        "exiting-the-program-exit": "Exiting the program : exit",
-        "saving-the-data": "Saving the data",
-        "editing-the-data-file": "Editing the data file",
-        "archiving-data-files-coming-in-v2-0": "Archiving data files [coming in v2.0]",
-        "faq": "FAQ",
-        "known-issues": "Known issues",
-        "command-summary": "Command summary"
+        "user": "User",
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Register",
+        "-3": "",
+        "customer": "Customer",
+        "add-a-customer": "Add a customer",
+        "list-customers": "List customers",
+        "-4": "",
+        "update-customer-details": "Update customer details",
+        "delete-customer": "Delete customer",
+        "delivery": "Delivery",
+        "create-delivery": "Create delivery",
+        "view-all-deliveries": "View all deliveries",
+        "view-details-of-deliveries": "View details of deliveries",
+        "update-details-of-deliveries": "Update details of deliveries",
+        "delete-delivery": "Delete delivery"
       },
       "headingKeywords": {}
     },
@@ -132,6 +135,14 @@
       "title": "",
       "headings": {
         "homeboss": "HomeBoss"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/b-enguin.md",
+      "title": "Benjamin Koh's Project Portfolio Page",
+      "headings": {
+        "project-homeboss": "Project: HomeBoss"
       },
       "headingKeywords": {}
     },
