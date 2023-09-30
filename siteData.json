@@ -7,9 +7,9 @@
       "headings": {
         "about-us": "About Us",
         "project-team": "Project team",
-        "john-doe": "John Doe",
-        "jane-doe": "Jane Doe",
-        "johnny-doe": "Johnny Doe",
+        "benjamin-koh-zhao-hui": "Benjamin Koh Zhao Hui",
+        "lim-jian-yang": "Lim Jian Yang",
+        "lim-zhong-han": "Lim Zhong Han",
         "jean-doe": "Jean Doe",
         "james-doe": "James Doe"
       },
@@ -125,8 +125,12 @@
         "create-delivery": "Create delivery",
         "view-all-deliveries": "View all deliveries",
         "view-details-of-deliveries": "View details of deliveries",
-        "update-details-of-deliveries": "Update details of deliveries",
-        "delete-delivery": "Delete delivery"
+        "update-delivery-status-and-date": "Update delivery status and date",
+        "delete-delivery": "Delete delivery",
+        "view-deliveries-for-the-day-coming-soon-in-v1-3": "View deliveries for the day [coming soon in v1.3]",
+        "add-customer-data-to-delivery-coming-soon-in-v1-3": "Add customer data to delivery [coming soon in v1.3]",
+        "remove-customer-from-delivery-coming-soon-in-v1-3": "Remove customer from delivery [coming soon in v1.3]",
+        "look-up-delivery-details-coming-soon-in-v1-3": "Look up delivery details [coming soon in v1.3]"
       },
       "headingKeywords": {}
     },
@@ -147,10 +151,26 @@
       "headingKeywords": {}
     },
     {
+      "src": "team/jianyangg.md",
+      "title": "Lim Jian Yang's Project Portfolio Page",
+      "headings": {
+        "project-homeboss": "Project: HomeBoss"
+      },
+      "headingKeywords": {}
+    },
+    {
       "src": "team/johndoe.md",
       "title": "John Doe's Project Portfolio Page",
       "headings": {
         "project-addressbook-level-3": "Project: AddressBook Level 3"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/zhonghan721.md",
+      "title": "Lim Zhong Han's Project Portfolio Page",
+      "headings": {
+        "project-homeboss": "Project: HomeBoss"
       },
       "headingKeywords": {}
     },
