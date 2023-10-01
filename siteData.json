@@ -10,8 +10,8 @@
         "benjamin-koh-zhao-hui": "Benjamin Koh Zhao Hui",
         "lim-jian-yang": "Lim Jian Yang",
         "lim-zhong-han": "Lim Zhong Han",
-        "jean-doe": "Jean Doe",
-        "james-doe": "James Doe"
+        "julius-gambe": "Julius Gambe",
+        "gabriel-seethor-jun-hao": "Gabriel Seethor Jun Hao"
       },
       "headingKeywords": {}
     },
@@ -111,14 +111,15 @@
         "-2": "",
         "features": "Features",
         "user": "User",
-        "login": "Login",
-        "logout": "Logout",
         "register": "Register",
-        "-3": "",
+        "login": "Login",
+        "forget-password-coming-soon": "Forget Password [coming soon]",
+        "logout": "Logout",
+        "change-password-coming-soon": "Change Password [coming soon]",
+        "delete-account-coming-soon": "Delete Account [coming soon]",
         "customer": "Customer",
         "add-a-customer": "Add a customer",
         "list-customers": "List customers",
-        "-4": "",
         "update-customer-details": "Update customer details",
         "delete-customer": "Delete customer",
         "delivery": "Delivery",
@@ -127,6 +128,7 @@
         "view-details-of-deliveries": "View details of deliveries",
         "update-delivery-status-and-date": "Update delivery status and date",
         "delete-delivery": "Delete delivery",
+        "create-a-note-for-a-delivery-coming-soon-in-v1-3": "Create a note for a delivery [coming soon in v1.3]",
         "view-deliveries-for-the-day-coming-soon-in-v1-3": "View deliveries for the day [coming soon in v1.3]",
         "add-customer-data-to-delivery-coming-soon-in-v1-3": "Add customer data to delivery [coming soon in v1.3]",
         "remove-customer-from-delivery-coming-soon-in-v1-3": "Remove customer from delivery [coming soon in v1.3]",
@@ -151,6 +153,11 @@
       "headingKeywords": {}
     },
     {
+      "src": "team/gabriel4357.md",
+      "headings": {},
+      "headingKeywords": {}
+    },
+    {
       "src": "team/jianyangg.md",
       "title": "Lim Jian Yang's Project Portfolio Page",
       "headings": {
@@ -159,10 +166,10 @@
       "headingKeywords": {}
     },
     {
-      "src": "team/johndoe.md",
-      "title": "John Doe's Project Portfolio Page",
+      "src": "team/juliusgambe.md",
+      "title": "Julius Gambe's Project Portfolio Page",
       "headings": {
-        "project-addressbook-level-3": "Project: AddressBook Level 3"
+        "project-homeboss": "Project: HomeBoss"
       },
       "headingKeywords": {}
     },
