@@ -1,0 +1,99 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UserLoginCommandParser" as UserLoginCommandParser LOGIC_COLOR
+participant "l:UserLoginCommand" as UserLoginCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "u:User" as User MODEL_COLOR
+participant "model:Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create UserLoginCommandParser
+AddressBookParser -> UserLoginCommandParser
+activate UserLoginCommandParser
+
+UserLoginCommandParser --> AddressBookParser
+deactivate UserLoginCommandParser
+
+AddressBookParser -> UserLoginCommandParser : parse(arg)
+activate UserLoginCommandParser
+
+create User
+UserLoginCommandParser -> User : User(username, password)
+activate User
+
+User --> UserLoginCommandParser
+deactivate User
+
+create UserLoginCommand
+UserLoginCommandParser -> UserLoginCommand : UserLoginCommand(u)
+activate UserLoginCommand
+
+UserLoginCommand --> UserLoginCommandParser
+deactivate UserLoginCommand
+
+UserLoginCommandParser --> AddressBookParser : l
+deactivate UserLoginCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+UserLoginCommandParser -[hidden]-> AddressBookParser
+destroy UserLoginCommandParser
+
+AddressBookParser --> LogicManager : l
+deactivate AddressBookParser
+
+LogicManager -> UserLoginCommand : execute(model)
+activate UserLoginCommand
+
+UserLoginCommand -> Model : getUserLoginStatus()
+activate Model
+
+Model --> UserLoginCommand : isLoggedIn
+deactivate Model
+
+UserLoginCommand -> Model : userMatches(u)
+activate Model
+
+Model --> UserLoginCommand : userMatches
+deactivate Model
+
+UserLoginCommand -> Model : setLoginSuccess()
+activate Model
+
+Model --> UserLoginCommand
+deactivate Model
+
+UserLoginCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_CUSTOMERS)
+activate Model
+
+Model --> UserLoginCommand
+deactivate Model
+
+create CommandResult
+UserLoginCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> UserLoginCommand
+deactivate CommandResult
+
+UserLoginCommand --> LogicManager : result
+deactivate UserLoginCommand
+UserLoginCommand -[hidden]-> LogicManager : result
+User -[hidden]-> AddressBookParser
+destroy UserLoginCommand
+destroy User
+
+[<--LogicManager : result
+deactivate LogicManager
+@enduml

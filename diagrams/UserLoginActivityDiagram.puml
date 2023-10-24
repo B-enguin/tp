@@ -1,0 +1,28 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+!pragma useVerticalIf on
+start
+:User executes login command;
+:Parse command string;
+
+if () then ([else])
+    :ParseException: Invalid Command Format;
+    stop
+([all fields are filled]) elseif () then ([user is already logged in])
+    :CommandException: Already Logged In;
+    stop
+([else]) elseif () then ([else])
+    :CommandException: Wrong Credentials;
+    stop
+else ([fields matches
+    stored user])
+
+endif
+:User login command is executed successfully.
+User is now logged in.;
+:Show full Customer List;
+
+stop
+@enduml

@@ -1,0 +1,72 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant "l:UserLogoutCommand" as UserLogoutCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "model:Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create UserLogoutCommand
+AddressBookParser -> UserLogoutCommand
+activate UserLogoutCommand
+
+UserLogoutCommand --> AddressBookParser
+deactivate UserLogoutCommand
+
+AddressBookParser --> LogicManager : l
+deactivate AddressBookParser
+
+LogicManager -> UserLogoutCommand : execute(model)
+activate UserLogoutCommand
+
+UserLogoutCommand -> Model : getUserLoginStatus()
+activate Model
+
+Model --> UserLogoutCommand : isLoggedIn
+deactivate Model
+
+UserLogoutCommand -> Model : setLogoutSuccess()
+activate Model
+
+Model --> UserLogoutCommand
+deactivate Model
+
+UserLogoutCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_NO_CUSTOMERS)
+activate Model
+
+Model --> UserLogoutCommand
+deactivate Model
+
+UserLogoutCommand -> Model : updateFilteredDeliveryList(PREDICATE_SHOW_NO_DELIVERIES)
+activate Model
+
+Model --> UserLogoutCommand
+deactivate Model
+
+create CommandResult
+UserLogoutCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> UserLogoutCommand
+deactivate CommandResult
+
+UserLogoutCommand --> LogicManager : result
+deactivate UserLogoutCommand
+UserLogoutCommand -[hidden]-> LogicManager : result
+destroy UserLogoutCommand
+
+[<--LogicManager : result
+deactivate LogicManager
+@enduml
