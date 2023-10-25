@@ -1,0 +1,26 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+!pragma useVerticalIf on
+start
+:User executes register command;
+:Parse command string;
+
+if () then ([else])
+    :ParseException: Invalid Command Format;
+    stop
+([all fields are filled]) elseif () then ([else])
+    :ParseException: Password Mismatch;
+    stop
+([password match confirm password]) elseif () then ([stored user already exists])
+    :CommandException: Already Have Account;
+    stop
+else ( [else])
+endif
+:User register command is executed successfully.
+User is now logged in.;
+:Show full Customer List;
+
+stop
+@enduml

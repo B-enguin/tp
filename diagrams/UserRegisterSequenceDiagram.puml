@@ -1,0 +1,109 @@
+@startuml
+'The sequence of the `register` command is as follows:
+'
+'1. The command `register INPUT` is entered by the user (e.g., register --user gab --password pass1234 --confirmPass
+'   pass1234 --secretQn First Pet? --answer Koko).
+'2. Logic Manager calls the `AddressBookParser#parseCommand` with the `INPUT`.
+'3. The `AddressBookParser` parses the command word, creating an instance of `UserRegisterCommandParser` to parse the
+'   rest of the command.
+'4. If all fields are present, it checks if password and confirm password match.
+'5. If password and confirm password match, it creates an instance of `UserRegisterCommand`.
+'6. `Logic Manager` executes `UserRegisterCommand` by calling `UserRegisterCommand#execute()`.
+'7. `UserRegisterCommand` checks if a user is already registered by calling `Model#getStoredUser`.
+'8. If no user is registered, `UserRegisterCommand` calls `Model#registerUser` to store the user. Login status is set to
+'   true.
+'9. `UserRegisterCommand` calls `Model#updateFilteredPersonList` to display the list of customers.
+'10. `UserRegisterCommand` returns a `CommandResult` with a success message.
+
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UserRegisterCommandParser" as UserRegisterCommandParser LOGIC_COLOR
+participant "l:UserRegisterCommand" as UserRegisterCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "u:User" as User MODEL_COLOR
+participant "model:Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create UserRegisterCommandParser
+AddressBookParser -> UserRegisterCommandParser
+activate UserRegisterCommandParser
+
+UserRegisterCommandParser --> AddressBookParser
+deactivate UserRegisterCommandParser
+
+AddressBookParser -> UserRegisterCommandParser : parse(arg)
+activate UserRegisterCommandParser
+
+create User
+UserRegisterCommandParser -> User : User(username, password, true, secretQuestion, answer)
+activate User
+
+User --> UserRegisterCommandParser : u
+deactivate User
+
+create UserRegisterCommand
+UserRegisterCommandParser -> UserRegisterCommand : UserRegisterCommand(u)
+activate UserRegisterCommand
+
+UserRegisterCommand --> UserRegisterCommandParser : l
+deactivate UserRegisterCommand
+
+UserRegisterCommandParser --> AddressBookParser : l
+deactivate UserRegisterCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+UserRegisterCommandParser -[hidden]-> AddressBookParser
+destroy UserRegisterCommandParser
+
+AddressBookParser --> LogicManager : l
+deactivate AddressBookParser
+
+LogicManager -> UserRegisterCommand : execute(model)
+activate UserRegisterCommand
+
+UserRegisterCommand -> Model : getStoredUser()
+activate Model
+
+Model --> UserRegisterCommand : loggedInUser
+deactivate Model
+
+UserRegisterCommand -> Model : registerUser(u)
+activate Model
+
+Model --> UserRegisterCommand
+deactivate Model
+
+UserRegisterCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_CUSTOMERS)
+activate Model
+
+Model --> UserRegisterCommand
+deactivate Model
+
+create CommandResult
+UserRegisterCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> UserRegisterCommand
+deactivate CommandResult
+
+UserRegisterCommand --> LogicManager : result
+deactivate UserRegisterCommand
+UserRegisterCommand -[hidden]-> LogicManager : result
+User -[hidden]-> AddressBookParser
+destroy UserRegisterCommand
+destroy User
+
+[<--LogicManager : result
+deactivate LogicManager
+@enduml
