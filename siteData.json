@@ -115,7 +115,7 @@
         "user": "User",
         "register": "Register",
         "login": "Login",
-        "update-details-coming-soon-in-v1-3": "Update details [Coming Soon in v1.3]",
+        "update-details": "Update details",
         "logout": "Logout",
         "account-recovery": "Account Recovery",
         "account-deletion": "Account Deletion",
