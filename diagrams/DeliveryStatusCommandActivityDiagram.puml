@@ -1,0 +1,47 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+!pragma useVerticalIf on
+start
+:User enters <i>delivery status</i> command;
+partition DeliveryStatusCommandParser {
+    if () then ([else])
+        :ParseException: Invalid Command Format;
+        stop
+    ( [none-empty arguments provided]) elseif () then ([else])
+        :ParseException: Invalid Command Format;
+        stop
+    ( [number and word provided]) elseif () then ([else])
+        :ParseException: Invalid Delivery Status;
+        stop
+    ( [valid delivery status]) elseif () then ([else])
+        :ParseException: Invalid Delivery ID;
+         stop
+    else ( [valid id])
+    endif
+    :Create and Execute DeliveryStatusCommand;
+}
+
+partition DeliveryStatusCommand {
+    if () then ([else])
+        :CommandException: User Not Authenticated;
+        stop
+    ( [user logged in]) elseif () then ([else])
+        :CommandException: Invalid Delivery;
+        stop
+    else ( [delivery id found])
+    endif
+    : Create Delivery with new status;
+    : Replace Selected Delivery with Created Delivery;
+    : Refresh Displayed Delivery List;
+    : Return CommandResult;
+}
+
+
+
+
+stop
+
+@enduml

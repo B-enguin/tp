@@ -31,14 +31,14 @@ AddressBookParser -> UserLoginCommandParser : parse(arg)
 activate UserLoginCommandParser
 
 create User
-UserLoginCommandParser -> User : User(username, password)
+UserLoginCommandParser -> User : new User(username, password)
 activate User
 
 User --> UserLoginCommandParser
 deactivate User
 
 create UserLoginCommand
-UserLoginCommandParser -> UserLoginCommand : UserLoginCommand(u)
+UserLoginCommandParser -> UserLoginCommand : new UserLoginCommand(u)
 activate UserLoginCommand
 
 UserLoginCommand --> UserLoginCommandParser

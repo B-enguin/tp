@@ -1,0 +1,26 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+!pragma useVerticalIf on
+start
+:User executes customer add command;
+:Parse command string;
+
+if () then ([else])
+    :ParseException: Invalid Command Format;
+    stop
+( [all fields are filled and valid]) elseif () then ([else])
+    :CommandException: User Not Authenticated;
+    stop
+( [user is logged in]) elseif () then ([else])
+    :CommandException: Duplicate Customer;
+    stop
+else ( [Customer does not exist in the database])
+
+endif
+:Customer add command is executed successfully.
+Customer is added to the database.;
+
+stop
+@enduml

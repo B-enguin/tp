@@ -1,0 +1,95 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CustomerEditCommandParser" as CustomerEditCommandParser LOGIC_COLOR
+participant ":CustomerEditDescriptor" as CustomerEditDescriptor LOGIC_COLOR
+participant ":CustomerEditCommand" as CustomerEditCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Customer" as Customer MODEL_COLOR
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create CustomerEditCommandParser
+AddressBookParser -> CustomerEditCommandParser
+activate CustomerEditCommandParser
+
+CustomerEditCommandParser --> AddressBookParser
+deactivate CustomerEditCommandParser
+
+AddressBookParser -> CustomerEditCommandParser : parse(args)
+activate CustomerEditCommandParser
+
+create CustomerEditDescriptor
+CustomerEditCommandParser -> CustomerEditDescriptor
+activate CustomerEditDescriptor
+CustomerEditDescriptor --> CustomerEditCommandParser
+deactivate CustomerEditDescriptor
+
+create CustomerEditCommand
+CustomerEditCommandParser -> CustomerEditCommand
+activate CustomerEditCommand
+CustomerEditCommand --> CustomerEditCommandParser
+deactivate CustomerEditCommand
+
+CustomerEditCommandParser --> AddressBookParser : customerEditCommand
+CustomerEditCommandParser -[hidden]-> AddressBookParser
+deactivate CustomerEditCommandParser
+CustomerEditCommandParser -[hidden]-> CustomerEditDescriptor
+destroy CustomerEditCommandParser
+
+
+AddressBookParser --> LogicManager : customerEditCommand
+deactivate AddressBookParser
+
+LogicManager -> CustomerEditCommand : execute(model)
+activate CustomerEditCommand
+
+CustomerEditCommand -> Model : getFilteredCustomerList()
+activate Model
+deactivate Model
+
+CustomerEditCommand -> CustomerEditCommand : createEditedCustomer(customer, editCustomerDescriptor)
+activate CustomerEditCommand
+
+create Customer
+CustomerEditCommand -> Customer
+activate Customer
+deactivate CustomerEditCommand
+
+Customer --> CustomerEditCommand : editedCustomer
+deactivate Customer
+
+
+
+CustomerEditCommand -> Model : setCustomer(customer, editedCustomer)
+activate Model
+deactivate Model
+
+CustomerEditCommand -> Model : updateFilteredCustomerList(PREDICATE_SHOW_ALL_CUSTOMERS)
+activate Model
+deactivate Model
+
+create CommandResult
+CustomerEditCommand -> CommandResult
+activate CommandResult
+CommandResult --> CustomerEditCommand : commandResult
+
+CustomerEditCommand --> LogicManager : commandResult
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml

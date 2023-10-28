@@ -1,0 +1,91 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CustomerAddCommandParser" as CustomerAddCommandParser LOGIC_COLOR
+participant "a:CustomerAddCommand" as CustomerAddCommand LOGIC_COLOR
+participant "result:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "c:Customer" as Customer MODEL_COLOR
+participant "model:Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create CustomerAddCommandParser
+AddressBookParser -> CustomerAddCommandParser
+activate CustomerAddCommandParser
+
+CustomerAddCommandParser --> AddressBookParser
+deactivate CustomerAddCommandParser
+
+AddressBookParser -> CustomerAddCommandParser : parse(arg)
+activate CustomerAddCommandParser
+
+create Customer
+CustomerAddCommandParser -> Customer : new Customer(name, phone, email, address)
+activate Customer
+
+Customer --> CustomerAddCommandParser
+deactivate Customer
+
+create CustomerAddCommand
+CustomerAddCommandParser -> CustomerAddCommand : new CustomerAddCommand(c)
+activate CustomerAddCommand
+
+CustomerAddCommand --> CustomerAddCommandParser
+deactivate CustomerAddCommand
+
+CustomerAddCommandParser --> AddressBookParser : a
+deactivate CustomerAddCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+CustomerAddCommandParser -[hidden]-> AddressBookParser
+destroy CustomerAddCommandParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> CustomerAddCommand : execute(model)
+activate CustomerAddCommand
+
+CustomerAddCommand -> Model : getUserLoginStatus()
+activate Model
+
+Model --> CustomerAddCommand : isLoggedIn
+deactivate Model
+
+CustomerAddCommand -> Model : hasPerson(c)
+activate Model
+
+Model --> CustomerAddCommand
+deactivate Model
+
+CustomerAddCommand -> Model : addPerson(c)
+activate Model
+
+Model --> CustomerAddCommand
+deactivate Model
+
+create CommandResult
+CustomerAddCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> CustomerAddCommand
+deactivate CommandResult
+
+CustomerAddCommand --> LogicManager : result
+deactivate CustomerAddCommand
+CustomerAddCommand -[hidden]-> LogicManager : result
+destroy CustomerAddCommand
+
+[<--LogicManager : result
+deactivate LogicManager
+@enduml

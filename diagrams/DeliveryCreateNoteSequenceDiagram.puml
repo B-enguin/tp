@@ -1,0 +1,95 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeliveryCreateNoteCommandParser" as DeliveryCreateNoteCommandParser LOGIC_COLOR
+participant "d:DeliveryCreateNoteCommand" as DeliveryCreateNoteCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("delivery note 1 --note A note")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("delivery note 1 --note A note")
+activate AddressBookParser
+
+create DeliveryCreateNoteCommandParser
+AddressBookParser -> DeliveryCreateNoteCommandParser
+activate DeliveryCreateNoteCommandParser
+
+DeliveryCreateNoteCommandParser --> AddressBookParser
+deactivate DeliveryCreateNoteCommandParser
+
+AddressBookParser -> DeliveryCreateNoteCommandParser : parse("1 --note A note")
+activate DeliveryCreateNoteCommandParser
+
+create DeliveryCreateNoteCommand
+DeliveryCreateNoteCommandParser -> DeliveryCreateNoteCommand
+activate DeliveryCreateNoteCommand
+
+DeliveryCreateNoteCommand --> DeliveryCreateNoteCommandParser : d
+deactivate DeliveryCreateNoteCommand
+
+DeliveryCreateNoteCommandParser --> AddressBookParser : d
+deactivate DeliveryCreateNoteCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeliveryCreateNoteCommandParser -[hidden]-> AddressBookParser
+destroy DeliveryCreateNoteCommandParser
+
+AddressBookParser --> LogicManager : d
+deactivate AddressBookParser
+
+LogicManager -> DeliveryCreateNoteCommand : execute()
+activate DeliveryCreateNoteCommand
+
+DeliveryCreateNoteCommand -> Model : getUserLoginStatus()
+activate Model
+
+Model --> DeliveryCreateNoteCommand : loginStatus
+deactivate Model
+
+DeliveryCreateNoteCommand -> Model : getDelivery(targetId)
+activate Model
+
+Model --> DeliveryCreateNoteCommand : Delivery
+deactivate Model
+
+DeliveryCreateNoteCommand -> DeliveryCreateNoteCommand : createDeliveryWithNewNote(deliveryToEdit, newNote)
+activate DeliveryCreateNoteCommand
+
+DeliveryCreateNoteCommand --> DeliveryCreateNoteCommand : editedDelivery
+deactivate DeliveryCreateNoteCommand
+
+DeliveryCreateNoteCommand -> Model : setDelivery(Delivery)
+activate Model
+
+Model --> DeliveryCreateNoteCommand
+deactivate Model
+
+DeliveryCreateNoteCommand -> Model : updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES)
+activate Model
+
+Model --> DeliveryCreateNoteCommand
+deactivate Model
+
+create CommandResult
+DeliveryCreateNoteCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> DeliveryCreateNoteCommand
+deactivate CommandResult
+
+DeliveryCreateNoteCommand --> LogicManager : result
+deactivate DeliveryCreateNoteCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml

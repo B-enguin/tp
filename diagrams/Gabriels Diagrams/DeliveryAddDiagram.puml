@@ -1,0 +1,83 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeliveryAddCommandParser" as DeliveryAddCommandParser LOGIC_COLOR
+participant ":DeliveryAddDescriptor" as DeliveryAddDescriptor LOGIC_COLOR
+participant ":DeliveryAddCommand" as DeliveryAddCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Delivery" as Delivery MODEL_COLOR
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create DeliveryAddCommandParser
+AddressBookParser -> DeliveryAddCommandParser
+activate DeliveryAddCommandParser
+DeliveryAddCommandParser --> AddressBookParser
+deactivate DeliveryAddCommandParser
+
+
+AddressBookParser -> DeliveryAddCommandParser : parse(args)
+activate DeliveryAddCommandParser
+
+create DeliveryAddDescriptor
+DeliveryAddCommandParser -> DeliveryAddDescriptor
+activate DeliveryAddDescriptor
+DeliveryAddDescriptor --> DeliveryAddCommandParser
+deactivate DeliveryAddDescriptor
+
+create DeliveryAddCommand
+DeliveryAddCommandParser -> DeliveryAddCommand
+activate DeliveryAddCommand
+DeliveryAddCommand --> DeliveryAddCommandParser
+deactivate DeliveryAddCommand
+
+DeliveryAddCommandParser --> AddressBookParser : deliveryAddCommand
+DeliveryAddCommand -[hidden]-> DeliveryAddCommandParser
+deactivate DeliveryAddCommandParser
+DeliveryAddCommandParser -[hidden]-> DeliveryAddDescriptor
+destroy DeliveryAddCommandParser
+
+AddressBookParser --> LogicManager : deliveryAddCommand
+deactivate AddressBookParser
+LogicManager -> DeliveryAddCommand : execute(model)
+activate DeliveryAddCommand
+
+DeliveryAddCommand -> DeliveryAddCommand : createDelivery(model, deliveryAddDescriptor)
+activate DeliveryAddCommand
+
+create Delivery
+DeliveryAddCommand -> Delivery
+deactivate DeliveryAddCommand
+activate Delivery
+Delivery --> DeliveryAddCommand : toAdd
+deactivate Delivery
+
+DeliveryAddCommand -> Model : addDelivery(toAdd)
+activate Model
+deactivate Model
+
+create CommandResult
+DeliveryAddCommand -> CommandResult
+activate CommandResult
+CommandResult --> DeliveryAddCommand
+deactivate CommandResult
+
+DeliveryAddCommand -->LogicManager
+[<--LogicManager
+deactivate LogicManager
+
+
+@enduml

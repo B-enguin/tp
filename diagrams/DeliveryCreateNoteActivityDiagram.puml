@@ -1,0 +1,50 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+!pragma useVerticalIf on
+start
+:User enters <i>delivery note</i> command;
+partition DeliveryStatusCommandParser {
+    if () then ([else])
+        :NullPointerException: Args cannot be Null;
+        stop
+    else ([non null arguments provided])
+    endif
+    : Tokenize Arguments with Note prefix;
+    if () then ([else])
+        :ParseException: Invalid Command Format;
+        stop
+    ( [prefix present and preamble empty]) elseif () then ([else])
+        :ParseException: Duplicate Prefix;
+        stop
+    ( [no duplicate prefix]) elseif () then ([else])
+        :ParseException: Invalid Delivery ID;
+         stop
+    ( [valid delivery id]) elseif () then ([else])
+        :ParseException: Invalid Note;
+        stop
+    else ( [valid note])
+    endif
+    :Create and Execute DeliveryCreateNoteCommand;
+}
+
+partition DeliveryCreateNoteCommand {
+    if () then ([else])
+        :CommandException: User Not Authenticated;
+        stop
+    ( [user logged in]) elseif () then ([else])
+        :CommandException: Invalid Delivery;
+        stop
+    else ( [delivery id found])
+    endif
+    : Create Delivery with new note;
+    : Replace Selected Delivery with Created Delivery;
+    : Refresh Displayed Delivery List;
+    : Return CommandResult;
+}
+
+stop
+
+@enduml

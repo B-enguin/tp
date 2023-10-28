@@ -1,0 +1,19 @@
+@startuml
+start
+:Key in add command;
+
+ if () then ([Provide no/incorrect fields or invalid format])
+  :Error: Invalid command format!;
+  stop
+  elseif () then ([Provide a Delivery Date that is not in the future])
+  :Error: Delivery Date cannot be before today.;
+  stop
+  elseif () then ([Provide an index of an invalid customer])
+  : Error: The person index provided is invalid;
+  stop
+
+  else ([Valid format and index provided])
+  endif
+  :Delivery Add Success!;
+
+@enduml

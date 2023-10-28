@@ -18,14 +18,14 @@ Class CommandBox
 }
 
 package Model <<Rectangle>> {
-Class HiddenModel #FFFFFF
+Class HiddenModel<<HIDDEN>> #FFFFFF
 }
 
 package Logic <<Rectangle>> {
-Class HiddenLogic #FFFFFF
+Class HiddenLogic<<HIDDEN>> #FFFFFF
 }
 
-Class HiddenOutside #FFFFFF
+Class HiddenOutside<<HIDDEN>> #FFFFFF
 HiddenOutside ..> Ui
 
 UiManager .left.|> Ui

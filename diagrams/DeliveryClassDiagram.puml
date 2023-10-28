@@ -1,0 +1,32 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor MODEL_COLOR
+skinparam classBackgroundColor MODEL_COLOR
+
+Package Delivery as DeliveryPackage <<Rectangle>>{
+Class Delivery
+Class DeliveryName
+Class Customer
+Class OrderDate
+Class DeliveryDate
+Class DeliveryStatus
+Class Note
+
+Class DeliveryStatus <<Enumeration>>{
+}
+Class I #FFFFFF
+}
+
+Class HiddenOutside #FFFFFF
+HiddenOutside .down.> Delivery
+
+Delivery *--> "1" DeliveryName
+Delivery o--> "1" Customer
+Delivery *--> "1" OrderDate
+Delivery *--> "1" DeliveryDate
+Delivery *--> "1" DeliveryStatus
+Delivery *--> "0..1" Note
+
+
+@enduml

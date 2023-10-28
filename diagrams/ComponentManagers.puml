@@ -19,7 +19,7 @@ Class "<<interface>>\nStorage" as Storage
 Class StorageManager
 }
 
-Class HiddenOutside #FFFFFF
+Class HiddenOutside<<HIDDEN>> #FFFFFF
 HiddenOutside ..> Logic
 
 LogicManager .up.|> Logic

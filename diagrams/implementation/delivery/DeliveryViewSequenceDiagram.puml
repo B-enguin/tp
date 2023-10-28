@@ -1,0 +1,71 @@
+@startuml
+!include ../../style.puml
+
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeliveryViewCommandParser" as DeliveryViewCommandParser LOGIC_COLOR
+participant ":DeliveryViewCommand" as DeliveryViewCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create DeliveryViewCommandParser
+AddressBookParser -> DeliveryViewCommandParser
+activate DeliveryViewCommandParser
+
+DeliveryViewCommandParser --> AddressBookParser
+deactivate DeliveryViewCommandParser
+
+AddressBookParser -> DeliveryViewCommandParser : parse(args)
+activate DeliveryViewCommandParser
+
+create DeliveryViewCommand
+DeliveryViewCommandParser -> DeliveryViewCommand
+activate DeliveryViewCommand
+
+DeliveryViewCommand --> DeliveryViewCommandParser : DeliveryViewCommand
+deactivate DeliveryViewCommand
+
+DeliveryViewCommandParser --> AddressBookParser : DeliveryViewCommand
+deactivate DeliveryViewCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeliveryViewCommandParser -[hidden]-> AddressBookParser
+destroy DeliveryViewCommandParser
+
+AddressBookParser --> LogicManager : DeliveryViewCommand
+deactivate AddressBookParser
+
+LogicManager -> DeliveryViewCommand : execute()
+activate DeliveryViewCommand
+
+DeliveryViewCommand -> Model : getDelivery(deliveryId)
+activate Model
+
+Model --> DeliveryViewCommand : delivery
+deactivate Model
+
+create CommandResult
+DeliveryViewCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> DeliveryViewCommand
+deactivate CommandResult
+
+DeliveryViewCommand --> LogicManager : result
+deactivate DeliveryViewCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

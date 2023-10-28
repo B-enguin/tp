@@ -1,0 +1,118 @@
+@startuml
+!include ../../style.puml
+
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":DeliveryListParser" as DeliveryListParser LOGIC_COLOR
+participant ":DeliveryListCommand" as DeliveryListCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(input)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(input)
+activate AddressBookParser
+
+create DeliveryListParser
+AddressBookParser -> DeliveryListParser
+activate DeliveryListParser
+
+DeliveryListParser --> AddressBookParser
+deactivate DeliveryListParser
+
+AddressBookParser -> DeliveryListParser : parse(input)
+activate DeliveryListParser
+
+create DeliveryListCommand
+DeliveryListParser -> DeliveryListCommand
+activate DeliveryListCommand
+
+DeliveryListCommand --> DeliveryListParser : deliveryListCommand
+deactivate DeliveryListCommand
+
+DeliveryListParser --> AddressBookParser : deliveryListCommand
+deactivate DeliveryListParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeliveryListParser -[hidden]-> AddressBookParser
+destroy DeliveryListParser
+
+AddressBookParser --> LogicManager : deliveryListCommand
+deactivate AddressBookParser
+
+LogicManager -> DeliveryListCommand : execute()
+activate DeliveryListCommand
+
+DeliveryListCommand -> Model : updateFilteredList with no filters
+activate Model
+
+Model --> DeliveryListCommand
+deactivate Model
+
+opt status != null
+DeliveryListCommand -> Model : updateFilteredList filter by status
+activate Model
+
+Model --> DeliveryListCommand : delivery list filtered by status
+deactivate Model
+end
+
+opt deliveryDate != null
+DeliveryListCommand -> Model : updateFilteredList filter by delivery date
+activate Model
+
+Model --> DeliveryListCommand : delivery list filtered by delivery date
+deactivate Model
+end
+
+
+opt customerId != null
+DeliveryListCommand -> Model : updateFilteredList filter by customer id
+activate Model
+
+Model --> DeliveryListCommand : delivery list filtered by customer id
+deactivate Model
+end
+
+
+alt sortType == Sort.ASC
+DeliveryListCommand -> Model : sortFilteredList sort by delivery date ascending
+activate Model
+
+Model --> DeliveryListCommand : sortedFilteredList sorted by delivery date ascending
+deactivate Model
+
+else sortType == Sort.DESC
+DeliveryListCommand -> Model : sortFilteredList sort by delivery date descending
+activate Model
+
+Model --> DeliveryListCommand : sortedFilteredList sorted by delivery date descending
+deactivate Model
+
+end
+
+Model --> DeliveryListCommand
+deactivate Model
+
+
+
+create CommandResult
+DeliveryListCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> DeliveryListCommand
+deactivate CommandResult
+
+DeliveryListCommand --> LogicManager : result
+deactivate DeliveryListCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
