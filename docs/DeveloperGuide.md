@@ -1702,6 +1702,7 @@ otherwise)
 **Guarantees:**
 
 - The status of the delivery is updated only if the command is executed successfully.
+- The delivery date of the delivery is updated only if the status is completed and the command is executed successfully.
 
 **MSS:**
 
@@ -1729,6 +1730,10 @@ otherwise)
     - 1c1. DMS informs the logged-in owner of an invalid delivery status being entered.
 
       Use case ends.
+
+- 1d. Logged-in owner specified the delivery status as completed.
+
+   - 1d1. DMS will update the DeliveryDate the specified delivery (if present) to the current date.
 
 ---
 

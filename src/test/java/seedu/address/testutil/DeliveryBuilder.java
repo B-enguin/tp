@@ -125,6 +125,17 @@ public class DeliveryBuilder {
     }
 
     /**
+     * Sets the {@code deliveredAt} of the {@code Delivery} that we are building.
+     *
+     * @param deliveryDate The deliveredAt to set.
+     * @return The DeliveryBuilder with the deliveredAt set.
+     */
+    public DeliveryBuilder withDeliveryDate(LocalDate deliveryDate) {
+        this.deliveredAt = new DeliveryDate(deliveryDate);
+        return this;
+    }
+
+    /**
      * Sets the {@code status} of the {@code Delivery} that we are building.
      *
      * @param status The status to set.

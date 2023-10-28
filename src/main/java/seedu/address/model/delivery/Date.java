@@ -18,7 +18,7 @@ public class Date implements Comparable<Date> {
     public final LocalDate date;
 
     /**
-     * Constructs a {@code DeliveryDate}.
+     * Constructs a {@code Date}.
      *
      * @param date A valid date.
      */
@@ -26,6 +26,16 @@ public class Date implements Comparable<Date> {
         requireNonNull(date);
         checkArgument(isValidDate(date), MESSAGE_CONSTRAINTS);
         this.date = LocalDate.parse(date);
+    }
+
+    /**
+     * Constructs a {@code Date}.
+     *
+     * @param date A valid {@code LocalDate}.
+     */
+    protected Date(LocalDate date) {
+        requireNonNull(date);
+        this.date = date;
     }
 
     /**

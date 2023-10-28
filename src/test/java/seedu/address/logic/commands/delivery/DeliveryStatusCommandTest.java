@@ -10,6 +10,8 @@ import static seedu.address.testutil.TypicalDeliveries.GAMBES_RICE;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
@@ -28,8 +30,29 @@ public class DeliveryStatusCommandTest {
 
     @Test
     public void execute_allFieldsValid_success() {
-        DeliveryStatus deliveryStatus = DeliveryStatus.COMPLETED;
+        DeliveryStatus deliveryStatus = DeliveryStatus.SHIPPED;
         Delivery expectedDelivery = new DeliveryBuilder(GABRIELS_MILK).withStatus(deliveryStatus).build();
+        DeliveryStatusCommand deliveryStatusCommand =
+            new DeliveryStatusCommand(GABRIELS_MILK.getDeliveryId(), deliveryStatus);
+
+        String expectedMessage = String.format(DeliveryStatusCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
+            Messages.format(expectedDelivery));
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
+            new DeliveryBook(model.getDeliveryBook()),
+            new UserPrefs(),
+            true);
+        expectedModel.setDelivery(model.getDeliveryBook().getById(GABRIELS_MILK.getDeliveryId()).get(),
+            expectedDelivery);
+
+        assertCommandSuccess(deliveryStatusCommand, model, expectedMessage, expectedModel, true);
+    }
+
+    @Test
+    public void execute_completedStatusShouldUpdateDeliveryDate_success() {
+        DeliveryStatus deliveryStatus = DeliveryStatus.COMPLETED;
+        Delivery expectedDelivery =
+            new DeliveryBuilder(GABRIELS_MILK).withStatus(deliveryStatus).withDeliveryDate(LocalDate.now()).build();
         DeliveryStatusCommand deliveryStatusCommand =
             new DeliveryStatusCommand(GABRIELS_MILK.getDeliveryId(), deliveryStatus);
 

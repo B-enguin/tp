@@ -18,6 +18,15 @@ public class DeliveryDate extends Date {
     }
 
     /**
+     * Constructs a {@code DeliveryDate}.
+     *
+     * @param date A valid {@code LocalDate}.
+     */
+    public DeliveryDate(LocalDate date) {
+        super(date);
+    }
+
+    /**
      * Returns true if a given string is a valid delivery date.
      *
      * @param date A string representing a date.

@@ -1,10 +1,12 @@
 package seedu.address.model.delivery;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,14 +14,30 @@ import org.junit.jupiter.api.Test;
 public class DeliveryDateTest {
 
     @Test
-    public void constructor_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> new DeliveryDate(null));
+    public void stringConstructor_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new DeliveryDate((String) null));
+    }
+
+    @Test
+    public void localDateConstructor_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new DeliveryDate((LocalDate) null));
     }
 
     @Test
     public void constructor_invalidDate_throwsIllegalArgumentException() {
         String invalidDate = "";
         assertThrows(IllegalArgumentException.class, () -> new DeliveryDate(invalidDate));
+    }
+
+    @Test
+    public void constructor_validDateString_success() {
+        String validDate = "2023-12-12";
+        assertDoesNotThrow(() -> new DeliveryDate(validDate));
+    }
+
+    @Test
+    public void constructor_validDateLocalDate_success() {
+        assertDoesNotThrow(() -> new DeliveryDate(LocalDate.now()));
     }
 
     @Test

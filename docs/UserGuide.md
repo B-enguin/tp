@@ -375,9 +375,12 @@ _STATUS:_ Either `CREATED`/`SHIPPED`/`COMPLETED`/`CANCELLED`
 
 _CUSTOMER_ID:_ Integer
 
+**The `DeliveryDate` of the specified delivery will be set to the current date if `STATUS` is `COMPLETED`*
+
 **Command succeeds:**
 
 ![Delivery Status](images/delivery/delivery_status.png)
+
 **Command fails (invalid_status):** _Delivery Status should be one of CREATED, SHIPPED, COMPLETED, CANCELLED_
 
 **Command fails (invalid_index):** _The delivery index provided is invalid_
