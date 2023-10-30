@@ -3,6 +3,7 @@ package seedu.address.ui;
 import static java.util.Objects.requireNonNull;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 
@@ -18,6 +19,9 @@ public class ResultDisplay extends UiPart<Region> {
 
     public ResultDisplay() {
         super(FXML);
+
+        // disable right click
+        resultDisplay.setContextMenu(new ContextMenu());
     }
 
     public void setFeedbackToUser(String feedbackToUser) {
