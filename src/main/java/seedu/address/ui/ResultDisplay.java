@@ -17,6 +17,9 @@ public class ResultDisplay extends UiPart<Region> {
     @FXML
     private TextArea resultDisplay;
 
+    /**
+     * Creates a {@code ResultDisplay}.
+     */
     public ResultDisplay() {
         super(FXML);
 
@@ -24,6 +27,9 @@ public class ResultDisplay extends UiPart<Region> {
         resultDisplay.setContextMenu(new ContextMenu());
     }
 
+    /**
+     * Sets the feedback to be displayed to user.
+     */
     public void setFeedbackToUser(String feedbackToUser) {
         requireNonNull(feedbackToUser);
         resultDisplay.setText(feedbackToUser);
