@@ -118,7 +118,8 @@
     {
       "src": "UserGuide.md",
       "headings": {
-        "user-guide-for-homeboss": "User Guide for HomeBoss",
+        "user-guide": "User Guide",
+        "about-homeboss": "About HomeBoss",
         "about-this-user-guide": "About this User Guide",
         "navigating-the-user-guide": "Navigating the User Guide",
         "table-of-contents": "Table of Contents",
@@ -146,12 +147,9 @@
         "add-delivery": "Add delivery",
         "view-all-deliveries": "View all deliveries",
         "view-details-of-deliveries": "View details of deliveries",
-        "look-up-delivery-details-coming-soon-in-v1-3": "Look up delivery details [Coming Soon in v1.3]",
         "update-delivery-status": "Update delivery status",
         "create-a-note-for-a-delivery": "Create a note for a delivery",
-        "add-customer-data-to-delivery-coming-soon-in-v1-3": "Add customer data to delivery [Coming Soon in v1.3]",
         "delete-delivery": "Delete delivery",
-        "remove-customer-from-delivery-coming-soon-in-v1-3": "Remove customer from delivery [Coming Soon in v1.3]",
         "miscellaneous-2": "Miscellaneous",
         "help": "Help",
         "exit": "Exit",
