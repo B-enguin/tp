@@ -65,10 +65,10 @@ deactivate Model
 end
 
 opt deliveryDate != null
-DeliveryListCommand -> Model : updateFilteredList filter by delivery date
+DeliveryListCommand -> Model : updateFilteredList filter by expected delivery date
 activate Model
 
-Model --> DeliveryListCommand : delivery list filtered by delivery date
+Model --> DeliveryListCommand : delivery list filtered by expected delivery date
 deactivate Model
 end
 
@@ -83,17 +83,17 @@ end
 
 
 alt sortType == Sort.ASC
-DeliveryListCommand -> Model : sortFilteredList sort by delivery date ascending
+DeliveryListCommand -> Model : sortFilteredList sort by expected delivery date ascending
 activate Model
 
-Model --> DeliveryListCommand : sortedFilteredList sorted by delivery date ascending
+Model --> DeliveryListCommand : sortedFilteredList sorted by expected delivery date ascending
 deactivate Model
 
 else sortType == Sort.DESC
-DeliveryListCommand -> Model : sortFilteredList sort by delivery date descending
+DeliveryListCommand -> Model : sortFilteredList sort by expected delivery date descending
 activate Model
 
-Model --> DeliveryListCommand : sortedFilteredList sorted by delivery date descending
+Model --> DeliveryListCommand : sortedFilteredList sorted by expected delivery date descending
 deactivate Model
 
 end
