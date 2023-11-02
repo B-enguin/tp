@@ -149,11 +149,14 @@
         "view-details-of-deliveries": "View details of deliveries",
         "update-delivery-status": "Update delivery status",
         "create-a-note-for-a-delivery": "Create a note for a delivery",
+        "find-deliveries": "Find deliveries",
         "delete-delivery": "Delete delivery",
         "miscellaneous-2": "Miscellaneous",
         "help": "Help",
         "exit": "Exit",
-        "clear": "Clear"
+        "clear": "Clear",
+        "faq": "FAQ",
+        "command-summary-2": "Command Summary"
       },
       "headingKeywords": {}
     },

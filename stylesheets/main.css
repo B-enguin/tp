@@ -142,3 +142,17 @@ h5,
 h6 {
   color: #e46c0a;
 }
+
+.hljs {
+  background: #eef;
+  border: 1px solid #e8e8e8;
+}
+
+.hljs.inline {
+  background: #eef;
+  border: 1px solid #e8e8e8;
+}
+
+.hljs.inline.no-lang {
+  color: #000000;
+}
