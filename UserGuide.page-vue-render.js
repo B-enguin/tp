@@ -179,46 +179,46 @@ with(this){return _c('p',[_c('a',{attrs:{"href":"/tp/images/getting-started/Deli
 with(this){return _c('p',[_v("HomeBoss has many other features for you to try to streamline your delivery workflow. Take a look at our\n"),_c('a',{attrs:{"href":"#features"}},[_v("Features")]),_v(" below for even more commands and their details!")])}
 },function anonymous(
 ) {
-with(this){return _c('h1',{attrs:{"id":"command-summary"}},[_v("Command Summary"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#command-summary","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h1',{attrs:{"id":"feature-summary"}},[_v("Feature Summary"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#feature-summary","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('p',[_v("Here is a brief introduction to the commands that you will be using in HomeBoss. For more detailed information, please\nrefer to the "),_c('a',{attrs:{"href":"#features"}},[_v("Features")]),_v(" section.")])}
+with(this){return _c('p',[_v("Here is a brief introduction to all the features in HomeBoss. For more detailed information, please\nrefer to the "),_c('a',{attrs:{"href":"#features"}},[_v("Features")]),_v(" section.")])}
 },function anonymous(
 ) {
 with(this){return _c('h3',{attrs:{"id":"user"}},[_v("User"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#user","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('p',[_c('em',[_v("These are commands for managing your user account in HomeBoss.")])])}
+with(this){return _c('p',[_c('em',[_v("These are features for managing your user account in HomeBoss.")])])}
 },function anonymous(
 ) {
-with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("register")]),_v(" - Registers a new user account to use HomeBoss.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("login")]),_v(" - Logs in to your user account.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("update")]),_v(" - Updates your user account details.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("logout")]),_v(" - Logs out of your user account.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("recover account")]),_v(" - Recovers your user account.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delete account")]),_v(" - Deletes your user account.")])])}
+with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("register")]),_v(" - Registers a new user account to use HomeBoss.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("login")]),_v(" - Logs in to your user account.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("update")]),_v(" - Updates your user account details.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("recover account")]),_v(" - Recovers your user account.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("logout")]),_v(" - Logs out of your user account.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delete account")]),_v(" - Deletes your user account.")])])}
 },function anonymous(
 ) {
 with(this){return _c('h3',{attrs:{"id":"customer"}},[_v("Customer"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#customer","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('p',[_c('em',[_v("These are commands for managing your customers in HomeBoss.")])])}
+with(this){return _c('p',[_c('em',[_v("These are features for managing your customers in HomeBoss.")])])}
 },function anonymous(
 ) {
-with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer add")]),_v(" - Adds a customer to the address book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer find")]),_v(" - Finds customers whose names contain any of the given keywords.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer list")]),_v(" - Lists all customers in the address book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer edit")]),_v(" - Updates the details of an existing customer in the address book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer delete")]),_v(" - Deletes the specified customer from the address book.")])])}
+with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer add")]),_v(" - Adds a customer to the address book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer find")]),_v(" - Finds customers whose names contain any of the given keywords.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer list")]),_v(" - Lists all customers in the address book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer view")]),_v(" - Shows the details of the specified customer.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer edit")]),_v(" - Updates the details of an existing customer in the address book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("customer delete")]),_v(" - Deletes the specified customer from the address book.")])])}
 },function anonymous(
 ) {
 with(this){return _c('h3',{attrs:{"id":"delivery"}},[_v("Delivery"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#delivery","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('p',[_c('em',[_v("These are commands for managing your deliveries in HomeBoss.")])])}
+with(this){return _c('p',[_c('em',[_v("These are features for managing your deliveries in HomeBoss.")])])}
 },function anonymous(
 ) {
-with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery add")]),_v(" - Adds a delivery to the delivery book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery list")]),_v(" - Lists all deliveries in the delivery book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery view")]),_v(" - Shows the details of the specified delivery.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery status")]),_v(" - Changes the status of a specified delivery.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery note")]),_v(" - Creates a note for a specified delivery.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery delete")]),_v(" - Deletes the specified delivery from the delivery book.")])])}
+with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery add")]),_v(" - Adds a delivery to the delivery book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery find")]),_v(" - Finds deliveries whose names contain any of the given keywords.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery list")]),_v(" - Lists all deliveries in the delivery book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery view")]),_v(" - Shows the details of the specified delivery.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery edit")]),_v(" - Updates the details of an existing delivery in the delivery book.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery status")]),_v(" - Changes the status of a specified delivery.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery note")]),_v(" - Creates a note for a specified delivery.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery delete")]),_v(" - Deletes the specified delivery from the delivery book.")])])}
 },function anonymous(
 ) {
 with(this){return _c('h3',{attrs:{"id":"miscellaneous"}},[_v("Miscellaneous"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#miscellaneous","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('p',[_c('em',[_v("These are general commands for using HomeBoss.")])])}
+with(this){return _c('p',[_c('em',[_v("These are general features in HomeBoss.")])])}
 },function anonymous(
 ) {
-with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("help")]),_v(" - Shows a list of commands and their usage.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("exit")]),_v(" - Exits the program.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("clear")]),_v(" - Clears both customer and delivery database. "),_c('strong',[_v("Warning:")]),_v(" This action is irreversible.")])])}
+with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("exit")]),_v(" - Exits the program.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("help")]),_v(" - Shows a list of commands and their usage.")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("clear")]),_v(" - Clears both customer and delivery database. "),_c('strong',[_v("Warning:")]),_v(" This action is irreversible.")])])}
 },function anonymous(
 ) {
 with(this){return _c('h1',{attrs:{"id":"features"}},[_v("Features"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#features","onclick":"event.stopPropagation()"}})])}
@@ -701,7 +701,7 @@ with(this){return _c('p',[_c('strong',[_v("Q: How do I export my data to another
 with(this){return _c('p',[_c('strong',[_v("Q: Why is there an error when I input non-English characters?")])])}
 },function anonymous(
 ) {
-with(this){return _c('h1',{attrs:{"id":"command-summary-2"}},[_v("Command Summary"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#command-summary-2","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h1',{attrs:{"id":"command-summary"}},[_v("Command Summary"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#command-summary","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
 with(this){return _c('h4',{attrs:{"id":"user-3"}},[_v("User"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#user-3","onclick":"event.stopPropagation()"}})])}
@@ -728,6 +728,6 @@ with(this){return _c('h4',{attrs:{"id":"other"}},[_v("Other"),_c('a',{staticClas
 with(this){return _c('div',{staticClass:"table-responsive"},[_c('table',{staticClass:"markbind-table table table-bordered table-striped"},[_c('thead',[_c('tr',[_c('th',[_v("Command")]),_v(" "),_c('th',[_v("Format")]),_v(" "),_c('th',[_v("Examples")])])]),_v(" "),_c('tbody',[_c('tr',[_c('td',[_v("Exit")]),_v(" "),_c('td',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("exit")])]),_v(" "),_c('td',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("exit")])])]),_v(" "),_c('tr',[_c('td',[_v("Help")]),_v(" "),_c('td',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("help")])]),_v(" "),_c('td',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("help")])])]),_v(" "),_c('tr',[_c('td',[_v("Clear")]),_v(" "),_c('td',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("clear")])]),_v(" "),_c('td',[_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("clear")])])])])])])}
 },function anonymous(
 ) {
-with(this){return _c('footer',[_c('div',{staticClass:"text-center"},[_c('small',[_v("["),_c('span',[_c('strong',[_v("Powered by")])]),_v(" "),_c('img',{attrs:{"src":"https://markbind.org/favicon.ico","width":"30"}}),_v(" "),_c('a',{attrs:{"href":"https://markbind.org/"}},[_v("MarkBind 5.1.0")]),_v(", generated on Thu, 2 Nov 2023, 18:02:38 GMT+8]")])])])}
+with(this){return _c('footer',[_c('div',{staticClass:"text-center"},[_c('small',[_v("["),_c('span',[_c('strong',[_v("Powered by")])]),_v(" "),_c('img',{attrs:{"src":"https://markbind.org/favicon.ico","width":"30"}}),_v(" "),_c('a',{attrs:{"href":"https://markbind.org/"}},[_v("MarkBind 5.1.0")]),_v(", generated on Thu, 2 Nov 2023, 20:25:25 GMT+8]")])])])}
 }];
   

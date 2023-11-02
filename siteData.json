@@ -132,7 +132,7 @@
         "customer-delivery-list": "Customer/Delivery List",
         "homeboss-s-command-format": "HomeBoss's Command Format",
         "adding-your-first-delivery": "Adding your first Delivery",
-        "command-summary": "Command Summary",
+        "feature-summary": "Feature Summary",
         "user": "User",
         "customer": "Customer",
         "delivery": "Delivery",
@@ -164,7 +164,7 @@
         "exit": "Exit",
         "clear": "Clear",
         "faq": "FAQ",
-        "command-summary-2": "Command Summary"
+        "command-summary": "Command Summary"
       },
       "headingKeywords": {}
     },
