@@ -144,15 +144,26 @@ h6 {
 }
 
 .hljs {
-  background: #eef;
-  border: 1px solid #e8e8e8;
+  background: #eee;
+  border: 1px solid #d8d8d8;
 }
 
 .hljs.inline {
-  background: #eef;
-  border: 1px solid #e8e8e8;
+  background: #eee;
+  border: 1px solid #d8d8d8;
 }
+
+.hljs:not(.inline) {
+  border: 1px solid #d8d8d8;
+  background: #eef;
+}
+
 
 .hljs.inline.no-lang {
   color: #000000;
+}
+
+.hljs-meta {
+  color: #000000;
+  font-weight: var(--bs-body-font-weight);
 }
