@@ -71,7 +71,7 @@ with(this){return _c('ul',[_c('li',[_c('p',[_v("Words in blue are "),_c('a',{att
 with(this){return _c('h1',{attrs:{"id":"getting-started"}},[_v("Getting Started"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#getting-started","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('h2',{attrs:{"id":"prerequisites"}},[_v("Prerequisites"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#prerequisites","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h2',{attrs:{"id":"prerequisites"}},[_c('span',{staticStyle:{"text-decoration":"underline"}},[_v("Prerequisites")]),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#prerequisites","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
 with(this){return _c('p',[_v("Ensure that you have "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("Java 11")]),_v(" or above installed on your computer. If you are unsure how to do so you may view\nthis\nhelpful "),_c('a',{attrs:{"href":"https://www.java.com/en/download/help/version_manual.html"}},[_v("guide")]),_v(".")])}
@@ -80,7 +80,7 @@ with(this){return _c('p',[_v("Ensure that you have "),_c('code',{pre:true,attrs:
 with(this){return _c('p',[_c('a',{attrs:{"href":"#table-of-contents"}},[_v("↑ Back to Table of Contents")])])}
 },function anonymous(
 ) {
-with(this){return _c('h2',{attrs:{"id":"installing-homeboss"}},[_c('br'),_v("Installing HomeBoss"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#installing-homeboss","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h2',{attrs:{"id":"installing-homeboss"}},[_c('br'),_c('span',{staticStyle:{"text-decoration":"underline"}},[_v("Installing HomeBoss")]),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#installing-homeboss","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
 with(this){return _c('ol',[_c('li',[_c('p',[_v("You may download the latest release of "),_c('strong',[_v("HomeBoss")]),_v("\nfrom "),_c('a',{attrs:{"href":"https://github.com/AY2324S1-CS2103T-T13-3/tp/releases/latest"}},[_v("here")]),_v(".\n(Please download the file named "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("HomeBoss.jar")]),_v(")")])]),_v(" "),_c('li',[_c('p',[_v("Move the downloaded "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("HomeBoss.jar")]),_v(" file into the folder that you want to use as the home folder for your\napplication.")])])])}
@@ -95,7 +95,7 @@ with(this){return _c('p',[_c('a',{attrs:{"href":"/tp/images/getting-started/regi
 with(this){return _c('p',[_c('a',{attrs:{"href":"#table-of-contents"}},[_v("↑ Back to Table of Contents")])])}
 },function anonymous(
 ) {
-with(this){return _c('h2',{attrs:{"id":"understanding-our-layout"}},[_c('br'),_v("Understanding our layout"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#understanding-our-layout","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h2',{attrs:{"id":"understanding-our-layout"}},[_c('span',{staticStyle:{"text-decoration":"underline"}},[_v("Understanding our layout")]),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#understanding-our-layout","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
 with(this){return _c('p',[_c('a',{attrs:{"href":"/tp/images/getting-started/homepage_annotated.png","target":"_self"}},[_c('img',{staticClass:"img-fluid",attrs:{"src":"/tp/images/getting-started/homepage_annotated.png","alt":"HomeBoss Home Page"}})])])}
@@ -131,7 +131,7 @@ with(this){return _c('table',{staticClass:"images",staticStyle:{"border":"0px so
 with(this){return _c('p',[_c('a',{attrs:{"href":"#table-of-contents"}},[_v("↑ Back to Table of Contents")])])}
 },function anonymous(
 ) {
-with(this){return _c('h2',{attrs:{"id":"homeboss-s-command-format"}},[_c('br'),_v("HomeBoss's Command Format"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#homeboss-s-command-format","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h2',{attrs:{"id":"homeboss-s-command-format"}},[_c('br'),_c('span',{staticStyle:{"text-decoration":"underline"}},[_v("HomeBoss's Command Format")]),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#homeboss-s-command-format","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
 with(this){return _c('p',[_v("Every command has a "),_c('strong',[_v("Command Phrase")]),_v(" and possibly one or more "),_c('strong',[_v("Parameters")]),_v("\n(inputs to customise the command to your needs) which is typically preceded by a "),_c('strong',[_v("Prefix")]),_v("\n(special markers for HomeBoss to understand your inputs)")])}
@@ -167,7 +167,7 @@ with(this){return _c('ul',[_c('li',[_v("The "),_c('strong',[_v("Command Phrase")
 with(this){return _c('p',[_c('a',{attrs:{"href":"#table-of-contents"}},[_v("↑ Back to Table of Contents")])])}
 },function anonymous(
 ) {
-with(this){return _c('h2',{attrs:{"id":"registering-and-creating-your-first-delivery"}},[_c('br'),_v("Registering and creating your first Delivery"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#registering-and-creating-your-first-delivery","onclick":"event.stopPropagation()"}})])}
+with(this){return _c('h2',{attrs:{"id":"registering-and-creating-your-first-delivery"}},[_c('br'),_c('span',{staticStyle:{"text-decoration":"underline"}},[_v("Registering and creating your first Delivery")]),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#registering-and-creating-your-first-delivery","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
 with(this){return _c('ol',[_c('li',[_v("Let's first register for HomeBoss using the "),_c('code',{pre:true,attrs:{"class":"hljs inline swift"}},[_v("register")]),_v(" command. Suppose you want to register an account\nwith the following details:")])])}
@@ -197,7 +197,7 @@ with(this){return _c('ol',{attrs:{"start":"6"}},[_c('li',[_v("Now, let's add a n
 with(this){return _c('ul',[_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline swift"}},[_c('span',{pre:true,attrs:{"class":"hljs-type"}},[_v("DELIVERY_NAME")])]),_v(" : MacBook Pro")]),_v(" "),_c('li',[_c('code',{pre:true,attrs:{"class":"hljs inline swift"}},[_c('span',{pre:true,attrs:{"class":"hljs-type"}},[_v("EXPECTED_DELIVERY_DATE")])]),_v(" : 2023-12-03")])])}
 },function anonymous(
 ) {
-with(this){return _c('ol',{attrs:{"start":"7"}},[_c('li',[_c('p',[_v("Type "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery add MacBook Pro --customer CUSTOMER_ID --date 2023-12-03")]),_v(", replacing "),_c('code',{pre:true,attrs:{"class":"hljs inline swift"}},[_c('span',{pre:true,attrs:{"class":"hljs-type"}},[_v("CUSTOMER_ID")])])]),_v(" "),_c('p',[_v("with Gabriel's ID, and hit enter.")])]),_v(" "),_c('li',[_c('p',[_v("A new Delivery should have been added for "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("Gabriel")]),_v(", you should see a new Delivery in the Delivery List panel,\nsimilar to the image shown below.")])])])}
+with(this){return _c('ol',{attrs:{"start":"7"}},[_c('li',[_c('p',[_v("Type "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("delivery add MacBook Pro --customer CUSTOMER_ID --date 2023-12-03")]),_v(", replacing "),_c('code',{pre:true,attrs:{"class":"hljs inline swift"}},[_c('span',{pre:true,attrs:{"class":"hljs-type"}},[_v("CUSTOMER_ID")])]),_v("\nwith Gabriel's ID, and hit enter.")])]),_v(" "),_c('li',[_c('p',[_v("A new Delivery should have been added for "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("Gabriel")]),_v(", you should see a new Delivery in the Delivery List panel,\nsimilar to the image shown below.")])])])}
 },function anonymous(
 ) {
 with(this){return _c('p',[_c('a',{attrs:{"href":"/tp/images/getting-started/delivery_add.png","target":"_self"}},[_c('img',{staticClass:"img-fluid",staticStyle:{"display":"block","margin":"0 auto"},attrs:{"src":"/tp/images/getting-started/delivery_add.png","alt":"DeliveryAdded"}})])])}
@@ -740,6 +740,6 @@ with(this){return _c('div',{staticClass:"table-responsive"},[_c('table',{staticC
 with(this){return _c('p',[_c('a',{attrs:{"href":"#table-of-contents"}},[_v("↑ Back to Table of Contents")])])}
 },function anonymous(
 ) {
-with(this){return _c('footer',[_c('div',{staticClass:"text-center"},[_c('small',[_v("["),_c('span',[_c('strong',[_v("Powered by")])]),_v(" "),_c('img',{attrs:{"src":"https://markbind.org/favicon.ico","width":"30"}}),_v(" "),_c('a',{attrs:{"href":"https://markbind.org/"}},[_v("MarkBind 5.1.0")]),_v(", generated on Sat, 11 Nov 2023, 13:01:15 GMT+8]")])])])}
+with(this){return _c('footer',[_c('div',{staticClass:"text-center"},[_c('small',[_v("["),_c('span',[_c('strong',[_v("Powered by")])]),_v(" "),_c('img',{attrs:{"src":"https://markbind.org/favicon.ico","width":"30"}}),_v(" "),_c('a',{attrs:{"href":"https://markbind.org/"}},[_v("MarkBind 5.1.0")]),_v(", generated on Sat, 11 Nov 2023, 17:01:16 GMT+8]")])])])}
 }];
   
