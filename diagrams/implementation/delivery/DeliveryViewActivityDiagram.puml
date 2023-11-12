@@ -6,7 +6,7 @@ skinparam ArrowFontSize 12
 !pragma useVerticalIf on
 start
 :User enters <i>delivery view 1 </i> command;
-partition DeliveryViewParser {
+partition DeliveryViewCommandParser {
     if () then ([else])
         :ParseException: Invalid Command Format;
         stop
@@ -16,7 +16,7 @@ partition DeliveryViewParser {
     ([number provided]) elseif () then ([else])
         :ParseException: Invalid Id Provided;
         stop
-    else ([not invalid Id provided])
+    else ([valid id provided])
         :Create and Execute DeliveryViewCommand;
         endif
 }
@@ -27,11 +27,10 @@ partition DeliveryViewCommand {
         stop
         else ([user logged in])
     endif
-    if () then ([delivery empty])
+    if () then ([else])
         :CommandException: Delivery ID is invalid;
         stop
-    else ([delivery not empty])
-        : Show Delivery Item;
+    else ([delivery found])
         : Return CommandResult;
     endif
 }

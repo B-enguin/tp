@@ -6,7 +6,7 @@ skinparam ArrowFontStyle plain
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant ":DeliveryListParser" as DeliveryListParser LOGIC_COLOR
+participant ":DeliveryListCommandParser" as DeliveryListCommandParser LOGIC_COLOR
 participant ":DeliveryListCommand" as DeliveryListCommand LOGIC_COLOR
 participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
@@ -21,28 +21,34 @@ activate LogicManager
 LogicManager -> AddressBookParser : parseCommand(input)
 activate AddressBookParser
 
-create DeliveryListParser
-AddressBookParser -> DeliveryListParser
-activate DeliveryListParser
+create DeliveryListCommandParser
+AddressBookParser -> DeliveryListCommandParser
+activate DeliveryListCommandParser
 
-DeliveryListParser --> AddressBookParser
-deactivate DeliveryListParser
 
-AddressBookParser -> DeliveryListParser : parse(input)
-activate DeliveryListParser
 
+DeliveryListCommandParser --> AddressBookParser
+deactivate DeliveryListCommandParser
+
+AddressBookParser -> DeliveryListCommandParser : parse(input)
+activate DeliveryListCommandParser
+
+DeliveryListCommandParser -> DeliveryListCommandParser ++ : parseDeliveryListCommand()
 create DeliveryListCommand
-DeliveryListParser -> DeliveryListCommand
+DeliveryListCommandParser -> DeliveryListCommand
 activate DeliveryListCommand
 
-DeliveryListCommand --> DeliveryListParser : deliveryListCommand
+DeliveryListCommand --> DeliveryListCommandParser : deliveryListCommand
 deactivate DeliveryListCommand
+return deliveryListCommand
 
-DeliveryListParser --> AddressBookParser : deliveryListCommand
-deactivate DeliveryListParser
+DeliveryListCommandParser --> AddressBookParser : deliveryListCommand
+deactivate DeliveryListCommandParser
 'Hidden arrow to position the destroy marker below the end of the activation bar.
-DeliveryListParser -[hidden]-> AddressBookParser
-destroy DeliveryListParser
+DeliveryListCommandParser -[hidden]-> AddressBookParser
+destroy DeliveryListCommandParser
+
+
 
 AddressBookParser --> LogicManager : deliveryListCommand
 deactivate AddressBookParser
@@ -50,56 +56,31 @@ deactivate AddressBookParser
 LogicManager -> DeliveryListCommand : execute()
 activate DeliveryListCommand
 
-DeliveryListCommand -> Model : updateFilteredList with no filters
+DeliveryListCommand -> Model : getUserLoginStatus()
 activate Model
 
-Model --> DeliveryListCommand
+Model --> DeliveryListCommand : userLoginStatus
 deactivate Model
 
-opt status != null
-DeliveryListCommand -> Model : updateFilteredList filter by status
+DeliveryListCommand -> DeliveryListCommand ++ : createDeliveryListFilters()
+return filters
+
+DeliveryListCommand -> Model: updateFilteredDeliveryList(filters)
 activate Model
 
-Model --> DeliveryListCommand : delivery list filtered by status
+Model --> DeliveryListCommand: filteredDeliveries
 deactivate Model
-end
 
-opt deliveryDate != null
-DeliveryListCommand -> Model : updateFilteredList filter by expected delivery date
+DeliveryListCommand -> DeliveryListCommand ++: createDeliveryListSort()
+return sort
+
+DeliveryListCommand -> Model: updateSortedDeliveryList(sort)
 activate Model
 
-Model --> DeliveryListCommand : delivery list filtered by expected delivery date
-deactivate Model
-end
-
-
-opt customerId != null
-DeliveryListCommand -> Model : updateFilteredList filter by customer id
-activate Model
-
-Model --> DeliveryListCommand : delivery list filtered by customer id
-deactivate Model
-end
-
-
-alt sortType == Sort.ASC
-DeliveryListCommand -> Model : sortFilteredList sort by expected delivery date ascending
-activate Model
-
-Model --> DeliveryListCommand : sortedFilteredList sorted by expected delivery date ascending
+Model --> DeliveryListCommand: sortedDeliveries
 deactivate Model
 
-else sortType == Sort.DESC
-DeliveryListCommand -> Model : sortFilteredList sort by expected delivery date descending
-activate Model
 
-Model --> DeliveryListCommand : sortedFilteredList sorted by expected delivery date descending
-deactivate Model
-
-end
-
-Model --> DeliveryListCommand
-deactivate Model
 
 
 
