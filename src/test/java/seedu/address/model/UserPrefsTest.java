@@ -7,6 +7,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -49,7 +50,7 @@ public class UserPrefsTest {
         UserPrefs userPrefs = new UserPrefs();
         userPrefs.setAuthenticationFilePath(Paths.get("src/test/data/Authentication",
                 "authentication_noStoredUser.json"));
-        assertTrue(userPrefs.getStoredUser() == null);
+        assertTrue(userPrefs.getStoredUser().isEmpty());
     }
 
     @Test
@@ -62,14 +63,11 @@ public class UserPrefsTest {
         User user = new User(username, password, true, secretQuestion, answer);
         userPrefs.setAuthenticationFilePath(Paths.get("src/test/data/Authentication", "authentication.json"));
 
-        try {
-            User storedUser = userPrefs.getStoredUser();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-        assertTrue(userPrefs.getStoredUser() != null);
-        assertEquals(userPrefs.getStoredUser(), user);
+        Optional<User> storedUser = userPrefs.getStoredUser();
+        assertTrue(storedUser.isPresent());
+        User currentStoredUser = storedUser.get();
+        assertTrue(userPrefs.getStoredUser().isPresent());
+        assertEquals(userPrefs.getStoredUser(), Optional.ofNullable(user));
     }
 
     @Test
@@ -90,7 +88,7 @@ public class UserPrefsTest {
         User user = new User(username, password, true, secretQuestion, answer);
 
         assertTrue(userPrefs.registerUser(user));
-        assertEquals(userPrefs.getStoredUser(), user);
+        assertEquals(userPrefs.getStoredUser(), Optional.ofNullable(user));
     }
 
     @Test

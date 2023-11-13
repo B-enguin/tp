@@ -57,7 +57,8 @@ public class CustomerEditDescriptorTest {
     @Test
     public void toStringMethod() {
         CustomerEditDescriptor customerEditDescriptor = new CustomerEditDescriptor();
-        String expected = CustomerEditDescriptor.class.getCanonicalName() + "{name="
+        String expected = CustomerEditDescriptor.class.getCanonicalName() + "{customerId="
+                + customerEditDescriptor.getCustomerId() + ", name="
                 + customerEditDescriptor.getName().orElse(null) + ", phone="
                 + customerEditDescriptor.getPhone().orElse(null) + ", email="
                 + customerEditDescriptor.getEmail().orElse(null) + ", address="

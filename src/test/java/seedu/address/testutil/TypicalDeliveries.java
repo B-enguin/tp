@@ -13,22 +13,25 @@ import seedu.address.model.delivery.DeliveryStatus;
  */
 public class TypicalDeliveries {
     public static final Delivery GABRIELS_MILK = new DeliveryBuilder().withId(1).withName("Gabriel Milk")
-        .withCustomer(TypicalPersons.ALICE).withNote("Note").withOrderDate("2021-12-12").build();
+            .withCustomer(TypicalCustomers.ALICE).withNote("Note").withOrderDate("2021-12-12").build();
 
     public static final Delivery GAMBES_RICE = new DeliveryBuilder().withId(2).withName("Gambe Rice")
-        .withCustomer(TypicalPersons.BENSON).withOrderDate("2021-12-12").build();
+            .withCustomer(TypicalCustomers.BENSON).withOrderDate("2021-12-12").build();
 
     public static final Delivery JY_CAKE = new DeliveryBuilder().withId(3).withName("Jian Yang Cake")
-        .withCustomer(TypicalPersons.BENSON).withNote("Note").build();
+            .withCustomer(TypicalCustomers.BENSON).withNote("Note").build();
 
     public static final Delivery BRYANS_RICE = new DeliveryBuilder().withId(4).withName("Bryan Rice")
-        .withCustomer(TypicalPersons.BENSON).withOrderDate("2021-12-12").withStatus(DeliveryStatus.CANCELLED).build();
+            .withCustomer(TypicalCustomers.BENSON).withOrderDate("2021-12-12").withStatus(DeliveryStatus.CANCELLED)
+            .build();
 
     public static final Delivery REYNONS_BANANA = new DeliveryBuilder().withId(5).withName("Reynons Banana")
-        .withCustomer(TypicalPersons.BENSON).withOrderDate("2021-12-12").withStatus(DeliveryStatus.SHIPPED).build();
+            .withCustomer(TypicalCustomers.BENSON).withOrderDate("2021-12-12").withStatus(DeliveryStatus.SHIPPED)
+            .build();
 
     public static final Delivery JULIUS_PEACHES = new DeliveryBuilder().withId(6).withName("Julius Peaches")
-        .withCustomer(TypicalPersons.BENSON).withOrderDate("2021-12-12").withStatus(DeliveryStatus.COMPLETED).build();
+            .withCustomer(TypicalCustomers.BENSON).withOrderDate("2021-12-12").withStatus(DeliveryStatus.COMPLETED)
+            .build();
 
     private TypicalDeliveries() {
     } // prevents instantiation

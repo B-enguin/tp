@@ -31,7 +31,7 @@ AddressBookParser -> UserLoginCommandParser : parse(arg)
 activate UserLoginCommandParser
 
 create User
-UserLoginCommandParser -> User : new User(username, password)
+UserLoginCommandParser -> User : new User(username, password, true)
 activate User
 
 User --> UserLoginCommandParser
@@ -56,6 +56,12 @@ deactivate AddressBookParser
 LogicManager -> UserLoginCommand : execute(model)
 activate UserLoginCommand
 
+UserLoginCommand -> Model : getStoredUser()
+activate Model
+
+Model --> UserLoginCommand : storedUser
+deactivate Model
+
 UserLoginCommand -> Model : getUserLoginStatus()
 activate Model
 
@@ -74,7 +80,7 @@ activate Model
 Model --> UserLoginCommand
 deactivate Model
 
-UserLoginCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_CUSTOMERS)
+UserLoginCommand -> Model : showAllFilteredCustomerList()
 activate Model
 
 Model --> UserLoginCommand

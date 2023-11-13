@@ -13,8 +13,15 @@ pageNav: 3
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well }_
+HomeBoss is a software project adapted from the
+[AddressBook-Level3 project](https://se-education.org/addressbook-level3/) created by
+the [SE-EDU initiative](https://se-education.org).
+
+Libraries used in this project:
+
+* [Jackson](https://github.com/FasterXML/jackson)
+* [JavaFX](https://openjfx.io/)
+* [JUnit5](https://github.com/junit-team/junit5)
 
 ---
 
@@ -75,6 +82,8 @@ implementation of a component), as illustrated in the (partial) class diagram be
 
 The sections below give more details of each component.
 
+<br>
+
 ### UI component
 
 The **API** of this component is specified
@@ -103,9 +112,12 @@ The `UI` component,
   and `Delivery` objects residing in the
   `Model`.
 
+<br>
+
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/AY2324S1-CS2103T-T13-3/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** :
+[`Logic.java`](https://github.com/AY2324S1-CS2103T-T13-3/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -116,7 +128,7 @@ call as an example.
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
 
-<box type="info" seamless>
+<box type="note" background-color="#dff0d8" border-color="#d6e9c6" icon=":information_source:">
 
 **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of
 PlantUML, the lifeline reaches the end of diagram.
@@ -125,9 +137,9 @@ PlantUML, the lifeline reaches the end of diagram.
 How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates
-   a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which
-   is executed by the `LogicManager`.
+   a parser that matches the command (e.g., `CustomerDeleteCommandParser`) and uses it to parse the command.
+1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `CustomerDeleteCommand`)
+   which is executed by the `LogicManager`.
 1. The command can communicate with the `Model` when it is executed (e.g. to delete a customer).
 1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
 
@@ -138,64 +150,95 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 How the parsing works:
 
 - When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a
-  placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse
-  the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as
-  a `Command` object.
-- All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser`
-  interface so that they can be treated similarly where possible e.g, during testing.
+  placeholder for the specific command name e.g., `CustomerAddCommandParser`) which uses the other classes shown above
+  to parse the user command and create a `XYZCommand` object (e.g., `CustomerAddCommand`) which the `AddressBookParser`
+  returns back as a `Command` object.
+- All `XYZCommandParser` classes (e.g., `CustomerAddCommandParser`, `DeliveryDeleteCommandParser`, ...) inherit from
+  the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
+
+<br>
 
 ### Model component
 
-**API** : [`Model.java`](https://github.com/AY2324S1-CS2103T-T13-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** :
+[`Model.java`](https://github.com/AY2324S1-CS2103T-T13-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
 
 
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
+<puml src="diagrams/ModelClassDiagram.puml" width="900" />
 
 The `Model` component,
 
-* stores the address book data i.e., all `Customer` objects (which are contained in a `UniqueCustomerList` object). The
-  address book is exposed to the outside as a `ReadOnlyBook` objects.
-* stores the delivery book data i.e., all `Delivery` objects (which are contained in a `UniqueDeliveryList` object). The
-  delivery book is exposed to the outside as a `ReadOnlyBook` objects.
-* stores the currently filtered `Customer` objects (e.g., results of a search query) as a separate _filteredCustomers_
-  list
-* stores the currently filtered `Delivery` objects (e.g., results of a status filter query) as a separate
-  _filteredDeliveries_ list
-* stores the currently sorted `Delivery` objects (e.g., results of a sort query) as a separate _sortedDeliveries_
-  list
-* stores an unmodifiable `ObservableList<ListItem>` that can be 'observed' e.g. the UI can be bound
-  to this list so that the UI automatically updates when the data in the list change.
+* stores the address book data i.e., all `Customer` objects. (See the [ReadOnlyBook Model](#readonlybook-model) section
+  below for more details)
+* stores the delivery book data i.e., all `Delivery` objects. (See the [ReadOnlyBook Model](#readonlybook-model) section
+  below for more details)
+* stores the currently filtered `Customer` objects (See the [Customer Model](#customer-model)) as a separate
+  _filteredCustomers_ list. (e.g., results of a `customer list` command)
+* stores the currently filtered `Delivery` objects (See the [Delivery Model](#delivery-model)) as a separate
+  _filteredDeliveries_ list. (e.g., results of a `delivery list --status COMPLETED` command)
+* stores the currently sorted `Delivery` objects as a separate _sortedDeliveries_ list. (eg., results of
+  a `delivery list --sort ASC` command)
+* stores a `User` object that represents the logged-in user's data (See the [User Model](#user-model)).
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as
   a `ReadOnlyUserPref` objects.
+* stores an unmodifiable `ObservableList<ListItem>` that exposes the `Customer` or `Delivery`  details that is
+  shown on the UI list panel that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically
+  updates when the data in the list change.
+* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they
+  should make sense on their own without depending on other components)
+
+
+<br>
+
+#### ReadOnlyBook Model
+
+<puml src="diagrams/ReadOnlyBookClassDiagram.puml" width="350" />
+
+The `ReadOnlyBook` model,
+
+* exposes the `AddressBook` and `DeliveryBook` to the outside.
+* The `AddressBook` class stores the address book data i.e., all `Customer` that are contained through
+  the `UniqueCustomerList`.
+* The `DeliveryBook` class stores the delivery book data i.e., all `Delivery` that are contained through
+  the `UniqueDeliveryList`.
+
+<br>
 
 #### User Model
 
-<puml src="diagrams/UserClassDiagram.puml" width="450" />
+<puml src="diagrams/UserClassDiagram.puml" width="300" />
 
 The `User` model,
 
-* stores the user data i.e, the username and password of the user.
+* stores the user data i.e, the username, password, secret question and secret answer of the user.
+
+<br>
 
 #### Delivery Model
 
-<puml src="diagrams/DeliveryClassDiagram.puml" width="450" />
+<puml src="diagrams/DeliveryClassDiagram.puml" width="600" />
 
 The `Delivery` model,
 
-* stores the delivery data i.e, the delivery name, customer, delivery status, order date, expected delivery date and note for the
-  delivery.
+* stores the delivery data i.e, the delivery ID, delivery name, customer, delivery status, order date,
+  expected delivery date and note for the delivery.
+
+<br>
 
 #### Customer Model
 
-<puml src="diagrams/CustomerClassDiagram.puml" width="450" />
+<puml src="diagrams/CustomerClassDiagram.puml" width="350" />
 
 The `Customer` model,
 
-* stores the customer data i.e, the customer address, phone, email and address.
+* stores the customer data i.e, the customer ID, customer address, phone, email and address.
+
+<br>
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/AY2324S1-CS2103T-T13-3/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** :
+[`Storage.java`](https://github.com/AY2324S1-CS2103T-T13-3/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
@@ -211,6 +254,8 @@ The concrete implementation of storage is done through `StorageManger`, which ho
 `BookStorage` and `BookStorageWithReference`. Which represents the User Preference Data, Address Book and Delivery Book
 respectively.
 
+<br>
+
 ### Common classes
 
 Classes used by multiple components are in the `seedu.addressbook.commons` package.
@@ -224,12 +269,15 @@ This section describes some noteworthy details on how certain features are imple
 - [Update Delivery Status](#update-delivery-status-feature)
 - [Create Delivery Note](#create-note-for-delivery-feature)
 - [User Register Account Command](#user-register-account-command)
+- [Delivery List Command](#list-delivery-feature)
+- [Deliver View Command](#view-delivery-feature)
 - [User Login](#user-login-command)
-- User Update Details
 - [User Logout](#user-logout-command)
-- User Account Recovery
-- User Account Deletion
 - [Add Customer](#add-customer-command)
+- [Customer Edit Command](#customer-edit-command)
+- [Delivery Add Command](#delivery-add-command)
+
+<br>
 
 ### Update Delivery Status Feature
 
@@ -276,19 +324,9 @@ The sequence of the `delivery status` command is as follows:
 
 The following sequence diagram illustrates the `delivery status` command sequence:
 
-<puml src="diagrams/DeliveryStatusCommandSequenceDiagram.puml" width="450" />
+<puml src="diagrams/DeliveryStatusCommandSequenceDiagram.puml" width="900" />
 
-This section describes some noteworthy details on how certain features are implemented.
-
-- [Create Delivery Note](#create-note-for-delivery-feature)
-- [User Register Account Command](#user-register-account-command)
-- [User Login Command](#user-login-command)
-- User Update Details Command
-- [User Logout Command](#user-logout-command)
-- User Account Recovery
-- User Account Deletion
-- Customer Edit Command
-- Delivery Add Command
+<br>
 
 ### Create Note for Delivery Feature
 
@@ -339,7 +377,9 @@ command executes successfully
 
 The following diagram illustrates the `delivery note` command sequence:
 
-<puml src="diagrams/DeliveryCreateNoteSequenceDiagram.puml" width="450" />
+<puml src="diagrams/DeliveryCreateNoteSequenceDiagram.puml" width="1000" />
+
+<br>
 
 ### User Register Account Command
 
@@ -372,19 +412,21 @@ The sequence of the `register` command is as follows:
    pass1234 --secretQn First Pet? --answer Koko).
 2. Logic Manager calls the `AddressBookParser#parseCommand` with the `INPUT`.
 3. The `AddressBookParser` parses the command word, creating an instance of `UserRegisterCommandParser` to parse the
-rest of the command.
+   rest of the command.
 4. If all fields are present, it checks if password and confirm password match.
 5. If password and confirm password match, it creates an instance of `UserRegisterCommand`.
 6. `Logic Manager` executes `UserRegisterCommand` by calling `UserRegisterCommand#execute()`.
 7. `UserRegisterCommand` checks if a user is already registered by calling `Model#getStoredUser`.
 8. If no user is registered, `UserRegisterCommand` calls `Model#registerUser` to store the user. Login status is set to
-true.
+   true.
 9. `UserRegisterCommand` calls `Model#updateFilteredPersonList` to display the list of customers.
 10. `UserRegisterCommand` returns a `CommandResult` with a success message.
 
 The following sequence diagram shows how the `register` command works:
 
 <puml src="diagrams/UserRegisterSequenceDiagram.puml" alt="UserRegisterSequenceDiagram" />
+
+<br>
 
 ### List Delivery Feature
 
@@ -393,59 +435,69 @@ The following sequence diagram shows how the `register` command works:
 The `delivery list` command is used to list all deliveries in the delivery book.
 
 The format of the `delivery list` command can be found
-[here](./UserGuide.md#view-all-deliveries)
+[here](./UserGuide.md#view-a-list-of-deliveries)
 
 ### Feature Details
 
-1. The user enters the `delivery list` command.
-2. If the user enters no arguments, the `delivery list` command will list all
-   deliveries in the delivery book.
-3. If the user enters an invalid or empty status that is prefixed by `--status`, a `ParseException` will be thrown.
-4. If the user enters an invalid or empty sort that is prefixed by `--sort`, a `ParseException` will be thrown.
-5. If the command is parsed successfully, a `DeliveryListCommand` object will be created, and executed.
-6. If the user is not logged in, a `CommandException` will be thrown.
-7. If the status was provided, the status is used to filter the current delivery list with the specified status.
-8. If the customer id was provided, the customer id is used to filter the current delivery list with the specified
-   customer id.
-9. If the expected delivery date was provided, the expected delivery date is used to filter the current delivery list 
-   with the specified expected delivery date.
-10. If the sort was provided, the sort is used to sort the current delivery list. By default, the deliveries will be
-    sorted in descending order of their expected delivery date.
-11. The list on the ui will be updated with the filtered and sorted deliveries.
-12. If the command completed successfully, a `CommandResult` object will be created, and returned.
+1. The user can optionally specify a `status`, `customer id`, `date` and `sort` to filter and sort the
+   current delivery list in any combination.
+2. If the preamble is not empty, a `ParseException` will be thrown.
+3. If the user enters a delivery status, it will be parsed and stored as a `DeliveryStatus` object.
+4. If the user enters a customer id, it will be parsed and stored as an `Integer`.
+5. If the user enters a date, it will be parsed. If the date is specified as `TODAY`, today's date
+   will be stored as a `Date` object. Else, the date provided will be parsed and stored as a `Date` object.
+6. If the user enters a sort, it will be parsed and stored as a `Sort` object. Else, it will be stored as a `Sort` with
+   descending order.
+7. If the command is parsed successfully, a `DeliveryListCommand` object will be created, and executed.
+8. If the user is not logged in, a `CommandException` will be thrown.
+9. If the status was provided, the status is added as a filter.
+10. If the customer id was provided, the customer id is added as a filter.
+11. If the date was provided, the date is added as an expected delivery date filter.
+12. The delivery list will be filtered by the filters created, if any.
+13. If the sort was provided, the sort provided is added as the sort. By default, a descending order sort is
+    added as a sort.
+14. The delivery list will be sorted by the sort created.
+15. If the command completed successfully, a `CommandResult` object will be created, and returned.
 
-The following activity diagram illustrates the logic for listing `Delivery`
+The following activity diagram illustrates the logic for listing `Delivery`. Some ParseExceptions are omitted for better
+readability.
 
-<puml src="diagrams/implementation/delivery/DeliveryListActivityDiagram.puml" width="450"> </puml>
+<puml src="diagrams/implementation/delivery/DeliveryListActivityDiagram.puml" width="800"> </puml>
 
 The sequence of the `delivery list` command is as follows:
 
-1. The command `delivery list --status STATUS --sort SORT` is entered by the user
-   (e.g. `delivery list --status created --sort ASC`)
-2. The `LogicManager` calls the `AdressBookParser#parseCommand()` with `delivery list --status STATUS --sort SORT`
+1. The command `delivery list --status STATUS --customer CUSTOMER_ID --date EXPECTED_DELIVERY_DATE --sort SORT` is
+   entered by the user
+   (e.g. `delivery list --status created --customer 1 --date 2023-12-12 --sort ASC`)
+2. The `LogicManager` calls the `AdressBookParser#parseCommand()`
+   with `delivery list --status STATUS --customer CUSTOMER_ID --date EXPECTED_DELIVERY_DATE --sort SORT`
 3. `AddressBookParser` will parse the command, and creates a new instance of `DeliveryListCommandParser` calling
-   `DeliveryListCommandParser#parse()` to parse the remaining input after the command word has been removed
-   (i.e. the command arguments)
-4. `DeliveryListCommandParser` will parse the arguments, and return a new instance of `DeliveryListCommand`
-   with the parsed `STATUS` and `SORT`
+   `DeliveryListCommandParser#parse()`  to parse remaining input after the command word has been removed (i.e. the
+   command arguments)
+4. `DeliveryListCommandParser#parse()` will call `DeliveryListCommandParser#parseDeliveryListCommand()`to parse the
+   arguments and return a new instance of `DeliveryListCommand` with the parsed `STATUS`, `CUSTOMER_ID`
+   , `EXPECTED_DELIVERY_DATE` and `SORT`, if any.
 5. `LogicManager` calls `DeliveryListCommand#execute()`, first checking if the user is logged in by calling
    `Model#getUserLoginStatus()`
-6. If status is not null, `DeliveryListCommand` will call `Model#updateFilteredDeliveryListByStatus(Predicate)` to
-   filter the
-   delivery list by the specified status.
-7. If expected delivery date is not null, `DeliveryListCommand` will call 
-   `Model#updateFilteredDeliveryListByStatus(Predicate)` to filter the delivery list by the specified date.
-8. If customer id is not null, `DeliveryListCommand` will call `Model#updateFilteredDeliveryListByStatus(Predicate)`
-   to filter the delivery list by the specified customer id.
-9. If the sort is `asc`, `DeliveryListCommand` will call `Model#sortFilteredDeliveryList(Comparator)` to sort the
-   delivery list by expected delivery date in descending order.
-10. Else, `DeliveryListCommand` will call `Model#sortFilteredDeliveryList()` to sort the delivery list by the 
-    expected delivery date in descending order.
-11. It creates a new "CommandResult" with the result of the execution.
+6. If status is not false, `DeliveryListCommand` will call `DeliveryListCommand#createDeliveryListFilters()` to create
+   the filters based on the parsed arguments, if any.
+7. `DeliveryListCommand` will call `Model#updateFilteredDeliveryList(Predicate)` to filter the delivery list by
+   the filters created.
+8. `DeliveryListCommand` will call `DeliveryListCommand#createDeliveryListSort()` to create the sort for the delivery
+   list by expected delivery date based on the parsed arguments, if any, or by default, create the sort in descending
+   expected delivery date.
+9. `DeliveryListCommand` will call `Model#updateSortedDeliveryList(Comparator)` to sort the delivery list by the sort
+   created.
+10. It creates a new "CommandResult" with the result of the execution.
 
-The default delivery sort is `asc`.
+The default delivery sort is `desc` which sorts the delivery list by expected delivery date in descending order from
+the latest date to the earliest date.
 
 The following sequence diagram illustrates the `delivery list` command sequence:
+
+<puml src="diagrams/implementation/delivery/DeliveryListSequenceDiagram.puml" />
+
+<br>
 
 ### View Delivery Feature
 
@@ -454,40 +506,46 @@ The following sequence diagram illustrates the `delivery list` command sequence:
 The `delivery view` command is used to view a selected delivery with the id specified by the user.
 
 The format of the `delivery view` command can be found
-[here](./UserGuide.md#view-details-of-deliveries)
+[here](./UserGuide.md#view-details-of-a-delivery)
 
 #### Feature Details
 
 1. The user will specify a `Delivery` through its `id`.
-2. If a number is not specified, or is in the incorrect format, an `ParseException` will be thrown.
-3. If the command is parsed successfully, a new `DeliveryViewCommand` is created, and executed
-4. If the user is not logged in during command execution, a `CommandException` will be thrown.
-5. The number provided is used to fetch the associated `Delivery` from `Model` if it exists. If the provided number does
-   not match any of the IDs of the `Delivery` stored in `Model`, a `CommandException` is thrown.
-6. It creates and returns a new `CommandResult` with the result of the execution.
+2. If there are no arguments specified, a `ParseException` will be thrown.
+3. If a number is not specified, or is in the incorrect format, a `ParseException` will be thrown.
+4. If the number provided is not a valid id, a `ParseException` will be thrown.
+5. If the command is parsed successfully, a new `DeliveryViewCommand` is created, and executed
+6. If the user is not logged in during command execution, a `CommandException` will be thrown.
+7. The number provided is used to fetch the associated `Delivery` from `Model`.
+8. If the provided number does not match any of the IDs of the `Delivery` stored in `Model`, a `CommandException` is
+   thrown.
+9. If the provided number matches an ID of a `Delivery`, it creates and returns a new `CommandResult` with the result of
+   the execution.
 
 The following activity diagram illustrates the logic of viewing a `Delivery`.
 
-<puml src="diagrams/implementations/DeliveryViewActivityDiagram.puml" width="450" />
+<puml src="diagrams/implementation/delivery/DeliveryViewActivityDiagram.puml" width="600" />
 
 The sequence of the `delivery view` command is as follows:
 
-1. The command `delivery view DELIVERY_ID` is entered by the user (e.g. `delivery view 1`)
-2. `LogicManager` calls the `AddressBookParser#parseCommand()` with `delivery view 1`
+1. The command `delivery view DELIVERY_ID` is entered by the user (e.g. `delivery view 1`).
+2. `LogicManager` calls the `AddressBookParser#parseCommand()` with `delivery view 1`.
 3. `AddressBookParser` will parse the command, and creates a new instance of `DeliveryViewCommandParser` calling
    `DeliveryViewCommandParser#parse()` to parse the remaining input after the command word has been removed
-   (i.e. the command arguments)
+   (i.e. the command arguments).
 4. `DeliveryViewCommandParser` will parse the arguments, and return a new instance of `DeliveryViewCommand` with
-   the parsed `DELIVERY_ID`
-5. `LogicManager` calls `Delivery#execute()`, first checking if the user is logged in by calling
-   `Model#getUserLoginStatus()`
-6. It then attempts to fetch the `Delivery` with the specified `DELIVERY_ID`, using `Model#getDelivery(DELIVERY_ID)`
-   and returns the delivery.
-7. It creates and returns a new `CommandResult` with the result of the execution
+   the parsed `DELIVERY_ID`.
+5. `LogicManager` calls `DeliveryViewCommand#execute()`, first checking if the user is logged in by calling
+   `Model#getUserLoginStatus()`.
+6. If the status is not false, it attempts to fetch the `Delivery` with the specified `DELIVERY_ID`,
+   using `Model#getDelivery(DELIVERY_ID)` and returns the delivery if found.
+7. It creates and returns a new `CommandResult` with the result of the execution.
 
 The following sequence diagram illustrates the `delivery view` command sequence:
 
-<puml src="diagrams/implementations/DeliveryViewCommandSequenceDiagram.puml" width="450" />
+<puml src="diagrams/implementation/delivery/DeliveryViewSequenceDiagram.puml" width="900" />
+
+<br>
 
 ### User Login Command
 
@@ -503,11 +561,12 @@ The format for the `login` command can be found [here](UserGuide.md#login).
 1. The user specifies the `Username` and `Password` in the `login` command.
 2. If any of the fields is not provided, an error message with the correct command usage will be shown.
 3. If invalid command parameters are provided, an error message with the correct parameter format will be shown.
-4. If the user is currently logged in, an error message will be shown.
-5. The `User` is then cross-referenced with the stored user in `Model` to check if the credentials match.
-If incorrect credentials are provided, an error message regarding wrong credentials will be shown.
-6. If all the previous steps are completed without exceptions, the user will be logged in and the
-`isLoggedIn` status in `Model` will be updated to `true`.
+4. If there is no registered account found, an error message will be shown.
+5. If the user is currently logged in, an error message will be shown.
+6. The `User` is then cross-referenced with the stored user in `Model` to check if the credentials match.
+   If incorrect credentials are provided, an error message regarding wrong credentials will be shown.
+7. If all the previous steps are completed without exceptions, the user will be logged in and the
+   `isLoggedIn` status in `Model` will be updated to `true`.
 
 The following activity diagram shows the logic of a user logging in:
 
@@ -516,19 +575,22 @@ The following activity diagram shows the logic of a user logging in:
 The sequence of the `login` command is as follows:
 
 1. Upon launching the application, the `ModelManager` will be initialized with
-the `User` constructed with details from the authentication.json file.
+   the `User` constructed with details from the authentication.json file.
 2. The user inputs the `login` command with the username and password.
 3. The `userLoginCommandParser` checks whether all the required fields are present.
-If all fields are present, it creates a new `userLoginCommand`.
-4. The `userLoginCommand` checks whether the user is currently logged in by calling `Model#getUserLoginStatus()`.
-5. The `userLoginCommand` then checks if the user credentials match the stored user by calling `Model#userMatches()`.
-6. If the user is not logged in and the credentials match, the `userLoginCommand` calls `Model#setLoginSuccess()`,
-changing the login status to true and enabling the user access to all commands.
-7. The `userLoginCommand` also calls `Model#updateFilteredPersonList()` to display the list of customers.
+   If all fields are present, it creates a new `userLoginCommand`.
+4. The `userLoginCommand` checks whether there is a registered account stored by calling `Model#getStoredUser`.
+5. The `userLoginCommand` then checks whether the user is currently logged in by calling `Model#getUserLoginStatus`.
+6. The `userLoginCommand` then checks if the user credentials match the stored user by calling `Model#userMatches`.
+7. If the user is not logged in and the credentials match, the `userLoginCommand` calls `Model#setLoginSuccess`,
+   changing the login status to true and giving the user access to all commands.
+8. The `userLoginCommand` also calls `Model#showAllFilteredCustomerList` to display the list of customers.
 
 The following sequence diagram shows how the `login` command works:
 
 <puml src="diagrams/UserLoginSequenceDiagram.puml" alt="UserLoginSequenceDiagram" />
+
+<br>
 
 ### User Logout Command
 
@@ -546,7 +608,7 @@ The format for the `logout` command can be found [here](UserGuide.md#logout).
 2. If extra command parameters are provided after specifying `logout`, the logout command will still be executed.
 3. If the user is currently logged out, an error message will be shown.
 4. If all the previous steps are completed without exceptions, the user will be logged out and the
-`isLoggedIn` status in `Model` will be updated to `false`.
+   `isLoggedIn` status in `Model` will be updated to `false`.
 
 The following activity diagram shows the logic of a user logging out:
 
@@ -556,16 +618,19 @@ The sequence of the `logout` command is as follows:
 
 1. The user inputs the `logout` command.
 2. A new `userLogoutCommand` is created and checks whether the user is currently logged out
-by calling `Model#getUserLoginStatus()`.
-3. If the user is currently logged in, the `userLogoutCommand` calls `Model#setLogoutSuccess()`,
-changing the login status to false and restricting the user access to most commands.
-4. The `userLoginCommand` also calls `Model#updateFilteredPersonList()` to hide the list of customers.
+   by calling `Model#getUserLoginStatus`.
+3. If the user is currently logged in, the `userLogoutCommand` calls `Model#setLogoutSuccess`,
+   changing the login status to false and restricting the user access to most commands.
+4. The `userLogoutCommand` also calls `Model#clearFilteredDeliveryList` and `Model#clearFilteredCustomerList`
+   to hide the list of deliveries and customers.
 
-The following sequence diagram shows how the `login` command works:
+The following sequence diagram shows how the `logout` command works:
 
-<puml src="diagrams/UserLogoutSequenceDiagram.puml" alt="UserLogoutSequenceDiagram" />
+<puml src="diagrams/UserLogoutSequenceDiagram.puml" alt="UserLogoutSequenceDiagram" width="900" />
 
-### Add Customer Command
+<br>
+
+### Customer Add Command
 
 **Overview:**
 
@@ -580,8 +645,8 @@ The format for the `customer add` command can be found [here](UserGuide.md#add-a
 2. If any of the fields is not provided, an error message with the correct command usage will be shown.
 3. If invalid command parameters are provided, an error message with the correct parameter format will be shown.
 4. If the user is currently not logged in, an error message will be shown.
-5. The `Customer` is then cross-referenced in the `Model` to check if a customer with the same `Name` already exists.
-   If a customer with the same `Name` exists, an error message will be shown.
+5. The `Customer` is then cross-referenced in the `Model` to check if a customer with the same `Phone` already exists.
+   If a customer with the same `Phone` exists, an error message will be shown.
 6. If all the previous steps are completed without exceptions, the new `Customer` will be successfully added to the
    database.
 
@@ -591,21 +656,23 @@ The following activity diagram shows the logic of adding a `Customer` into the d
 
 The sequence of the `customer add` command is as follows:
 
-1. The user inputs the `customer add ARG` command (e.g. `customer add --name Gabriel --phone 87654321
+1. The user inputs the `customer add` command (e.g. `customer add --name Gabriel --phone 87654321
    --email gabrielrocks@gmail.com --address RVRC Block B`).
-2. The `LogicManager` calls the `AddressBookParser#parseCommand` with `ARG` to parse the command.
+2. The `LogicManager` calls the `AddressBookParser#parseCommand` with the user input to parse the command.
 3. The `AddressBookParser` then creates a new `CustomerAddCommandParser` to parse the fields provided by the user.
 4. A corresponding `Customer` is created by the `CustomerAddCommandParser`, which is used to
    create a new `CustomerAddCommand`.
-5. The `CustomerAddCommand` checks whether the user is currently logged in by calling `Model#getUserLoginStatus()`.
-6. The `CustomerAddCommand` then checks if the `Model` contains a customer with the same `Name`
-   by calling `Model#hasPerson`.
-7. If the user is logged in and the `Model` does not contain a customer with the same `Name`, the `CustomerAddCommand`
-   calls `Model#addPerson` to add the new `Customer` to the database.
+5. The `CustomerAddCommand` checks whether the user is currently logged in by calling `Model#getUserLoginStatus`.
+6. The `CustomerAddCommand` then checks if the `Model` contains a customer with the same `Phone`
+   by calling `Model#hasCustomer`.
+7. If the user is logged in and the `Model` does not contain a customer with the same `Phone`, the `CustomerAddCommand`
+   calls `Model#addCustomer` to add the new `Customer` to the database.
 
-The following sequence diagram shows how the `login` command works:
+The following sequence diagram shows how the `customer add` command works:
 
 <puml src="diagrams/CustomerAddSequenceDiagram.puml" alt="CustomerAddSequenceDiagram" />
+
+<br>
 
 ### Customer Edit Command
 
@@ -634,7 +701,7 @@ The format for the `customer edit` command can be found [here](UserGuide.md#upda
 
 The following activity diagram shows the logic of a user editing a customer's information:
 
-<puml src="diagrams/CustomerEditActivityDiagram.puml" alt="CustomerEditActivityDiagram" />
+<puml src="diagrams/Gabriels Diagrams/CustomerEditActivityDiagram.puml" alt="CustomerEditActivityDiagram" />
 
 The sequence of the `customer edit` command is as follows:
 
@@ -653,7 +720,9 @@ The sequence of the `customer edit` command is as follows:
 
 The following sequence diagram shows how the `customer edit` command works:
 
-<puml src="diagrams/CustomerEditSequenceDiagram.puml" alt="CustomerEditSequenceDiagram" />
+<puml src="diagrams/Gabriels Diagrams/CustomerEditDiagram.puml" alt="CustomerEditSequenceDiagram" />
+
+<br>
 
 ### Delivery Add Command
 
@@ -670,7 +739,7 @@ The format for the `delivery add` command can be found [here](UserGuide.md#creat
 1. The user inputs `delivery add`, followed by the `DeliveryName`, customer id of a `Customer` and `DeliveryDate`.
    e.g.(delivery add --name Chocolate Cake --customer 1 --date 2024-10-10)
 2. If no fields or incorrect fields are provided, an error message will inform the user of the correct command usage.
-3. If the expected delivery date provided is before today's date, an error message will prompt the user to key in a 
+3. If the expected delivery date provided is before today's date, an error message will prompt the user to key in a
    date that is today or after today.
 4. The customer id provided is then cross-referenced with the stored customer list in `Model` to ensure that
    it corresponds to an existing `Customer`. If the customer id is not tied to any `Customer`, an error message will
@@ -680,7 +749,7 @@ The format for the `delivery add` command can be found [here](UserGuide.md#creat
 
 The following activity diagram shows the logic of a user adding a delivery:
 
-<puml src="diagrams/DeliveryAddActivityDiagram.puml" alt="DeliveryAddActivityDiagram" />
+<puml src="diagrams/Gabriels Diagrams/DeliveryAddActivityDiagram.puml" alt="DeliveryAddActivityDiagram" />
 
 The sequence of the `delivery add` command is as follows:
 
@@ -700,7 +769,9 @@ The sequence of the `delivery add` command is as follows:
 
 The following sequence diagram shows how the `delivery add` command works:
 
-<puml src="diagrams/DeliveryAddSequenceDiagram.puml" alt="DeliveryAddSequenceDiagram" />
+<puml src="diagrams/Gabriels Diagrams/DeliveryAddDiagram.puml" alt="DeliveryAddSequenceDiagram" />
+
+<br>
 
 ### \[Proposed\] Undo/redo feature
 
@@ -853,29 +924,29 @@ thereby improving efficiency for business owners.
 
 Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikely to have) - `*`
 
-| Priority | As a …​            | I want to …​                                                             | So that I can…​                                                                                                                                                                         |
+| Priority | As …​              | I want to …​                                                             | So that …​                                                                                                                                                                              |
 |----------|--------------------|--------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `***`    | an owner           | create a local account                                                   | I can personalise and secure my account.                                                                                                                                                |
+| `***`    | an owner           | create a local account                                                   | I can personalise my account and secure my data.                                                                                                                                        |
 | `***`    | a registered owner | log in to my local account                                               | I can access my data.                                                                                                                                                                   |
-| `***`    | a forgetful owner  | retrieve my account                                                      | I can still recover my data.                                                                                                                                                            |
+| `***`    | a forgetful owner  | retrieve my account                                                      | I can still recover my data if I forget my password.                                                                                                                                    |
 | `***`    | a logged-in owner  | log out of my account                                                    | I can keep my data secure.                                                                                                                                                              |
-| `***`    | a registered owner | delete my account                                                        | I can have greater control over my data and account removal for privacy reasons.                                                                                                        |
+| `***`    | a registered owner | delete my account                                                        | I can clear all personal information or data from HomeBoss for privacy and security reasons.                                                                                            |
 | `***`    | a registered owner | update my details                                                        | I can change my personalisation.                                                                                                                                                        |
 | `***`    | a registered owner | create a customer                                                        | I can tie deliveries to customers’ information.                                                                                                                                         |
 | `***`    | a registered owner | view a customer                                                          | I can see their detailed information.                                                                                                                                                   |
 | `***`    | a registered owner | see a customer's list of deliveries                                      | I can easily see all the deliveries of a certain customer.                                                                                                                              |
 | `***`    | a registered owner | quickly search for the details of a client                               | I can monitor the progress of an order efficiently and effectively.                                                                                                                     |
-| `***`    | a registered owner | update a customer                                                        | I can change details if keyed in wrongly.                                                                                                                                               |
+| `***`    | a registered owner | update a customer's details                                              | I can change details if keyed in wrongly.                                                                                                                                               |
 | `***`    | a registered owner | delete a customer                                                        | I can remove redundant or incorrect customer records, especially when unforeseen errors occur.                                                                                          |
 | `***`    | a registered owner | view a list of customers                                                 | I can have a comprehensive overview of my customer base.                                                                                                                                |
 | `***`    | a registered owner | create a delivery                                                        | I can efficiently organise and access delivery information.                                                                                                                             |
 | `***`    | a registered owner | create notes about deliveries                                            | I can add additional information about deliveries.                                                                                                                                      |
 | `***`    | a registered owner | view a list of deliveries                                                | I can see a comprehensive overview of my deliveries.                                                                                                                                    |
 | `***`    | a registered owner | see the list of deliveries that would be delivered for the day           | I can prioritise particular orders.                                                                                                                                                     |
-| `***`    | a registered owner | add a customer to a delivery                                             | I know who the delivery is for.                                                                                                                                                         |
+| `***`    | a registered owner | add a customer to a delivery                                             | I can know who the delivery is for.                                                                                                                                                     |
 | `***`    | a registered owner | quickly search for the name of a delivery                                | I can monitor the progress of delivery.                                                                                                                                                 |
-| `***`    | a registered owner | see a list of deliveries sorted by their expected date of delivery       | It more organised and easier for me to get an overview of all orders.                                                                                                                   |
-| `***`    | a registered owner | view the details of a delivery                                           | I know what the order is and where to deliver it to.                                                                                                                                    |
+| `***`    | a registered owner | see a list of deliveries sorted by their expected date of delivery       | I can see a more organised list and easier for me to get an overview of all orders.                                                                                                     |
+| `***`    | a registered owner | view the details of a delivery                                           | I can know what the order is and where to deliver it to.                                                                                                                                |
 | `***`    | a registered owner | update the status of the delivery                                        | I can keep track of the delivery progress and notify my client.                                                                                                                         |
 | `***`    | a registered owner | update delivery details                                                  | I can change any information if there was an error from                                                                                                                        user/me. |
 | `***`    | a registered owner | delete a delivery                                                        | I can get rid of deliveries that are redundant.                                                                                                                                         |
@@ -883,10 +954,63 @@ Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikel
 | `*`      | a registered owner | know the sum of all the materials required for a fixed delivery schedule | I can plan my inventory.                                                                                                                                                                |
 | `*`      | a registered owner | have different user authorisation levels                                 | I can control who has access to what.                                                                                                                                                   |
 
+### Planned Enhancements
+
+1. Currently, when a new customer or a new delivery is created, the ID is guaranteed to be unique among customers and
+   deliveries respectively but may not be generated from the first available ID. We plan to modify the ID generation so
+   that the ID of the new customer or new delivery would be the first available ID from 1 to the maximum integer
+   respectively. Thus, preventing the strange behaviour of the ID not starting from 1 or from the first available ID
+   when the data is removed by `clear` or `delete account` or if the data is manually removed or when the application is
+   closed and opened again.
+
+2. Currently, you are unable to key in special characters for the name of a customer or for delivery notes. We plan to
+   allow certain special characters only such as `/` for the name of a customer as some people have special characters
+   eg. `Gabriel s/o Bryan` in their name or require special characters when taking notes.
+
+3. Currently, the `find` command for customer would allow special characters to be used to find a customer by their
+   name. We plan to limit the allowed special characters to the allowed special characters for names based on the
+   previous point to avoid confusion.
+
+4. Currently, the `find` command requires exact match of keywords and returns results that matches any of those
+   keywords. This potentially results in numerous in unwanted data to be shown if there are multiple matching keywords.
+   Or, if there are no matching keywords, no results would be shown. For example, if you have `100` Chocolate Cake
+   and `100` Strawberry Buns and `1` Chocolate Buns, and you search for Chocolate Buns, the result would be `100`
+   Chocolate Cake and `1` Chocolate Buns and `100` Strawberry Buns. Or, if you misspelled your search as Chcolate Bns,
+   you would receive no result. We plan to make the `find` command have more options to do more complex search
+   functionalities such as fuzzy search and exact match search. For example, if you search for Chocolate Buns, with
+   exact search, the result would be `1` Chocolate Buns. Or, if you misspelled your search as Chcolate Bns, with fuzzy
+   search, the result would be `1` Chocolate Buns.
+
+5. Currently, you would need to type `delivery list` or `customer list` in order to switch between the two lists to get
+   information which may hinder the user's ability to quickly type commands. We can create two side-by-side list views
+   of both customer and delivery for quicker reference and enable users to make quicker commands.
+
+6. Currently, some error messages are not specific enough. Error messages can be made more specific and instructive. For
+   example, if a user enters 2023-02-30, the error message can be "Invalid date. The date entered does not exist.",
+   however the current implementation only states "Dates should be in the format yyyy-MM-dd". Or, if a user enters the
+   incorrect ID, the error should show "Customer ID" or "Delivery ID", however, the current implementation of some
+   commands does not specify whether it is for the customer ID or for delivery ID and only states "ID". Or, if a user
+   inputs a negative value or zero for some numerical parameters that requires a positive integer, the error message
+   should be more specific and state "Please enter a positive integer." instead of "Invalid Command Format".
+
+7. Currently, only the user password is the only thing that is hashed in the authentication file. We plan to encrypt the
+   whole JSON authentication file and the data to prevent unauthorised access to the user's account and data
+   instead of only hashing the user password.
+
+8. Currently, you can recover your account while logged in. We plan to disallow the user to recover their account while
+   logged in.
+
+9. Currently, you can put duplicate prefixes for delivery list to filter or sort the deliveries that may arise in
+   confusion by which filter is applied. We plan to disallow duplicate prefixes for delivery list so that users would
+   not be confused by the output.
+
+10. Currently, you can filter delivery list by a customer id that does not exist. We plan to disallow filtering delivery
+    list by a customer id that does not exist.
+
 ### Use cases
 
-(For all use cases below, the **System** is the `HomeBoss` and the **Actor** is the `user`, unless specified
-otherwise)
+For all use cases below, the **System** is `HomeBoss` and the **Actor** is the `user`, unless specified
+otherwise.
 
 #### Use Case: UC01 - Register an Account
 
@@ -905,21 +1029,22 @@ otherwise)
 
 1. Unregistered owner opens HomeBoss application.
 2. Unregistered owner enters register command with his username, password, confirm password, a "forget password"
-   question and answer.
-3. US creates an account and shows a welcome message with the newly created username.
+   secret question and answer.
+3. US creates an account and shows a welcome message. The GUI footer is updated with the username.
+
    Use case ends.
 
 **Extensions:**
 
 * 2a. Unregistered owner does not enter one of the fields.
 
-    * 2a1. US requests unregistered owner to fill up all the required fields.
+    * 2a1. US requests unregistered owner to fill up all the required fields by showing expected command format.
 
       Use case ends.
 
 * 2b. Unregistered owner types incorrect confirm password.
 
-    * 2b1. US requests unregistered owner to retype their confirm password.
+    * 2b1. US points out password mismatch and requests unregistered owner to try again.
 
       Use case ends.
 
@@ -946,15 +1071,29 @@ otherwise)
 
 **Extensions:**
 
-* 2a. Registered owner does not enter one of the fields
-    * 2a1. US requests registered owner to fill up all the required fields
+* 2a. Registered Owner does not enter one of the fields.
+
+    * 2a1. US displays an error to Registered Owner to fill up all the required fields.
 
       Use case ends.
 
-* 2b. Registered owner types incorrect password or username
-    * 2b1. US requests registered owner to retype their username or password
+* 2b. Registered Owner types incorrect username or password.
+
+    * 2b1. US displays an error to Registered Owner that the username or password is incorrect.
 
       Use case ends.
+
+* 2c. Registered Owner types duplicated fields.
+
+    * 2c1. US displays an error to Registered Owner that the field is duplicated.
+
+      Use case ends.
+
+* 2d. Registered Owner specifies values that do not match the field constraint.
+
+    * 2d1. US displays an error to Registered Owner that the value is invalid and shows the constraint.
+
+      Use Case ends.
 
 ---
 
@@ -964,31 +1103,33 @@ otherwise)
 
 **Actor:** Registered owner
 
-**Preconditions:** Registered owner is logged out.
+**Preconditions:** An owner is registered with HomeBoss.
 
 **Guarantees:**
 
-- Password would be changed.
+- Password will be changed.
 
 **MSS:**
 
 1. Registered owner opens the HomeBoss application.
-2. Registered owner enters the account recovery command without any command flags (i.e., `--answer`).
-3. US displays the forget password question that the user set during account registration.
+2. Registered owner enters the account recovery command without any command flags (i.e., no `--answer`).
+3. US displays the "forget password" secret question that the user set during account registration, together with the
+   command format for account recovery.
 4. Registered owner enters the account recovery command, this time with the answer, new password and confirm password
    fields.
-5. US logins and shows a success message.
+5. US logs in and shows a success message confirming account recovery.
+
    Use case ends.
 
 **Extensions:**
 
 * 4a. Registered owner does not enter the answer field.
-    * 4a1. US requests registered owner to fill up the answer field.
+    * 4a1. US requests registered owner to fill up all the required fields, and shows the expected command format.
 
       Use case ends.
 
-* 4b. Registered owner types incorrect answer
-    * 4b1. US requests registered owner to retype their answer.
+* 4b. Registered owner types incorrect answer.
+    * 4b1. US says that the answer is incorrect and requests registered owner to try again.
 
       Use case ends.
 
@@ -997,8 +1138,8 @@ otherwise)
 
       Use case ends.
 
-* 4d. Registered owner types incorrect confirm password.
-    * 4d1. US requests registered owner to retype their confirm password.
+* 4d. Registered owner types a password and confirm password that do not match.
+    * 4d1. US says that the passwords do not match and requests registered owner to try again.
 
       Use case ends.
 
@@ -1028,7 +1169,7 @@ otherwise)
 
 **System:** User System (US)
 
-**Actor:** Logged-in owner.
+**Actor:** Registered owner.
 
 **Preconditions:** Account is present.
 
@@ -1038,7 +1179,7 @@ otherwise)
 
 **MSS:**
 
-1. Logged-in owner types command to delete his account.
+1. Registered owner types command to delete his account.
 2. User system shows a success message.
 
    Use case ends.
@@ -1068,7 +1209,7 @@ otherwise)
 
 * 1a. Logged-in Owner does not specify at least one updated field(s).
 
-    * 1a1. US requests Logged-in Owner to specify at least one updated field.
+    * 1a1. US requests Logged-in Owner to specify at least one updated field by showing the expected command format.
 
       Use Case ends.
 
@@ -1102,6 +1243,12 @@ otherwise)
 
       Use Case ends.
 
+* 1c. Logged-in Owner specifies values that do not match the field constraint.
+
+    * 1c1. US displays an error to Logged-in Owner that the value is invalid and shows the constraint.
+
+      Use Case ends.
+
 ---
 
 #### **Use Case: UC07 - Create Customer**
@@ -1126,11 +1273,23 @@ otherwise)
 
 **Extensions:**
 
-- 1a. Logged-in Owner does not specify the required field(s)
+- 1a. Logged-in Owner does not specify the required field(s).
 
-    - 1a1. CMS requests Logged-in Owner to key in all the fields required to create a customer.
+    - 1a1. CMS displays an error to Logged-in Owner to key in all the fields required to create a customer.
 
       Use Case ends.
+
+- 1b. Logged-in Owner specifies duplicated fields.
+
+    - 1b1. CMS displays an error to Logged-in Owner that the field is entered more than once.
+
+      Use Case ends.
+
+- 1c. Logged-in Owner specifies values that do not match the field constraint.
+
+   - 1c1. CMS displays an error to Logged-in Owner that the value is invalid and shows the constraint.
+
+     Use Case ends.
 
 ---
 
@@ -1157,34 +1316,15 @@ otherwise)
 
 - 1a. Logged-in Owner does not specify the id.
 
-    - 1a1. CMS requests Logged-in Owner to key in an id.
+    - 1a1. CMS requests Logged-in Owner to specify all required fields.
 
       Use Case ends.
 
-- 1b. Logged-in Owner specifies a customer id that does not exist.
+- 1b. Logged-in Owner specifies an invalid Customer.
 
-    - 1b1. CMS displays a message that customer id does not exist.
+    - 1b1. CMS displays an error to Logged-in Owner that the specified customer does not exist.
 
       Use Case ends.
-
----
-
-#### **Use Case: UC09 - Sort customers**
-
-**System:** Customer Management System (CMS)
-
-**Actor:** Logged-in owner
-
-**Preconditions:** Owner is logged in
-
-**Guarantees**
-
-* A list of deliveries of a customer is shown if the command is executed successfully.
-
-**MSS:**
-
-1. Logged-in Owner types in command to view what deliveries a particular customer has.
-2. CMS shows the list of deliveries of that specific customer.
 
 ---
 
@@ -1211,19 +1351,19 @@ otherwise)
 
 - 1a. Logged-in Owner does not include any keyword.
 
-    - 1a1. CMS requests Logged-in Owner to specify a keyword.
+    - 1a1. CMS displays an error to Logged-in Owner to specify a keyword.
 
       Use Case ends.
 
 - 1b. No customer with specified keyword is found.
 
-    - 1b1. CMS displays a message where no customers with the specified keyword is found.
+    - 1b1. CMS displays a message where there are no customers found.
 
       Use Case ends.
 
 - 1c. There are no customers.
 
-    - 1c1. CMS displays a message where there are no customers at all.
+    - 1c1. CMS displays a message where there are no customers found.
 
       Use Case ends.
 
@@ -1250,21 +1390,21 @@ otherwise)
 
 **Extensions:**
 
-- 1a. Logged-in Owner does not specify at least one updated field(s).
+- 1a. Logged-in owner did not specify at least one field to update.
 
-    - 1a1. CMS displays an error to Logged-in Owner to specify at least one field to update.
-
-      Use Case Ends.
-
-- 1b. Logged-in Owner specifies invalid customer.
-
-    - 1b1. CMS displays an error to Logged-in Owner that the specified customer does not exist.
+    - 1a1. CMS informs the Logged-in Owner to specify at least one field to update.
 
       Use Case Ends.
 
-- 1c. Logged-in Owner does not specify customer.
+- 1b. Logged-in Owner specified a Customer ID that does not exist.
 
-    - 1c1. CMS displays an error to Logged-in Owner to specify a customer to update.
+    - 1b1. CMS informs the Logged-in Owner of invalid Customer ID being entered. 
+
+      Use Case Ends.
+
+- 1c. Logged-in Owner did not specify a Customer ID.
+
+    - 1c1. CMS informs the Logged-in Owner to specify a Customer to update.
 
       Use Case Ends.
 
@@ -1280,7 +1420,7 @@ otherwise)
 
 **Guarantees:**
 
-- Selected customer is deleted only if the command is executed successfully.
+- Selected customer is deleted if the command is executed successfully.
 
 **MSS:**
 
@@ -1291,15 +1431,21 @@ otherwise)
 
 **Extensions:**
 
-- 1a. Logged-in Owner specifies invalid customer.
+- 1a. Logged-in Owner specifies a customer ID that does not exist is a positive integer.
 
-    - 1a1. CMS displays an error to Logged-in Owner that the specified customer does not exist.
+    - 1a1. CMS displays an error to Logged-in Owner that the specified customer ID is invalid.
 
       Use Case Ends.
 
-- 1b. Logged-in Owner does not specify customer.
+- 1b. Logged-in Owner specifies a non-positive integer as customer ID.
 
-    - 1b1. CMS displays an error to Logged-in Owner to specify a customer to update.
+    - 1b1. CMS displays an error to Logged-in Owner that the command format used is invalid, and shows the expected
+      command format.
+
+- 1c. Logged-in Owner does not specify customer ID.
+
+    - 1c1. CMS displays an error to Logged-in Owner that the command format used is invalid, and shows the expected
+      command format.
 
       Use Case Ends.
 
@@ -1347,21 +1493,27 @@ otherwise)
 
 **Extensions:**
 
-- 1a. Command has missing fields.
+- 1a. Logged-in Owner did not specify all required fields.
 
-    - 1a1. DMS displays an error to Logged-in Owner to specify all required fields.
-
-      Use Case Ends.
-
-- 1b. Command has invalid date.
-
-    - 1b1. DMS displays an error to Logged-in Owner that an invalid date was given.
+    - 1a1. DMS informs the Logged-in Owner to specify all required fields.
 
       Use Case Ends.
 
-- 1c. Command has invalid date format.
+- 1b. Logged-in Owner specified an invalid Expected Delivery date.
 
-    - 1c1. DMS displays an error to Logged-in Owner to specify the date in a valid format.
+    - 1b1. DMS informs the Logged-in Owner that an Invalid date was given.
+
+      Use Case Ends.
+
+- 1c. Logged-in Owner specified an invalid date format.
+
+    - 1c1. DMS informs the Logged-in Owner to specify the date in a valid format.
+
+      Use Case Ends.
+  
+- 1d. Logged-in Owner specfied a Customer ID that does not exist.
+
+    - 1d1. DMS informs the Logged-in Owner of invalid Customer ID being entered.
 
       Use Case Ends.
 
@@ -1394,6 +1546,18 @@ otherwise)
 
       Use Case Ends.
 
+- 1b. Command specifies an invalid Delivery.
+
+   - 1b1. DMS displays an error to Logged-in Owner that the specified Delivery does not exist.
+
+     Use Case Ends.
+
+- 1c. Command specifies an invalid note.
+
+   - 1c1. DMS informs the logged-in owner of an invalid note being entered.
+
+     Use Case Ends.
+
 ---
 
 #### **Use case:** UC15 - Delivery List
@@ -1410,188 +1574,80 @@ otherwise)
 **MSS:**
 
 1. Logged-in Owner types command to view a list of deliveries.
-2. DMS displays a list of all deliveries sorted in descending expected delivery date (newest to oldest).
+2. DMS displays a list of all deliveries sorted in descending expected delivery date (latest to earliest).
 
    Use Case Ends.
 
 **Extensions:**
 
-* 1a. User specifies status field in command.
-    * 1a1. DMS display a list of deliveries filtered by the specified status.
+- 1a. User specifies status field in command.
+
+    - 1a1. DMS displays a list of deliveries filtered with the specified status.
 
       Use Case Ends.
 
-* 1b. User specifies customer field in command.
-    * 1b1. DMS displays a list of deliveries filtered by the specified customer.
+- 1b. User specifies customer field in command.
+
+    - 1b1. DMS displays a list of deliveries filtered by the specified customer id.
 
       Use Case Ends.
 
-* 1c. User specifies expected delivery date field in command.
-    * 1c1. DMS displays a list of deliveries filtered by the specified expected delivery date.
+- 1c. User specifies expected delivery date field in command.
+
+    - 1c1. DMS displays a list of deliveries filtered by the specified expected delivery date.
 
       Use Case Ends.
 
-* 1d. User specifies both status and customer fields.
-    * 1c1. DMS displays a list of deliveries filtered by the specified status and customer.
+- 1d. User specifies expected delivery date field as "TODAY" in command.
+
+    - 1d1. DMS displays a list of deliveries filtered by the expected delivery date that is today's date.
 
       Use Case Ends.
 
-* 1e. User specifies both status and expected delivery date fields.
-    * 1e1. DMS displays a list of deliveries filtered by the specified status and expected delivery date.
+- 1e. User specifies a sort field in command.
+
+    - 1e1. DMS displays a list of all deliveries sorted by the specified sort order.
 
       Use Case Ends.
 
-* 1f. User specifies both customer and expected delivery date fields.
-    * 1f1. DMS displays a list of deliveries filtered by the specified customer and expected delivery date.
+- 1f. User specifies a combination of the filter fields and sort field.
 
-      Use Case Ends.
-* 1g. User specifies customer, expected delivery date and status fields.
-    * 1g1. DMS displays a list of deliveries filtered by the specified customer, expected delivery date and status.
-
-      Use Case Ends.
-
-* 1g. User specifies sort field in command.
-    * 1b1. DMS displays a list of all deliveries sorted by the specified sort order.
+    - 1f1. DMS displays a list of deliveries filtered by the specified filters and sorted by the specified sort
+      order.
 
       Use Case Ends.
 
-* 1h. User Specifies both filter fields and sort fields.
-    * 1c1. DMS displays a list of deliveries filtered by the specified filters and then expected delivery date sorted 
-           by the specified sort order.
-  
-       Use Case Ends.
+- 1g. User specifies duplicate fields
 
-#### **Use case:** UC16 - Delivery List for the Day
+    - 1g1. DMS displays a list of deliveries filtered by the last occurrence of each specified filters and sorted by the
+      last specified sort
 
-**System:** Delivery Management System (DMS)
-**Actor:** Logged-in owner.
+      Use Case Ends.
 
-**Preconditions:** Owner is logged in.
+- 1h. Logged-in Owner specifies invalid status.
 
-**Guarantees:**
+    - 1h1. DMS displays an error to Logged-in Owner that the specified status is invalid and state the possible accepted
+      status values.
 
-- A list of deliveries for the day is displayed only if the command is executed successfully.
+      Use Case Ends.
 
-**MSS:**
+- 1i. Logged-in Owner specifies an invalid date.
 
-1. Logged-in Owner types command to view a list of deliveries for the day.
-2. DMS displays a list of deliveries for the day.
+    - 1i1. DMS displays an error to Logged-in Owner that the specified date is in an invalid format and states what
+      format it should be in.
 
-   Use Case Ends.
+      Use Case Ends.
 
-**Extensions:**
+- 1j. Logged-in Owner specifies an invalid sort.
 
-- 1a. Command has missing fields.
-
-    - 1a1. DMS displays an error to Logged-in Owner.
+    - 1j1. DMS displays an error to Logged-in Owner that the specified sort is invalid and state the possible accepted
+      values.
 
       Use Case Ends.
 
 ---
 
-#### **Use case:** UC17 - Add Customer to Delivery
-
-**System:** Delivery Management System (DMS)
-**Actor:** Logged-in owner.
-
-**Preconditions:** Owner is logged in.
-
-**Guarantees:**
-
-- A customer is added to a delivery only if the command is executed successfully.
-
-**MSS:**
-
-1. Logged-in Owner types command to add a customer to a delivery.
-2. DMS shows success message.
-
-   Use Case Ends.
-
-**Extensions:**
-
-- 1a. Command has missing fields.
-
-    - 1a1. DMS displays an error to Logged-in Owner to specify all required fields.
-
-      Use Case Ends.
-
-- 1b. Command has invalid customer details.
-
-    - 1b1. DMS displays an error to Logged-in Owner that the specified customer details is invalid.
-
-      Use Case Ends.
-
----
-
-#### **Use case:** UC18 - Remove Customer from Delivery
-
-**System:** Delivery Management System (DMS)
-**Actor:** Logged-in owner.
-
-**Preconditions:** Owner is logged in.
-
-**Guarantees:**
-
-- A customer is removed from a delivery only if the command is executed successfully.
-
-**MSS:**
-
-1. Logged-in Owner types command to remove a customer from a delivery.
-2. DMS shows success message.
-
-   Use Case Ends.
-
-**Extensions:**
-
-- 1a. Command has missing fields.
-
-    - 1a1. DMS displays an error to Logged-in Owner to specify all required fields.
-
-      Use Case Ends.
-
-- 1b. Command has invalid customer details.
-
-    - 1b1. DMS displays an error to Logged-in Owner that the specified customer cannot be found.
-
-      Use Case Ends.
-
----
-
-#### **Use case:** UC19 - Specify Delivery Method
-
-**System:** Delivery Management System (DMS)
-**Actor:** Logged-in owner.
-
-**Preconditions:** Owner is logged in.
-
-**Guarantees:**
-
-- A delivery method is specified only if the command is executed successfully.
-
-**MSS:**
-
-1. Logged-in Owner types command to specify a delivery method.
-2. DMS shows success message.
-
-   Use Case Ends.
-
-**Extensions:**
-
-- 1a. Command has missing fields.
-
-    - 1a1. DMS displays an error to Logged-in Owner to specify all required fields.
-
-      Use Case Ends.
-
-- 1b. Command has invalid delivery options.
-
-    - 1b1. DMS displays an error to Logged-in Owner that the specified delivery method is invalid.
-
-      Use Case Ends.
-
----
-
-#### **Use case:** UC20 - Search for Delivery
+#### **Use case:** UC17 - Search for Delivery
 
 **System:** Delivery Management System (DMS)
 **Actor:** Logged-in owner.
@@ -1619,46 +1675,11 @@ otherwise)
 
 ---
 
-#### Use Case: UC21 - View location of delivery
+#### Use Case: UC18 - View details of delivery
 
 **System:** Delivery Management System (DMS)
 
-**Actor:** Logged-in owner.
-
-**Preconditions:** Owner is logged-in.
-
-**Guarantees:**
-
-- Delivery location is shown only if the command is executed successfully.
-
-**MSS:**
-
-1. Logged-in owner types command to view location of delivery.
-2. DMS displays the address of the customer associated with the delivery.
-
-   Use case ends.
-
-**Extensions**
-
-- 1a. Logged-in owner did not specify the delivery id.
-
-    - 1a1. DMS informs the logged-in owner of the missing field.
-
-      Use case ends.
-
-- 1b. Logged-in owner specified a delivery id that does not exist.
-
-    - 1b1. DMS informs the logged-in owner of invalid delivery id being entered.
-
-      Use case ends.
-
----
-
-#### Use Case: UC22 - View details of delivery
-
-**System:** Delivery Management System (DMS)
-
-**Actor:** Logged-in owner.
+**Actor:** Logged-in Owner.
 
 **Preconditions:** Owner is logged-in.
 
@@ -1677,19 +1698,19 @@ otherwise)
 
 - 1a. Logged-in owner did not specify the delivery id.
 
-    - 1a1. DMS informs the logged-in owner of the missing field.
+    - 1a1. DMS displays an error to Logged-in Owner to specify all required fields.
 
       Use case ends.
 
 - 1b. Logged-in owner specified a delivery id that does not exist.
 
-    - 1b1. DMS informs the logged-in owner of invalid delivery id being entered.
+    - 1b1. DMS displays an error to Logged-in Owner of invalid delivery id being entered.
 
       Use case ends.
 
 ---
 
-#### Use Case: UC23 - Update delivery status
+#### Use Case: UC19 - Update delivery status
 
 **System:** Delivery Management System (DMS)
 
@@ -1710,15 +1731,15 @@ otherwise)
 
 **Extensions**
 
-- 1a. Logged-in owner did not specify the delivery id or delivery status.
+- 1a. Command has missing fields.
 
-    - 1a1. DMS informs the logged-in owner of the missing field.
+    - 1a1. DMS displays an error to Logged-in Owner to specify all required fields.
 
       Use case ends.
 
-- 1b. Logged-in owner specified a delivery id that does not exist.
+- 1b. Logged-in owner specified an invalid Delivery.
 
-    - 1b1. DMS informs the logged-in owner of an invalid delivery id being entered.
+    - 1b1. DMS displays an error to Logged-in Owner that the specified Delivery does not exist.
 
       Use case ends.
 
@@ -1730,7 +1751,7 @@ otherwise)
 
 ---
 
-#### Use Case: UC24 - Update delivery details
+#### Use Case: UC20 - Update delivery details
 
 **System:** Delivery Management System (DMS)
 
@@ -1751,27 +1772,27 @@ otherwise)
 
 **Extensions**
 
-- 1a. Logged-in owner did not specify all the fields.
+- 1a. Logged-in owner did not specify at least one field to update.
 
-    - 1a1. DMS informs the logged-in owner to specify all the fields.
-
-      Use case ends.
-
-- 1b. Logged-in owner specified a delivery id that does not exist.
-
-    - 1b1. DMS informs the logged-in owner of invalid delivery id being entered.
+    - 1a1. DMS informs the Logged-in Owner to specify at least one field to update.
 
       Use case ends.
 
-- 1c. Logged-in owner entered date in the wrong format.
+- 1b. Logged-in owner specified a Delivery ID that does not exist.
 
-    - 1c1. DMS informs the logged-in owner of invalid format and shows the correct format.
+    - 1b1. DMS informs the logged-in owner of Invalid delivery id being entered.
+
+      Use case ends.
+
+- 1c. Logged-in owner did not specifiy a Delivery ID.
+
+    - 1c1. DMS informs the logged-in Owner to specify a Delivery to update. 
 
       Use case ends
 
 ---
 
-#### Use Case: UC25 - Delete delivery
+#### Use Case: UC21 - Delete delivery
 
 **System:** Delivery Management System (DMS)
 
@@ -1792,23 +1813,18 @@ otherwise)
 
 **Extensions**
 
-- 1a. Logged-in owner did not specify the delivery id.
+- 1a. Logged-in owner did not specify the Delivery ID.
 
-    - 1a1. DMS informs the logged-in owner of the missing field.
-
-      Use case ends.
-
-- 1b. Logged-in owner specified a delivery id that does not exist.
-
-    - 1b1. DMS informs the logged-in owner of invalid delivery id being entered.
+    - 1a1. DMS informs the Logged-in Owner to specify a Delivery to delete.
 
       Use case ends.
 
-- 1c. Logged-in owner specified a delivery that is in-progress.
+- 1b. Logged-in owner specified a Delivery ID that does not exist.
 
-    - 1c1. DMS informs the logged-in owner of the status of the delivery and does not delete it.
+    - 1b1. DMS informs the logged-in owner of Invalid Delivery ID being entered.
 
-      Use case ends
+      Use case ends.
+
 
 ---
 
@@ -1822,19 +1838,30 @@ otherwise)
 4. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be
    able to accomplish most of the tasks faster using commands than using the mouse.
 5. Data stored should be persistent until removal by user, and Private Contact Details should be secure.
-6. The project is expected to adhere to a schedule which delivers a feature set every milestone up to _V1.3_
-7. The application is not expected to
+6. Data should be stored locally.
+7. The GUI should not cause any resolution-related inconveniences to the user for standard screen resolutions of
+   1920x1080 and higher, and should be usable for screen resolutions of 1280x720 and higher.
+8. The application should be packaged into a single JAR file with size not exceeding 100MB.
+9. The project is expected to adhere to a schedule which delivers a feature set every milestone up to _V1.3_
+10. The application is not expected to
     1. Perform Inventory Management
     2. Perform Route Planning
 
-_{More to be added}_
+<br>
 
 ### Glossary
 
-- **Mainstream OS**: Windows, Linux, Unix, OS-X
-- **Private Contact Detail**: A contact detail that is not meant to be shared with others
-- **CLI**: Command Line Interface
-- **Owner**: The customer who owns the home-based business and who uses the app
+| Term                           | Definition                                                                              |
+|--------------------------------|-----------------------------------------------------------------------------------------|
+| Alphanumeric                   | Consisting of only letters and numbers                                                  |
+| Command Line Interface (CLI)   | A text-based user interface used to run programs                                        |
+| Graphical User Interface (GUI) | A visual interface where you can interact with the program through graphical components |
+| JSON                           | Short for JavaScript Object Notation, a lightweight format for storing your data        |
+| Owner                          | The individual who owns the home-based business and who uses the HomeBoss app           |
+| Mainstream OS                  | Windows, Linux, Unix, OS-X                                                              |
+| Parameter                      | Inputs to customise the command to your needs                                           |
+| Prefix                         | Special markers for HomeBoss to understand your inputs                                  |
+| Private Contact Detail         | A contact detail that is not meant to be shared with others                             |
 
 ---
 
@@ -1842,7 +1869,7 @@ _{More to be added}_
 
 Given below are instructions to test the app manually.
 
-<box type="info" seamless>
+<box type="note" background-color="#dff0d8" border-color="#d6e9c6" icon=":information_source:">
 
 **Note:** These instructions only provide a starting point for testers to work on;
 testers are expected to do more _exploratory_ testing.
@@ -1851,44 +1878,792 @@ testers are expected to do more _exploratory_ testing.
 
 ### Launch and shutdown
 
-1. Initial launch
+1. Initial launch.
 
-    1. Download the jar file and copy into an empty folder
+    1. Download the jar file and copy it into an empty folder.
 
-    1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be
-       optimum.
+    2. Run `HomeBoss.jar`{.swift}. If you are unsure how to run a `.jar` file, you may refer to this helpful
+       [guide](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Run-JAR-file-example-windows-linux-ubuntu).
 
-1. Saving window preferences
+    3. First register for HomeBoss using the `register`{.swift} command. So, for example, if you want to register an account
+       with the following details:
 
-    1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+       > `USERNAME`: Alex123
+       > `PASSWORD`: AlexIsGreat
+       > `CONFIRM_PASSWORD`: AlexIsGreat
+       > `SECRET_QUESTION`: First Pet Name?
+       > `ANSWER`: KoKo
 
-    1. Re-launch the app by double-clicking the jar file.<br>
-       Expected: The most recent window size and location is retained.
+       Type `register --user Alex123 --password AlexIsGreat --confirmPass AlexIsGreat --secretQn First Pet Name?
+       --answer Koko`{.swift} into the Command Box and hit enter. More details on the command can be found [here](#register).
 
-1. _{ more test cases …​ }_
+   4. Expected: Should see the HomeBoss Homepage.
 
-### Deleting a customer
+2. Subsequent launches.
 
-1. Deleting a customer while all customers are being shown
+   1. Relaunch the application by running `HomeBoss.jar`{.swift}.
 
-    1. Prerequisites: List all customers using the `list` command. Multiple customers in the list.
+   2. Using the `login`{.swift} command, log in into HomeBoss with the same user details entered earlier.
+      Expected: User is able to log in successfully and see the HomeBoss homepage.
 
-    1. Test case: `delete 1`<br>
-       Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message.
-       Timestamp in the status bar is updated.
+<br>
 
-    1. Test case: `delete 0`<br>
-       Expected: No customer is deleted. Error details shown in the status message. Status bar remains the same.
+### Register
 
-    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-       Expected: Similar to previous.
+1. Registering for an account.
 
-1. _{ more test cases …​ }_
+   1. Prerequisites: None
+
+   2. Test Case: `register --user Gabriel --password GabrielIsGreat --confirmPass GabrielIsGreat --secretQn First Pet Name? --answer Koko`{.swift}.</br>
+      Expected: A new user account is registered with username `Gabriel`{.swift}, password `GabrielIsGreat`{.swift},
+      secret question `First Pet Name?`{.swift} and answer `Koko`{.swift}. 
+
+   3. Test Case: `register --user Ga_briel --password GabrielIsGreat --confirmPass GabrielIsGreat --secretQn First Pet Name? --answer Koko`{.swift}.</br>
+      Expected: No new user is registered. Error indicating username constraints is
+      shown in the feedback message.
+
+   4. Test Case: `register --user Gabriel --password Gabriel_IsGreat --confirmPass Gabriel_IsGreat --secretQn First Pet Name? --answer Koko`{.swift}.</br>
+      Expected: No new user is registered. Error indicating password constraints is
+      shown in the feedback message.
+
+   5. Test Case: `register --user Gabriel --password GabrielIsGreat --confirmPass GabrielIsGreat1 --secretQn First Pet Name? --answer Koko`{.swift}.</br>
+      Expected: No new user is registered. Error indicating password and confirm password do not match is
+      shown in the feedback message.
+
+   6. Test Case: `register --user Gabriel --password GabrielIsGreat --confirmPass GabrielIsGreat --secretQn First Pet Name?`{.swift}.</br>
+      Expected: No new user is registered. Error indicating invalid command format is
+      shown in the feedback message.
+
+   7. Test Case: There already exists a user account stored in the application.</br>
+      Expected: No new user is registered. Error indicating existing account is
+      shown in the feedback message.
+
+<br>
+
+### Login
+
+1. Login to an account.
+
+   1. Prerequisites: There exists a stored user in the application, with the username `Gabriel`{.swift} and
+      password `GabrielIsGreat`{.swift}. The user is currently logged-out of the application.
+
+   2. Test Case: `login --user Gabriel --password GabrielIsGreat`{.swift}.</br>
+      Expected: The user is logged-in into the application. A welcome message is shown in the result message.
+
+   3. Test Case: `login --user Ga_briel --password GabrielIsGreat`{.swift}.</br>
+      Expected: The user does not get logged-in. Error indicating username constraints is
+      shown in the feedback message.
+
+   4. Test Case: `login --user Gabriel --password Gabriel_IsGreat`{.swift}.</br>
+      Expected: The user does not get logged-in. Error indicating password constraints is
+      shown in the feedback message.
+
+   5. Test Case: `login --user Gabriel1 --password GabrielIsGreat`{.swift}.</br>
+      Expected: The user does not get logged-in. Error indicating wrong username or password is
+      shown in the feedback message.
+
+   6. Test Case: `login --user Gabriel --password GabrielIsGreat1`{.swift}.</br>
+      Expected: Similar to previous.
+
+   7. Test Case: `login --user Gabriel`{.swift}.</br>
+      Expected: The user does not get logged-in. Error indicating invalid command format is
+      shown in the feedback message.
+
+<br>
+
+### Update Account Details
+
+1. Updating account details.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command. 
+
+   2. Test Case: `update --user Gabriel123`{.swift}.</br>
+      Expected: The username of the currently logged-in user is updated to `Gabriel123`{.swift}.
+
+   3. Test Case: `update --password GabrielIsCool --confirmPass GabrielIsCool`{.swift}.</br>
+      Expected: The password of the currently logged-in user is updated to `GabrielIsCool`{.swift}.
+
+   4. Test Case: `update --secretQn Favourite Pet --answer Bobo`{.swift}.</br>
+      Expected: The secret question of the currently logged-in user is updated to `GabrielIsCool`{.swift} and the
+      answer is updated to `Bobo`{.swift}.
+
+   5. Test Case: `update`{.swift}.</br>
+      Expected: No user details are updated. Error indicating that at least one field must be specified is
+      shown in the feedback message.
+
+   6. Test Case: `update --user G_briel123`{.swift}.</br>
+      Expected: No user details are updated. Error indicating username constraints is
+      shown in the feedback message.
+
+   7. Test Case: `update --password Gabriel_IsCool --confirmPass Gabriel_IsCool`{.swift}.</br>
+      Expected: No user details are updated. Error indicating password constraints is
+      shown in the feedback message.
+
+   8. Test Case: `update --password GabrielIsCool --confirmPass GabrielIsNotCool`{.swift}.</br>
+      Expected: No user details are updated. Error indicating password and confirm password do not match is
+      shown in the feedback message.
+
+   9. Test Case: `update --password GabrielIsCool`{.swift}.</br>
+      Expected: No user details are updated. Error indicating that password and confirm password must be both present 
+      or both absent is shown in the feedback message.
+
+   10. Test Case: `update --secretQn Favourite Pet`{.swift}.</br>
+       Expected: No user details are updated. Error indicating that secret question and answer must be both present
+       or both absent is shown in the feedback message.
+
+<br>
+
+### Logout
+
+1. Logging out of the application.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+
+   2. Test Case: `logout`{.swift}.</br>
+      Expected: The currently logged-in user is logged out of the application, currently displayed Customers/Deliveries
+      are hidden.
+
+   3. Test Case: `logout extra`{.swift} or other extra arguments.</br>
+      Expected: Similar to previous.
+
+<br>
+
+### Recover Account
+
+1. Recovering user account.
+
+   1. Prerequisites: There exists a stored user in the application, and the answer of the currently
+      stored user's secret question is "Koko".
+
+   2. Test Case: `recover account`{.swift}.</br>
+      Expected: The currently stored user's secret question is displayed.
+
+   3. Test Case: `recover account --answer Koko --password NewPassword123 --confirmPass NewPassword123`{.swift}.</br>
+      Expected: The currently stored user's password is updated to `NewPassword123`{.swift} 
+
+   4. Test Case: `recover account --answer NotKoko --password NewPassword123 --confirmPass NewPassword123`{.swift}</br>
+      Expected: No user details are updated. Error indicating that answer is incorrect is shown in the feedback message.
+
+   5. Test Case: `recover account --answer Koko --password NewPassword_123 --confirmPass NewPassword_123`{.swift}.</br>
+      Expected: No user details are updated. Error indicating password constraints is
+      shown in the feedback message.
+
+   6. Test Case: `recover account --answer Koko --password NewPassword123 --confirmPass NewPassword1234`{.swift}.</br>
+      Expected: No user details are updated. Error indicating password and confirm password do not match is
+      shown in the feedback message.
+
+   7. Test Case: `recover account --answer Koko --password NewPassword123`{.swift}</br>
+      Expected: No user details are updated. Error indicating invalid command format is
+      shown in the feedback message.
+
+<br>
+
+### Delete Account
+
+1. Delete currently stored user account.
+
+   1. Prerequisites: There exists a user account currently stored in the application
+
+   2. Test Case: `delete account`{.swift}.</br>
+      Expected: The currently stored user is deleted and all stored Customer and Delivery Data is deleted.
+
+   3. Test Case: `delete account extra`{.swift} or other extra arguments.</br>
+      Expected: Similar to previous.
+
+<br>
+
+### Add Customer
+
+1. Adding a Customer to the application.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command. There is currently no stored
+      Customer with a phone number of 87654321. There is currently a stored Customer with a phone number of 87651234.
+
+   2. Test Case: `customer add --name Gabriel --phone 87654321 --email Gabrielrocks@gmail.com --address RVRC Block B`{.swift}.</br>
+      Expected: A new Customer is added, with name `Gabriel`{.swift}, phone `87654321`{.swift}, 
+      email `Gabrielrocks@gmail.com`{.swift} and address `RVRC Block B`{.swift}. The details of the added Customer is
+      shown in the feedback message.
+
+   3. Test Case: `customer add --name G_briel --phone 87654321 --email Gabrielrocks@gmail.com --address RVRC Block B`{.swift}.</br>
+      Expected: No new Customer is added. Error indicating customer name constraints is
+      shown in the feedback message.
+
+   4. Test Case: `customer add --name Gabriel --phone 987654321 --email Gabrielrocks@gmail.com --address RVRC Block B`{.swift}.</br>
+      Expected: No new Customer is added. Error indicating phone number constraints is
+      shown in the feedback message.
+
+   5. Test Case: `customer add --name Gabriel --phone abcdefgh --email Gabrielrocks@gmail.com --address RVRC Block B`{.swift}.</br>
+      Expected: No new Customer is added. Error indicating phone number constraints is
+      shown in the feedback message.
+
+   6. Test Case: `customer add --name Gabriel --phone 87651234 --email Gabrielrocks@gmail.com --address RVRC Block B`{.swift}.</br>
+      Expected: No new Customer is added. Error indicating that the Customer already exists is
+      shown in the feedback message.
+
+   7. Test Case: `customer add --name Gabriel --phone 987654321 --email Gabrielrocks --address RVRC Block B`{.swift}.</br>
+      Expected: No new Customer is added. Error indicating email constraints is
+      shown in the feedback message.
+
+   8. Test Case: `customer add --name Gabriel --phone 987654321 --email Gabrielrocks@gmail.com`{.swift}.</br>
+      Expected: No new Customer is added. Error indicating invalid command format is
+      shown in the feedback message.
+
+<br>
+
+### View Details of Customer
+
+1. View the details of a Customer.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Customer with an ID of 1. There is only one Customer stored in the application.
+
+   2. Test Case: `customer view 1`{.swift}.</br>
+      Expected: The details of the Customer with an ID of 1 is shown in the result message.
+
+   3. Test Case: `customer view 0`{.swift}.</br>
+      Expected: No new Customer details are shown. Error indicating customer ID constraints is
+      shown in the feedback message.
+
+   4. Test Case: `customer view -1`{.swift}.</br>
+      Expected: No new Customer details are shown. Error indicating invalid command format is
+      shown in the feedback message.
+
+   5. Test Case: `customer view a`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `customer view 2`{.swift}.</br>
+      Expected: No new Customer details are shown. Error indicating invalid customer ID is
+      shown in the feedback message.
+
+<br>
+
+### List Customers
+
+1. List the Customers stored in the application.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is at least one Customer Stored in the application.
+
+   2. Test Case: `customer list`{.swift}.</br>
+      Expected: All customers are listed. A message indicating that Customers have been listed is
+      shown in the feedback message.
+
+   3. Test Case: `customer list extra`{.swift}.</br>
+      Expected: Similar to previous.
+
+<br>
+
+### Find Customers
+
+1. Find a Customers matching query.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There are currently three stored Customers with names `Alex Wong`{.swift}, `Alex Tan`{.swift} and `Tan Ah Meng`{.swift}.
+
+   2. Test Case: `customer find Alex`{.swift}.</br>
+      Expected: Only the Customers `Alex Wong`{.swift} and `Alex Tan`{.swift} are shown. 
+      A message indicating the number of Customers listed is shown in the result message.
+
+   3. Test Case: `customer find Alex Tan`{.swift}.</br>
+      Expected: All three Customers, `Alex Wong`{.swift}, `Alex Tan`{.swift} and `Tan Ah Meng`{.swift} are shown. 
+      A message indicating the number of Customers listed is shown in the result message.
+
+   4. Test Case: `customer find Ale`{.swift}.</br>
+      Expected: No customers are shown. A message indicating the number of Customers listed
+      is shown in the result message.
+
+   5. Test Case: `customer find`{.swift}.</br>
+      Expected: No customers are shown. An error indicating invalid command format is shown in the feedback message.
+
+   6. Test Case: `customer find Al_x`{.swift}.</br>
+      Expected: No customers are shown. A message indicating the number of Customers listed
+      is shown in the result message.
+
+<br>
+
+### Update Customer Details
+
+1. Update the details of a specific Customer.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Customer with an ID of 1. There is only one Customer stored in the application.
+
+   2. Test Case: `customer edit 1 --name Gabriel`{.swift}.</br>
+      Expected: The name of the Customer with an ID of 1 is updated to `Gabriel`{.swift}.
+      The updated details of the Customer with an ID of 1 is shown in the feedback message.
+
+   3. Test Case: `customer edit 1 --phone 98761234`{.swift}.</br>
+      Expected: The phone number of the Customer with an ID of 1 is updated to `98761234`{.swift}.
+      The updated details of the Customer with an ID of 1 is shown in the feedback message.
+
+   4. Test Case: `customer edit 1 --email GabrielIsCool@gmail.com`{.swift}.</br>
+      Expected: The email of the Customer with an ID of 1 is updated to `GabrielIsCool@gmail.com`{.swift}.
+      The updated details of the Customer with an ID of 1 is shown in the feedback message.
+
+   5. Test Case: `customer edit 1 --address RVRC Block E`{.swift}.</br>
+      Expected: The address of the Customer with an ID of 1 is updated to `RVRC Block E`{.swift}.
+      The updated details of the Customer with an ID of 1 is shown in the feedback message.
+
+   6. Test Case: `customer edit 1`{.swift}.</br>
+      Expected: No Customer details are updated. An error indicating that at least one field must be provided is shown
+      in the feedback message.
+
+   7. Test Case: `customer edit 2 --name Gabriel`{.swift}.</br>
+      Expected: No Customer details are updated. An error indicating invalid customer ID is shown
+      in the feedback message.
+
+   8. Test Case: `customer edit 0 --name Gabriel`{.swift}.</br>
+      Expected: No Customer details are updated. An error indicating invalid command format is shown
+      in the feedback message.
+
+<br>
+
+### Delete Customers
+
+1. Delete a specified Customer.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Customer with an ID of 1. There is only one Customer stored in the application.
+
+   2. Test Case: `customer delete 1`{.swift}.</br>
+      Expected: The Customer with an ID of 1 is deleted. The details of the deleted Customer is shown
+      in the feedback message.
+
+   3. Test Case: `customer delete 0`{.swift}.</br>
+      Expected: No Customer is deleted. Error indicating invalid command format is
+      shown in the feedback message.
+
+   4. Test Case: `customer delete -1`{.swift}.</br>
+      Expected: Similar to previous.
+
+   5. Test Case: `customer delete a`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `customer delete 2`{.swift}.</br>
+      Expected: No Customer is deleted. Error indicating invalid Customer ID is
+      shown in the feedback message.
+
+<br>
+
+### Add Delivery
+
+1. Adding a Delivery to the application.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a Customer stored with an ID of 1. And the current date is 2023-12-02.
+
+   2. Test Case: `delivery add Chocolate Cake --customer 1 --date 2023-12-12`{.swift}.</br>
+      Expected: A new Delivery is added, with name `Chocolate Cake`{.swift}, Customer ID `1`{.swift},
+      expected delivery date `2023-12-12`{.swift}, order date as today's date, delivery status as `CREATED`{.swift}, 
+      and the address as the address of the Customer with an ID of 1.
+      The details of the added Customer is shown in the feedback message.
+
+   3. Test Case: `delivery add Chocolate_Cake --customer 1 --date 2023-12-12`{.swift}.</br>
+      Expected: No new Delivery is added. An Error indicating delivery name constraints is
+      shown in the feedback message.
+
+   4. Test Case: `delivery add Chocolate Cake --customer 0 --date 2023-12-12`{.swift}.</br>
+      Expected: No new Delivery is added. An Error indicating customer ID constraints is
+      shown in the feedback message.
+
+   5. Test Case: `delivery add Chocolate Cake --customer a --date 2023-12-12`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `delivery add Chocolate Cake --customer 2 --date 2023-12-12`{.swift}.</br>
+      Expected: No new Delivery is added. An Error indicating invalid Customer ID is
+      shown in the feedback message.
+
+   7. Test Case: `delivery add Chocolate Cake --customer 1 --date 2023-12-01`{.swift}.</br>
+      Expected: No new Delivery is added. An Error indicating expected delivery date constraints is
+      shown in the feedback message.
+
+   8. Test Case: `delivery add Chocolate Cake --customer 1 --date 2023-13-01`{.swift}.</br>
+      Expected: No new Delivery is added. An Error indicating date constraints is
+      shown in the feedback message.
+
+   9. Test Case: `delivery add Chocolate Cake --date 2023-13-01`{.swift}.</br>
+      Expected: No new Delivery is added. An Error indicating invalid command format is
+      shown in the feedback message.
+
+<br>
+
+### View Details of a Delivery
+
+1. View the details of a Delivery.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Delivery with an ID of 1. There is only one Delivery stored in the application.
+
+   2. Test Case: `delivery view 1`{.swift}.</br>
+      Expected: The details of the Delivery with an ID of 1 is shown in the result message.
+
+   3. Test Case: `delivery view 0`{.swift}.</br>
+      Expected: No new Delivery details are shown. Error indicating delivery ID constraints is
+      shown in the feedback message.
+
+   4. Test Case: `delivery view -1`{.swift}.</br>
+      Expected: No new Delivery details are shown. Error indicating invalid command format is
+      shown in the feedback message.
+
+   5. Test Case: `delivery view a`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `delivery view 2`{.swift}.</br>
+      Expected: No new Delivery details are shown. Error indicating invalid delivery ID is
+      shown in the feedback message.
+
+<br>
+
+### List Deliveries
+
+1. List the Deliveries stored in the application.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There are two Customers with an ID of 1 and 2 stored in the application.
+      There are three deliveries stored in the application. 
+      The first with ID 1, Customer ID of 1, delivery status `CREATED`{.swift}, expected delivery date `2023-12-03`{.swift}.
+      The second with ID 2, Customer ID of 2, delivery status `SHIPPED`{.swift}, expected delivery date `2023-12-04`{.swift}.
+      The third with ID 3, Customer ID of 2, delivery status `SHIPPED`{.swift}, expected delivery date `2023-12-05`{.swift}.
+      The current date is `2023-12-03`{.swift}.
+
+   2. Test Case: `delivery list`{.swift}.</br>
+      Expected: All Deliveries are listed sorted in descending expected delivery date. 
+      A message indicating that deliveries have been listen is shown in the feedback message.
+
+   3. Test Case: `delivery list --status CREATED`{.swift}.</br>
+      Expected: The Delivery with an ID of 1 is listed. A message indicating that Deliveries have been listed is
+      shown in the feedback message.
+
+   4. Test Case: `delivery list --customer 1`{.swift}.</br>
+      Expected: Similar to previous.
+
+   5. Test Case: `delivery list --date today`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `delivery list --date 2023-12-04`{.swift}.</br>
+      Expected: The Delivery with an ID of 2 is listed. A message indicating that Deliveries have been listed is
+      shown in the feedback message.
+
+   7. Test Case: `delivery list --sort ASC`{.swift}.</br>
+      Expected: All Deliveries are listed sorted in ascending expected delivery date.
+      A message indicating that deliveries have been listen is shown in the feedback message.
+
+   8. Test Case: `delivery list --customer 2 --status SHIPPED --sort ASC`{.swift}.</br>
+      Expected: The deliveries with ID 2 and 3 are listed in ascending expected delivery date.
+      A message indicating that deliveries have been listen is shown in the feedback message.
+
+   9. Test Case: `delivery list --status INVALID`{.swift}.</br>
+      Expected: No Deliveries are listed. An Error indicating delivery status constraints
+      is shown in the feedback message.
+
+   10. Test Case: `delivery list --customer 0`{.swift}.</br>
+       Expected: No Deliveries are listed. An Error indicating Customer ID constraints
+       is shown in the feedback message.
+
+   11. Test Case: `delivery list --date 2023-13-04`{.swift}.</br>
+       Expected: No Deliveries are listed. An Error indicating expected delivery date constraints
+       is shown in the feedback message.
+
+   12. Test Case: `delivery list --sort random`{.swift}.</br>
+       Expected: No Deliveries are listed. An Error indicating sort constraints
+       is shown in the feedback message.
+
+<br>
+
+### Find Deliveries
+
+1. Find Deliveries matching query.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There are currently three stored Deliveries with names `Chocolate Cake`{.swift}, `Chocolate Bun`{.swift} and
+      `Strawberry Bun`{.swift}
+
+   2. Test Case: `delivery find Chocolate`{.swift}.</br>
+      Expected: Only the Deliveries `Chocolate Cake`{.swift} and `Chocolate Bun`{.swift} are shown. 
+      A message indicating the number of Deliveries listed is shown in the result message.
+
+   3. Test Case: `delivery find Choclate Bun`{.swift}.</br>
+      Expected: All three Deliveries, `Chocolate Cake`{.swift}, `Chocolate Bun`{.swift} and `Strawberry Bun`{.swift} 
+      are shown. A message indicating the number of Customers listed is shown in the result message.
+
+   4. Test Case: `delivery find Choc`{.swift}.</br>
+      Expected: No Deliveries are shown. A message indicating the number of Deliveries listed
+      is shown in the result message.
+
+   5. Test Case: `delivery find`{.swift}.</br>
+      Expected: No Deliveries are shown. An error indicating invalid command format is shown in the feedback message.
+
+   6. Test Case: `delivery find Chocolate_Cake`{.swift}.</br>
+      Expected: No Deliveries are shown. A message indicating the number of Deliveries listed
+      is shown in the result message.
+
+<br>
+
+### Update details of a Delivery
+
+1. Update the details of a specific Delivery.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There are currently two stored Customers with an ID of 1 and 2.
+      There is currently a stored Delivery with an ID of 1, Customer ID of 1. 
+      There is only one stored Delivery in the application.
+      The current date is `2023-12-12`{.swift}.
+
+   2. Test Case: `delivery edit 1 --name Vanilla Cake`{.swift}.</br>
+      Expected: The name of the Delivery with an ID of 1 is updated to `Vanilla Cake`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   3. Test Case: `delivery edit 1 --customer 2`{.swift}.</br>
+      Expected: The Customer ID of the Delivery with an ID of 1 is updated to `2`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   4. Test Case: `delivery edit 1 --date 2023-12-13`{.swift}.</br>
+      Expected: The expected delivery date of the Delivery with an ID of 1 is updated to `2023-12-13`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   5. Test Case: `delivery edit 1 --status CANCELLED`{.swift}.</br>
+      Expected: The delivery status of the Delivery with an ID of 1 is updated to `CANCELLED`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   6. Test Case: `delivery edit 1 --note By FedEx`{.swift}.</br>
+      Expected: The note of the Delivery with an ID of 1 is updated to `By FedEx`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   7. Test Case: `delivery edit 1`{.swift}.</br>
+      Expected: No Delivery details are updated. An error indicating that at least one field must be provided is shown
+      in the feedback message.
+
+   8. Test Case: `delivery edit 1 --name Vanilla_Cake`{.swift}.</br>
+      Expected: No Delivery details are updated. An error indicating delivery name constraints is shown
+      in the feedback message.
+
+   9. Test Case: `delivery edit 1 --customer 0`{.swift}.</br>
+      Expected: No Delivery details are updated. An error indicating invalid command format is shown
+      in the feedback message.
+
+   10. Test Case: `delivery edit 1 --customer 3`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating invalid Customer ID is shown
+       in the feedback message.
+
+   11. Test Case: `delivery edit 1 --date 2023-13-13`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating expected delivery date constraints is shown
+       in the feedback message.
+
+   12. Test Case: `delivery edit 1 --date 2023-12-11`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating expected delivery date constraints is shown
+       in the feedback message.
+
+   13. Test Case: `delivery edit 1 --status INVALID`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating delivery status constraints is shown
+       in the feedback message.
+
+   14. Test Case: `delivery edit 1 --note By_FedEx`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating note constraints is shown
+       in the feedback message.
+
+   15. Test Case: `delivery edit 2 --name Vanilla Cake`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating invalid Delivery ID is shown
+       in the feedback message.
+
+   16. Test Case: `delivery edit a --name Vanilla Cake`{.swift}.</br>
+       Expected: No Delivery details are updated. An error indicating invalid command format is shown
+       in the feedback message.
+
+<br>
+
+### Update delivery status
+
+1. Update the status of a specific Delivery.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Delivery with an ID of 1.
+      There is only one stored Delivery in the application.
+
+   2. Test Case: `delivery status 1 SHIPPED`{.swift}.</br>
+      Expected: The delivery status of the Delivery with an ID of 1 is updated to `SHIPPED`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   3. Test Case: `delivery status 1 INVALID`{.swift}.</br>
+      Expected: No delivery statuses are updated. An error indicating delivery status constraints is shown
+      in the feedback message.
+
+   4. Test Case: `delivery status 0 SHIPPED`{.swift}.</br>
+      Expected: No delivery statuses are updated. An error indicating delivery ID constraints is shown
+      in the feedback message.
+
+   5. Test Case: `delivery status 2 SHIPPED`{.swift}.</br>
+      Expected: No delivery statuses are updated. An error indicating invalid delivery ID is shown
+      in the feedback message.
+
+   6. Test Case: `delivery status SHIPPED 1`{.swift}.</br>
+      Expected: No delivery statuses are updated. An error indicating invalid command format is shown
+      in the feedback message.
+
+<br>
+
+### Create a note for a Delivery
+
+1. Create a note for a specific delivery.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Delivery with an ID of 1.
+      There is only one stored Delivery in the application.
+
+   2. Test Case: `delivery note 1 --note By FedEx`{.swift}.</br>
+      Expected: The note of the Delivery with an ID of 1 is updated to `By FedEx`{.swift}.
+      The updated details of the Delivery with an ID of 1 is shown in the feedback message.
+
+   3. Test Case: `delivery note 1 --note By_FedEx`{.swift}.</br>
+      Expected: No delivery notes are updated. An error indicating note constraints is shown
+      in the feedback message.
+
+   4. Test Case: `delivery note 0 --note By FedEx`{.swift}.</br>
+      Expected: No delivery notes are updated. An error indicating invalid command format is shown
+      in the feedback message.
+
+   5. Test Case: `delivery note a --note By FedEx`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `delivery note 1`{.swift}.</br>
+      Expected: Similar to previous.
+
+   7. Test Case: `delivery note 2 --note By FedEx`{.swift}.</br>
+      Expected: No delivery notes are updated. An error indicating invalid delivery ID is shown
+      in the feedback message.
+
+<br>
+
+### Delete Delivery
+
+1. Delete a specific delivery.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+      There is currently a stored Delivery with an ID of 1.
+      There is only one stored Delivery in the application.
+
+   2. Test Case: `delivery delete 1`{.swift}.</br>
+      Expected: The Delivery with an ID of 1 is deleted. The details of the deleted Delivery is shown
+      in the feedback message.
+
+   3. Test Case: `delivery delete 0`{.swift}.</br>
+      Expected: No Delivery is deleted. An Error indicating invalid command format is
+      shown in the feedback message.
+
+   4. Test Case: `delivery delete -1`{.swift}.</br>
+      Expected: Similar to previous.
+
+   5. Test Case: `delivery delete a`{.swift}.</br>
+      Expected: Similar to previous.
+
+   6. Test Case: `delivery delete 2`{.swift}.</br>
+      Expected: No Delivery is deleted. An Error indicating invalid Delivery ID is
+      shown in the feedback message.
+
+<br>
+
+### Help
+
+1. Shows the help information to the user.
+
+   1. Prerequisites: None.
+
+   2. Test Case: `help`{.swift}.</br>
+      Expected: Help message is shown in the feedback message. A new window is created with the link to the User Guide.
+
+   3. Test Case: `help extra`{.swift}.</br>
+      Expected: Similar to previous.
+
+<br>
+
+### Exit
+
+1. Exits the application.
+
+   1. Prerequisites: None.
+
+   2. Test Case: `exit`{.swift}.</br>
+      Expected: The application exits.
+
+   3. Test Case: `exit extra`{.swift}.</br>
+      Expected: Similar to previous.
+
+<br>
+
+### Clear
+
+1. Clears all Customer and Delivery data.
+
+   1. Prerequisites: Logged-in into the application with the `login`{.swift} command.
+
+   2. Test Case: `clear`{.swift}.</br>
+      Expected: All stored Customer and Delivery data is deleted from the application. A message indicating that data
+      is cleared is shown in the feedback message.
+
+   3. Test Case: `clear extra`{.swift}.</br>
+      Expected: Similar to previous.
+
+<br>
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Dealing with missing/corrupted data files.
 
-    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Prerequisites: There are existing Customer and Delivery Data files with existing stored Customers and Deliveries.
 
-1. _{ more test cases …​ }_
+   2. Test Case: Close the application and delete `addressbook.json`{.swift}. <br/>
+      Expected: Upon the next application start and login, a new `addressbook.json`{.swift} is created and
+      `deliverybook.json`{.swift} is cleared.
+
+   3. Test Case: Close the application and delete `addressbook.json`{.swift}.<br/>
+      Expected: Upon the next application start and login, a new `deliverybook.json`{.swift} is created.
+
+   4. Test Case: Close the application and edit `addressbook.json`{.swift} by changing the name of the first Customer
+      to `John_Doe`{.swift}.<br/>
+      Expected: Upon the next application start and login, `addressbook.json`{.swift} and 
+      `deliverybook.json`{.swift} is cleared.
+
+   5. Test Case: Close the application and edit `deliverybook.json`{.swift} by changing the name of the first Delivery
+      to `Chocolate_Cake`{.swift}.<br/>
+      Expected: Upon the next application start and login, `deliverybook.json`{.swift} is cleared.
+
+---
+
+## **Appendix: Effort**
+
+<br>
+
+### Difficulty level
+
+This project was moderately challenging as we had to deal with a large existing code base.
+It took us some time to understand how the different components interact with each other.
+Furthermore, our team was not familiar with frameworks such as JavaFX prior to this, and we had to learn how to use it.
+
+<br>
+
+### Challenges faced
+
+* Understanding and refactoring the code base
+    * As HomeBoss deals with Customers and Deliveries, we had to refactor `Person` into `Customer`, and irrelevant
+      classes such as `Tag` has to be removed.
+* Creating storage for Deliveries
+    * AB3 deals with only one storage. However, HomeBoss has two storages, one for Customers and one for Deliveries.
+      Furthermore, there is a dependency between the two entities, requiring a new `BookStorageWithReference`
+      class that accepts two type parameters to be created.
+* Adapting the `PersonListPanel` to `ListPanel`
+    * The `PersonListPanel` was designed to contain a list of `Person`. However, as we decided to display both
+      `Customer` and `Delivery` in the same list, we had to adapt the `PersonListPanel` to `ListPanel` to
+      accommodate both types of entities.
+* Figuring out how to implement a secure login/logout system
+    * As one of the feature of HomeBoss is security, we had to figure out and implement the hashing of user password
+      and how to store the data related to the account.
+
+<br>
+
+### Achievements
+
+* Added security feature to prevent unauthorised access to the application.
+* Displaying the list of Customers and list of Deliveries using the same panel.
+* Creating a new storage for Deliveries that has references to Customer.
+* A refreshing look of the UI.
+* New features such as filtering and sorting of deliveries.
+* Increasing code coverage to 83%.

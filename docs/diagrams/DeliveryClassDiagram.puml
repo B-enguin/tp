@@ -3,9 +3,12 @@
 skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
+skinparam classAttributeIconSize 0
 
 Package Delivery as DeliveryPackage <<Rectangle>>{
-Class Delivery
+Class Delivery {
+<color: #FFFFFF> - deliveryId: int
+}
 Class DeliveryName
 Class Customer
 Class OrderDate
@@ -15,10 +18,10 @@ Class Note
 
 Class DeliveryStatus <<Enumeration>>{
 }
-Class I #FFFFFF
+Class I<<HIDDEN>> #FFFFFF
 }
 
-Class HiddenOutside #FFFFFF
+Class HiddenOutside<<HIDDEN>> #FFFFFF
 HiddenOutside .down.> Delivery
 
 Delivery *--> "1" DeliveryName
@@ -28,5 +31,6 @@ Delivery *--> "1" DeliveryDate
 Delivery *--> "1" DeliveryStatus
 Delivery *--> "0..1" Note
 
+show Delivery fields
 
 @enduml

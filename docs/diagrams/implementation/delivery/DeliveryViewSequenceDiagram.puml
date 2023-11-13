@@ -50,6 +50,12 @@ deactivate AddressBookParser
 LogicManager -> DeliveryViewCommand : execute()
 activate DeliveryViewCommand
 
+DeliveryViewCommand -> Model : getUserLoginStatus()
+activate Model
+
+Model --> DeliveryViewCommand : userLoginStatus
+deactivate Model
+
 DeliveryViewCommand -> Model : getDelivery(deliveryId)
 activate Model
 

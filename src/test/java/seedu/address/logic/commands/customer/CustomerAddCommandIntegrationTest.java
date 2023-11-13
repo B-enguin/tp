@@ -2,8 +2,8 @@ package seedu.address.logic.commands.customer;
 
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import seedu.address.logic.Messages;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Customer;
+import seedu.address.model.customer.Customer;
 import seedu.address.testutil.CustomerBuilder;
 
 /**
@@ -28,12 +28,12 @@ public class CustomerAddCommandIntegrationTest {
     }
 
     @Test
-    public void execute_newPerson_success() {
+    public void execute_newCustomer_success() {
         Customer validCustomer = new CustomerBuilder().withCustomerId(50).build();
 
         Model expectedModel = new ModelManager(model.getAddressBook(), model.getDeliveryBook(),
                 new UserPrefs(), model.getUserLoginStatus());
-        expectedModel.addPerson(validCustomer);
+        expectedModel.addCustomer(validCustomer);
 
         assertCommandSuccess(new CustomerAddCommand(validCustomer), model,
                 String.format(CustomerAddCommand.MESSAGE_SUCCESS, Messages.format(validCustomer)),
@@ -41,14 +41,14 @@ public class CustomerAddCommandIntegrationTest {
     }
 
     @Test
-    public void execute_duplicatePerson_throwsCommandException() {
+    public void execute_duplicateCustomer_throwsCommandException() {
         Customer customerInList = model.getAddressBook().getList().get(0);
         assertCommandFailure(new CustomerAddCommand(customerInList), model,
                 CustomerAddCommand.MESSAGE_DUPLICATE_CUSTOMER);
     }
 
     @Test
-    public void execute_duplicatePersonWithSamePhone_throwsCommandException() {
+    public void execute_duplicateCustomerWithSamePhone_throwsCommandException() {
         // same phone, different name and customerId
         Customer customerInList = model.getAddressBook().getList().get(0);
         Customer customerWithSamePhone = new CustomerBuilder(customerInList).withName("Different Name")
@@ -58,19 +58,19 @@ public class CustomerAddCommandIntegrationTest {
     }
 
     @Test
-    public void execute_newPersonLoggedOut_failure() {
+    public void execute_newCustomerLoggedOut_failure() {
         model.setLogoutSuccess();
         Customer validCustomer = new CustomerBuilder().withCustomerId(50).build();
 
         Model expectedModel = new ModelManager(model.getAddressBook(), model.getDeliveryBook(),
                 new UserPrefs(), model.getUserLoginStatus());
-        expectedModel.addPerson(validCustomer);
+        expectedModel.addCustomer(validCustomer);
 
         assertCommandFailure(new CustomerAddCommand(validCustomer), model, Messages.MESSAGE_USER_NOT_AUTHENTICATED);
     }
 
     @Test
-    public void execute_duplicatePersonLoggedOut_throwsCommandException() {
+    public void execute_duplicateCustomerLoggedOut_throwsCommandException() {
         model.setLogoutSuccess();
         Customer customerInList = model.getAddressBook().getList().get(0);
         assertCommandFailure(new CustomerAddCommand(customerInList), model,

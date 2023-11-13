@@ -7,16 +7,17 @@ import java.time.DateTimeException;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Sort;
+import seedu.address.logic.commands.user.UserRegisterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Email;
+import seedu.address.model.customer.Name;
+import seedu.address.model.customer.Phone;
 import seedu.address.model.delivery.Date;
 import seedu.address.model.delivery.DeliveryDate;
 import seedu.address.model.delivery.DeliveryName;
 import seedu.address.model.delivery.DeliveryStatus;
 import seedu.address.model.delivery.Note;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
 import seedu.address.model.user.Password;
 import seedu.address.model.user.Username;
 
@@ -25,7 +26,7 @@ import seedu.address.model.user.Username;
  */
 public class ParserUtil {
 
-    public static final String MESSAGE_INVALID_INDEX = "ID must be an integer more than 0.";
+    public static final String MESSAGE_INVALID_INDEX = "ID must be an integer more than 0 and less than 2147483648.";
 
 
     /**
@@ -140,10 +141,14 @@ public class ParserUtil {
     public static DeliveryDate parseDeliveryDate(String date) throws ParseException {
         requireNonNull(date);
         String trimmedDate = date.trim();
-        if (!DeliveryDate.isValidDeliveryDate(date)) {
-            throw new ParseException(seedu.address.model.delivery.Date.MESSAGE_CONSTRAINTS);
+        if (!DeliveryDate.isValidDate(date)) {
+            throw new ParseException(Date.MESSAGE_CONSTRAINTS);
         }
-        return new DeliveryDate(trimmedDate);
+        try {
+            return new DeliveryDate(trimmedDate);
+        } catch (DateTimeException e) {
+            throw new ParseException(Date.MESSAGE_CONSTRAINTS);
+        }
     }
 
     /**
@@ -158,7 +163,6 @@ public class ParserUtil {
         if (!Date.isValidDate(date)) {
             throw new ParseException(Date.MESSAGE_CONSTRAINTS);
         }
-
 
         try {
             return new Date(trimmedDate);
@@ -191,10 +195,6 @@ public class ParserUtil {
     public static DeliveryStatus parseDeliveryStatus(String status) throws ParseException {
         requireNonNull(status);
         String trimmedStatus = status.trim().toUpperCase();
-
-        if (trimmedStatus.equals("ALL")) {
-            return null;
-        }
 
         if (!DeliveryStatus.isValidStatus(trimmedStatus)) {
             throw new ParseException(DeliveryStatus.MESSAGE_CONSTRAINTS);
@@ -262,10 +262,14 @@ public class ParserUtil {
      * @param secretQuestion The user input secret question.
      * @return String of trimmed secret question.
      */
-    public static String parseSecretQuestion(String secretQuestion) {
+    public static String parseSecretQuestion(String secretQuestion) throws ParseException {
         requireNonNull(secretQuestion);
-        // assume whatever user inputs is valid
-        return secretQuestion.trim();
+        secretQuestion = secretQuestion.trim();
+        // reject if empty string
+        if (secretQuestion.isEmpty()) {
+            throw new ParseException(UserRegisterCommand.MESSAGE_EMPTY_SECRET_QUESTION);
+        }
+        return secretQuestion;
     }
 
     /**
@@ -274,10 +278,14 @@ public class ParserUtil {
      * @param answer The user input answer.
      * @return String of trimmed answer.
      */
-    public static String parseAnswer(String answer) {
+    public static String parseAnswer(String answer) throws ParseException {
         requireNonNull(answer);
-        // assume whatever user inputs is valid
-        return answer.trim();
+        answer = answer.trim();
+        // reject if empty string
+        if (answer.isEmpty()) {
+            throw new ParseException(UserRegisterCommand.MESSAGE_EMPTY_ANSWER);
+        }
+        return answer;
     }
 
 }

@@ -5,20 +5,44 @@ skinparam ArrowFontSize 12
 
 !pragma useVerticalIf on
 start
-:User enters <i>delivery list --status completed \n <i> --sort asc </i> command;
-partition DeliveryListParser {
+:User enters <i>delivery list --status COMPLETED \n <i> --customer 1</i> \n <i> --date TODAY </i> \n <i> --sort ASC </i>;
+partition DeliveryListCommandParser {
     if () then ([else])
         :ParseException: Invalid Command Format;
         stop
-    ([none-empty arguments provided]) elseif () then ([else])
-        :ParseException: Invalid Delivery Status;
-        stop
-    ([sort provided]) elseif () then ([else])
-        :ParseException: Invalid Sort;
-        stop
-    else ([valid Sort])
-        :Create and Execute DeliveryListCommand;
+        else ([empty preamble])
         endif
+
+       if () then ([status provided])
+           :Parse delivery status;
+       else ([else])
+       endif
+
+       if () then ([customer id provided])
+           :Parse customer id;
+
+       else ([else])
+       endif
+
+       if () then ([date provided])
+
+           if () then ([date is "TODAY"])
+               :Get today's date;
+
+           else ([else])
+            :Parse date;
+           endif
+
+       else ([else])
+        endif
+
+          if () then ([sort provided])
+                   :Parse sort;
+
+               else ([else])
+               :Set sort by descending;
+               endif
+
 }
 
 partition DeliveryListCommand {
@@ -27,22 +51,27 @@ partition DeliveryListCommand {
         stop
     else ([user logged in])
 
-    if () then ([Status Provided])
-        :Filter deliveries by status;
+    if () then ([status provided])
+        :Add status filter;
     else ([else])
     endif
 
-    if () then ([Customer ID Provided])
-        :Filter deliveries by customer id;
+    if () then ([customer id provided])
+        :Add customer id filter;
     else ([else])
     endif
 
-    if () then ([date Provided])
-        :Filter deliveries by date;
+    if () then ([date provided])
+        :Add expected delivery date filter;
     else ([else])
     endif
-        : Sort by expected delivery date according to sort order;
-        : Refresh Displayed Delivery List;
+        : Filter delivery list according to filters;
+     if () then ([sort provided])
+            :Add sort by provided sort;
+        else ([else])
+        :Add sort by the default descending;
+        endif
+        : Sort by expected delivery date;
         : Return CommandResult;
     endif
 

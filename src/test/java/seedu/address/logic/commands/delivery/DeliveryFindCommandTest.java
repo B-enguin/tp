@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_DELIVERY_LISTED_OVERVIEW;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.GABRIELS_MILK;
 import static seedu.address.testutil.TypicalDeliveries.GAMBES_RICE;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,16 +25,16 @@ import seedu.address.model.delivery.DeliveryNameContainsKeywordsPredicate;
 public class DeliveryFindCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), getTypicalDeliveryBook(),
-        new UserPrefs(), true);
+            new UserPrefs(), true);
     private Model expectedModel = new ModelManager(getTypicalAddressBook(), getTypicalDeliveryBook(),
-        new UserPrefs(), true);
+            new UserPrefs(), true);
 
     @Test
     public void equals() {
         DeliveryNameContainsKeywordsPredicate firstPredicate =
-            new DeliveryNameContainsKeywordsPredicate(Collections.singletonList("first"));
+                new DeliveryNameContainsKeywordsPredicate(Collections.singletonList("first"));
         DeliveryNameContainsKeywordsPredicate secondPredicate =
-            new DeliveryNameContainsKeywordsPredicate(Collections.singletonList("second"));
+                new DeliveryNameContainsKeywordsPredicate(Collections.singletonList("second"));
 
         DeliveryFindCommand deliveryFindFirstCommand = new DeliveryFindCommand(firstPredicate);
         DeliveryFindCommand deliveryFindSecondCommand = new DeliveryFindCommand(secondPredicate);
@@ -94,6 +94,15 @@ public class DeliveryFindCommandTest {
         DeliveryFindCommand command = new DeliveryFindCommand(predicate);
         expectedModel.updateFilteredDeliveryList(predicate);
         assertCommandFailure(command, model, Messages.MESSAGE_USER_NOT_AUTHENTICATED);
+    }
+
+    @Test
+    public void toStringMethod() {
+        DeliveryNameContainsKeywordsPredicate predicate = preparePredicate("Kurz Elle Kunz");
+        String expected = DeliveryFindCommand.class.getCanonicalName()
+            + "{predicate=" + predicate + "}";
+        DeliveryFindCommand deliveryFindCommand = new DeliveryFindCommand(predicate);
+        assertEquals(expected, deliveryFindCommand.toString());
     }
 
     /**

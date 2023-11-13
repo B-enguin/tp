@@ -1,13 +1,13 @@
 package seedu.address.testutil;
 
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Customer;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Customer;
+import seedu.address.model.customer.Email;
+import seedu.address.model.customer.Name;
+import seedu.address.model.customer.Phone;
 
 /**
- * A utility class to help with building Person objects.
+ * A utility class to help with building Customer objects.
  */
 public class CustomerBuilder {
 
@@ -35,7 +35,7 @@ public class CustomerBuilder {
     }
 
     /**
-     * Initializes the CustomerBuilder with the data of {@code personToCopy}.
+     * Initializes the CustomerBuilder with the data of {@code customerToCopy}.
      */
     public CustomerBuilder(Customer customerToCopy) {
         customerId = customerToCopy.getCustomerId();

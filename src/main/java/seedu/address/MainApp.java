@@ -23,8 +23,8 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.delivery.Delivery;
-import seedu.address.model.person.Customer;
 import seedu.address.storage.BookStorage;
 import seedu.address.storage.BookStorageWithReference;
 import seedu.address.storage.JsonAddressBookStorage;
@@ -64,7 +64,7 @@ public class MainApp extends Application {
         UserPrefs userPrefs = initPrefs(userPrefsStorage);
         BookStorage<Customer> addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
         BookStorageWithReference<Delivery, Customer> deliveryBookStorage =
-                new JsonDeliveryBookStorage(userPrefs.getDeliveryBookFilePath());
+            new JsonDeliveryBookStorage(userPrefs.getDeliveryBookFilePath());
         storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
 
         model = initModelManager(storage, userPrefs);
@@ -87,7 +87,7 @@ public class MainApp extends Application {
             Files.createDirectories(storage.getAddressBookParentPath());
         } catch (IOException e) {
             logger.info("Data Folder failed to be created at " + storage.getAddressBookParentPath()
-                    + " " + e);
+                + " " + e);
         }
 
         Optional<ReadOnlyBook<Customer>> addressBookOptional;
@@ -102,7 +102,7 @@ public class MainApp extends Application {
             initialAddressData = addressBookOptional.orElseGet(AddressBook::new);
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AddressBook.");
+                + " Will be starting with an empty AddressBook.");
             initialAddressData = new AddressBook();
         }
 
@@ -115,7 +115,7 @@ public class MainApp extends Application {
             initialDeliveryData = deliveryBookOptional.orElseGet(DeliveryBook::new);
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AddressBook.");
+                + " Will be starting with an empty AddressBook.");
             initialDeliveryData = new DeliveryBook();
         }
 
@@ -153,7 +153,7 @@ public class MainApp extends Application {
             initializedConfig = configOptional.orElse(new Config());
         } catch (DataLoadingException e) {
             logger.warning("Config file at " + configFilePathUsed + " could not be loaded."
-                    + " Using default config properties.");
+                + " Using default config properties.");
             initializedConfig = new Config();
         }
 
@@ -184,7 +184,7 @@ public class MainApp extends Application {
             initializedPrefs = prefsOptional.orElse(new UserPrefs());
         } catch (DataLoadingException e) {
             logger.warning("Preference file at " + prefsFilePath + " could not be loaded."
-                    + " Using default preferences.");
+                + " Using default preferences.");
             initializedPrefs = new UserPrefs();
         }
 

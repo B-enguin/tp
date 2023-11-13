@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.customer.UniqueCustomerList;
 import seedu.address.model.delivery.exceptions.DeliveryNotFoundException;
 import seedu.address.model.delivery.exceptions.DuplicateDeliveryException;
 import seedu.address.testutil.DeliveryBuilder;
@@ -200,5 +201,31 @@ public class UniqueDeliveryListTest {
     @Test
     public void toStringMethod() {
         assertEquals(uniqueDeliveryList.asUnmodifiableObservableList().toString(), uniqueDeliveryList.toString());
+    }
+
+    @Test
+    public void equals() {
+        UniqueDeliveryList firstList = new UniqueDeliveryList();
+        UniqueDeliveryList secondList = new UniqueDeliveryList();
+        UniqueCustomerList customerList = new UniqueCustomerList();
+
+        // same list -> true
+        assertTrue(firstList.equals(firstList));
+
+        // different list both empty -> true
+        assertTrue(firstList.equals(secondList));
+
+        // different list -> false
+        assertFalse(firstList.equals(customerList));
+
+        secondList.add(GAMBES_RICE);
+
+        // different items -> false
+        assertFalse(firstList.equals(secondList));
+
+        firstList.add(GAMBES_RICE);
+
+        // same items -> true
+        assertTrue(firstList.equals(secondList));
     }
 }

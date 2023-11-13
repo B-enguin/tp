@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalCustomers.ALICE;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seedu.address.model.person.Customer;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.customer.Customer;
+import seedu.address.model.customer.exceptions.DuplicateCustomerException;
 import seedu.address.testutil.CustomerBuilder;
 
 public class AddressBookTest {
@@ -45,87 +45,87 @@ public class AddressBookTest {
     }
 
     @Test
-    public void resetData_withDuplicatePersons_throwsDuplicatePersonException() {
-        // Two persons with the same identity fields
+    public void resetData_withDuplicateCustomers_throwsDuplicateCustomerException() {
+        // Two customers with the same identity fields
 
         Customer editedAlice = new CustomerBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).build();
 
         List<Customer> newCustomers = Arrays.asList(ALICE, editedAlice);
         AddressBookStub newData = new AddressBookStub(newCustomers);
 
-        assertThrows(DuplicatePersonException.class, () -> addressBook.resetData(newData));
+        assertThrows(DuplicateCustomerException.class, () -> addressBook.resetData(newData));
     }
 
     @Test
-    public void hasPerson_nullPerson_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> addressBook.hasPerson(null));
+    public void hasCustomer_nullCustomer_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> addressBook.hasCustomer(null));
     }
 
     @Test
-    public void hasPerson_personNotInAddressBook_returnsFalse() {
-        assertFalse(addressBook.hasPerson(ALICE));
+    public void hasCustomer_customerNotInAddressBook_returnsFalse() {
+        assertFalse(addressBook.hasCustomer(ALICE));
     }
 
     @Test
-    public void hasPerson_personInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
-        assertTrue(addressBook.hasPerson(ALICE));
+    public void hasCustomer_customerInAddressBook_returnsTrue() {
+        addressBook.addCustomer(ALICE);
+        assertTrue(addressBook.hasCustomer(ALICE));
     }
 
     @Test
-    public void hasPerson_personWithSameIdentityFieldsInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
+    public void hasCustomer_customerWithSameIdentityFieldsInAddressBook_returnsTrue() {
+        addressBook.addCustomer(ALICE);
 
         Customer editedAlice = new CustomerBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).build();
 
-        assertTrue(addressBook.hasPerson(editedAlice));
+        assertTrue(addressBook.hasCustomer(editedAlice));
     }
 
     @Test
-    public void hasCustomerWithSamePhone_nullPerson_throwsNullPointerException() {
+    public void hasCustomerWithSamePhone_nullCustomer_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> addressBook.hasCustomerWithSamePhone(null));
     }
 
     @Test
-    public void hasCustomerWithSamePhone_personNotInAddressBook_returnsFalse() {
+    public void hasCustomerWithSamePhone_customerNotInAddressBook_returnsFalse() {
         assertFalse(addressBook.hasCustomerWithSamePhone(ALICE));
     }
 
     @Test
-    public void hasCustomerWithSamePhone_personInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
+    public void hasCustomerWithSamePhone_customerInAddressBook_returnsTrue() {
+        addressBook.addCustomer(ALICE);
         assertTrue(addressBook.hasCustomerWithSamePhone(ALICE));
     }
 
     @Test
-    public void hasCustomerWithSamePhone_personWithSameIdentityFieldsInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
+    public void hasCustomerWithSamePhone_customerWithSameIdentityFieldsInAddressBook_returnsTrue() {
+        addressBook.addCustomer(ALICE);
         Customer editedAlice = new CustomerBuilder(ALICE).withName(VALID_NAME_BOB)
                 .withAddress(VALID_ADDRESS_BOB).build();
         assertTrue(addressBook.hasCustomerWithSamePhone(editedAlice));
     }
 
     @Test
-    public void hasCustomerWithSamePhone_personWithSamePhoneFieldInAddressBook_returnsTrue() {
-        addressBook.addPerson(ALICE);
+    public void hasCustomerWithSamePhone_customerWithSamePhoneFieldInAddressBook_returnsTrue() {
+        addressBook.addCustomer(ALICE);
         Customer editedAlice = new CustomerBuilder(ALICE).withCustomerId(101).withName(VALID_NAME_BOB)
                 .withAddress(VALID_ADDRESS_BOB).build();
         assertTrue(addressBook.hasCustomerWithSamePhone(editedAlice));
     }
 
     @Test
-    public void getPersonList_modifyList_throwsUnsupportedOperationException() {
+    public void getCustomerList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> addressBook.getList().remove(0));
     }
 
     @Test
     public void toStringMethod() {
-        String expected = AddressBook.class.getCanonicalName() + "{persons=" + addressBook.getList() + "}";
+        String expected = AddressBook.class.getCanonicalName() + "{customers=" + addressBook.getList() + "}";
         assertEquals(expected, addressBook.toString());
     }
 
     /**
-     * A stub ReadOnlyBook whose persons list can violate interface constraints.
+     * A stub ReadOnlyBook whose customers list can violate interface constraints.
      */
     private static class AddressBookStub implements ReadOnlyBook<Customer> {
         private final ObservableList<Customer> customers = FXCollections.observableArrayList();

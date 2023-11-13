@@ -40,7 +40,7 @@
                             <Insets top="10" right="10" bottom="10" left="10"/>
                         </padding>
                         <VBox fx:id="customerList" prefHeight="200" minWidth="340" prefWidth="340" VBox.vgrow="ALWAYS">
-                            <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
+                            <StackPane fx:id="customerListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
                         </VBox>
                     </StackPane>
 

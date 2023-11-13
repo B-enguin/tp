@@ -52,7 +52,7 @@ public class ListPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new PersonCard(item).getRoot());
+                setGraphic(new ItemCard(item).getRoot());
             }
         }
     }

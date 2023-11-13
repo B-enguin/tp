@@ -4,11 +4,24 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Represents the authentication data stored in the authentication.json file.
+ * This class is used by Jackson to deserialize the authentication.json file.
  */
 public class AuthenticationData {
+    /**
+     * The username of the user.
+     */
     private String username;
+    /**
+     * The password of the user.
+     */
     private String password;
+    /**
+     * The secret question of the user.
+     */
     private String secretQuestion;
+    /**
+     * The answer to the secret question of the user.
+     */
     private String answer;
 
     /**
@@ -31,7 +44,12 @@ public class AuthenticationData {
         this.answer = answer;
     }
 
-    AuthenticationData() {
+    /**
+     * Creates an empty AuthenticationData object.
+     * This constructor is used by Jackson during deserialization.
+     * The username, password, secret question and answer will be set separately.
+     */
+    public AuthenticationData() {
     }
 
     /**

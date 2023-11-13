@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -116,32 +117,35 @@ public class UserPrefs implements ReadOnlyUserPrefs {
     /**
      * Returns the stored user.
      *
-     * @return storedUser
+     * @return Optional of the stored user
      */
-    public User getStoredUser() {
+    public Optional<User> getStoredUser() {
+
+        AuthenticationData authenticationData;
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            AuthenticationData authenticationData =
+            authenticationData =
                     objectMapper.readValue(authenticationFilePath.toFile(), AuthenticationData.class);
 
-            // if username in the authentication file is empty, return null
-            if ((!Username.isValidUsername(authenticationData.getUsername()))) {
-                return null;
-            }
-
-            // Create User objects
-            User storedUser =
-                    new User(new Username(authenticationData.getUsername()),
-                            new Password(authenticationData.getPassword(), true),
-                            true,
-                            authenticationData.getSecretQuestion(),
-                            authenticationData.getAnswer());
-            return storedUser;
         } catch (IOException e) {
             logger.fine("Error reading authentication file: " + e.getMessage());
-            return null;
+            return Optional.empty();
         }
+
+        // if username in the authentication file is empty, return empty Optional
+        if ((!Username.isValidUsername(authenticationData.getUsername()))) {
+            return Optional.empty();
+        }
+
+        // Create User objects
+        User storedUser =
+                new User(new Username(authenticationData.getUsername()),
+                        new Password(authenticationData.getPassword(), true),
+                        true,
+                        authenticationData.getSecretQuestion(),
+                        authenticationData.getAnswer());
+        return Optional.ofNullable(storedUser);
     }
 
     /**

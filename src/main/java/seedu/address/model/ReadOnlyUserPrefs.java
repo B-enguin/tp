@@ -1,6 +1,7 @@
 package seedu.address.model;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.user.User;
@@ -18,6 +19,6 @@ public interface ReadOnlyUserPrefs {
 
     Path getAuthenticationFilePath();
 
-    User getStoredUser();
+    Optional<User> getStoredUser();
 
 }

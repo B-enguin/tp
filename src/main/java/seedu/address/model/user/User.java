@@ -18,17 +18,6 @@ public class User {
     private String secretQuestion;
     private String answer;
 
-
-    /**
-     * Every field must be present and not null.
-     * This constructor assumes a non-hashed password is passed in
-     */
-    public User(Username username, Password password) {
-        requireAllNonNull(username, password);
-        this.username = username;
-        this.hashedPassword = new Password(password.toString());
-    }
-
     /**
      * Overloaded constructor for creating a new user with a hashed password
      *
@@ -134,6 +123,17 @@ public class User {
         return new ToStringBuilder(this)
                 .add("username", username)
                 .toString();
+    }
+
+    /**
+     * Checks if the answer is equal to the user's answer.
+     * This method is case-insensitive.
+     *
+     * @param answer The answer to be checked
+     * @return true if the answer is equal to the user's answer, false otherwise
+     */
+    public boolean checkAnswerEquals(String answer) {
+        return this.answer.equalsIgnoreCase(answer);
     }
 
 }

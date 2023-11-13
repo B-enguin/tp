@@ -13,8 +13,8 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.commons.util.JsonUtil;
 import seedu.address.model.ReadOnlyBook;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.delivery.Delivery;
-import seedu.address.model.person.Customer;
 
 /**
  * A class to access AddressBook data stored as a json file on the hard disk.
@@ -27,10 +27,14 @@ public class JsonDeliveryBookStorage extends BookStorageWithReference<Delivery, 
 
     /**
      * Constructor for JsonDeliveryBookStorage.
+     *
      * @param filePath path to delivery data file.
      */
     public JsonDeliveryBookStorage(Path filePath) {
         super();
+
+        requireNonNull(filePath);
+
         this.filePath = filePath;
     }
 
@@ -53,8 +57,8 @@ public class JsonDeliveryBookStorage extends BookStorageWithReference<Delivery, 
     public Optional<ReadOnlyBook<Delivery>> readBook() throws DataLoadingException {
         if (super.getReferenceBook().isEmpty()) {
             throw new DataLoadingException(
-                    new NullPointerException(String.format("%s requires reference to be set before reading",
-                            BookStorageWithReference.class.getSimpleName())));
+                new NullPointerException(String.format("%s requires reference to be set before reading",
+                    BookStorageWithReference.class.getSimpleName())));
         }
         return readBook(filePath);
     }
@@ -69,12 +73,13 @@ public class JsonDeliveryBookStorage extends BookStorageWithReference<Delivery, 
         requireNonNull(filePath);
         if (super.getReferenceBook().isEmpty()) {
             throw new DataLoadingException(
-                    new NullPointerException(String.format("%s requires reference to be set before reading",
-                            BookStorageWithReference.class.getSimpleName())));
+                new NullPointerException(String.format("%s requires reference to be set before reading",
+                    BookStorageWithReference.class.getSimpleName())));
         }
 
         Optional<JsonSerializableDeliveryBook> jsonDeliveryBook = JsonUtil.readJsonFile(
-                filePath, JsonSerializableDeliveryBook.class);
+            filePath, JsonSerializableDeliveryBook.class);
+
         if (!jsonDeliveryBook.isPresent()) {
             return Optional.empty();
         }
@@ -89,6 +94,8 @@ public class JsonDeliveryBookStorage extends BookStorageWithReference<Delivery, 
 
     @Override
     public void saveBook(ReadOnlyBook<Delivery> deliveryBook) throws IOException {
+        requireNonNull(deliveryBook);
+
         saveBook(deliveryBook, filePath);
     }
 

@@ -10,14 +10,15 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_SECRET_QUESTION
 import static seedu.address.logic.commands.CommandTestUtil.VALID_USERNAME_FOODBEAR;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ import seedu.address.model.DeliveryBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Customer;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.user.User;
 import seedu.address.testutil.CustomerBuilder;
 import seedu.address.testutil.CustomerEditDescriptorBuilder;
@@ -68,8 +69,10 @@ public class UserUpdateCommandTest {
     @Test
     public void execute_allFieldsSpecified_success() {
 
-        User updatedUser = model.getStoredUser();
-        UserUpdateDescriptor descriptor = new UpdateUserDescriptorBuilder(updatedUser).build();
+        Optional<User> updatedUser = model.getStoredUser();
+        assertTrue(updatedUser.isPresent());
+        User currentUpdatedUser = updatedUser.get();
+        UserUpdateDescriptor descriptor = new UpdateUserDescriptorBuilder(currentUpdatedUser).build();
         UserUpdateCommand updateCommand = new UserUpdateCommand(descriptor);
 
         String expectedMessage = UserUpdateCommand.MESSAGE_SUCCESS;
@@ -77,7 +80,7 @@ public class UserUpdateCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()),
                 new DeliveryBook(model.getDeliveryBook()),
                 new UserPrefs(model.getUserPrefs()), model.getUserLoginStatus());
-        expectedModel.setLoggedInUser(updatedUser);
+        expectedModel.setLoggedInUser(currentUpdatedUser);
 
         assertCommandSuccess(updateCommand, model, expectedMessage, expectedModel, true);
     }

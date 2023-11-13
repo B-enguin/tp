@@ -14,11 +14,11 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_CUSTOMER_ID_1;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_STATUS_SHIPPED;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_TOO_LARGE;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +32,8 @@ import seedu.address.model.DeliveryBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.delivery.Delivery;
-import seedu.address.model.person.Customer;
 import seedu.address.testutil.CustomerBuilder;
 import seedu.address.testutil.DeliveryBuilder;
 import seedu.address.testutil.DeliveryEditDescriptorBuilder;
@@ -44,10 +44,10 @@ import seedu.address.testutil.DeliveryEditDescriptorBuilder;
  */
 public class DeliveryEditCommandTest {
     private Model modelLoggedIn = new ModelManager(getTypicalAddressBook(), getTypicalDeliveryBook(), new UserPrefs(),
-        true);
+            true);
 
     private Model modelLoggedOut = new ModelManager(getTypicalAddressBook(), getTypicalDeliveryBook(),
-        new UserPrefs(), false);
+            new UserPrefs(), false);
 
     @Test
     public void constructor_nullDeliveryEditDescriptor_throwsNullPointerException() {
@@ -57,21 +57,21 @@ public class DeliveryEditCommandTest {
     @Test
     public void execute_allFieldsSpecified_success() {
 
-        Customer editedCustomer = modelLoggedIn.getFilteredPersonList().get(0);
+        Customer editedCustomer = modelLoggedIn.getFilteredCustomerList().get(0);
         Delivery editedDelivery =
-            new DeliveryBuilder().withCustomer(editedCustomer).withOrderDate("2021-12-12")
-                .withNote("TestFF").withName("Vanilla Cake")
-                .withDeliveryDate("2027-12-12").withStatus(VALID_STATUS_SHIPPED).build();
+                new DeliveryBuilder().withCustomer(editedCustomer).withOrderDate("2021-12-12")
+                        .withNote("TestFF").withName("Vanilla Cake")
+                        .withDeliveryDate("2027-12-12").withStatus(VALID_STATUS_SHIPPED).build();
 
         DeliveryEditDescriptor descriptor = new DeliveryEditDescriptorBuilder(editedDelivery).build();
         DeliveryEditCommand editCommand = new DeliveryEditCommand(INDEX_FIRST_PERSON, descriptor);
 
         String expectedMessage = String.format(DeliveryEditCommand.MESSAGE_EDIT_DELIVERY_SUCCESS,
-            Messages.format(editedDelivery));
+                Messages.format(editedDelivery));
 
         Model expectedModel = new ModelManager(new AddressBook(modelLoggedIn.getAddressBook()),
-            new DeliveryBook(modelLoggedIn.getDeliveryBook()),
-            new UserPrefs(), modelLoggedIn.getUserLoginStatus());
+                new DeliveryBook(modelLoggedIn.getDeliveryBook()),
+                new UserPrefs(), modelLoggedIn.getUserLoginStatus());
 
         expectedModel.setDelivery(modelLoggedIn.getFilteredDeliveryList().get(0), editedDelivery);
 
@@ -84,20 +84,20 @@ public class DeliveryEditCommandTest {
         Customer validCustomer = personBuilder.withCustomerId(VALID_CUSTOMER_ID_1).build();
 
         Delivery editedDelivery =
-            new DeliveryBuilder().withCustomer(validCustomer).withOrderDate("2021-12-12")
-                .withNote("TestFF").withName("Vanilla Cake")
-                .withDeliveryDate("2027-12-12").withStatus(VALID_STATUS_SHIPPED).build();
+                new DeliveryBuilder().withCustomer(validCustomer).withOrderDate("2021-12-12")
+                        .withNote("TestFF").withName("Vanilla Cake")
+                        .withDeliveryDate("2027-12-12").withStatus(VALID_STATUS_SHIPPED).build();
 
         DeliveryEditDescriptor descriptor = new DeliveryEditDescriptorBuilder(editedDelivery).build();
         DeliveryEditCommand editCommand = new DeliveryEditCommand(INDEX_TOO_LARGE, descriptor);
 
 
         Model expectedModel = new ModelManager(new AddressBook(modelLoggedIn.getAddressBook()),
-            new DeliveryBook(modelLoggedIn.getDeliveryBook()),
-            new UserPrefs(), modelLoggedIn.getUserLoginStatus());
+                new DeliveryBook(modelLoggedIn.getDeliveryBook()),
+                new UserPrefs(), modelLoggedIn.getUserLoginStatus());
 
         assertThrows(CommandException.class, MESSAGE_INVALID_DELIVERY_DISPLAYED_INDEX, () ->
-            editCommand.execute(expectedModel));
+                editCommand.execute(expectedModel));
     }
 
     @Test
@@ -106,20 +106,20 @@ public class DeliveryEditCommandTest {
         Customer validCustomer = personBuilder.withCustomerId(VALID_CUSTOMER_ID_1).build();
 
         Delivery editedDelivery =
-            new DeliveryBuilder().withCustomer(validCustomer).withOrderDate("2021-12-12")
-                .withNote("TestFF").withName("Vanilla Cake")
-                .withDeliveryDate(INVALID_DELIVERY_DATE).withStatus(VALID_STATUS_SHIPPED).build();
+                new DeliveryBuilder().withCustomer(validCustomer).withOrderDate("2021-12-12")
+                        .withNote("TestFF").withName("Vanilla Cake")
+                        .withDeliveryDate(INVALID_DELIVERY_DATE).withStatus(VALID_STATUS_SHIPPED).build();
 
         DeliveryEditDescriptor descriptor = new DeliveryEditDescriptorBuilder(editedDelivery).build();
         DeliveryEditCommand editCommand = new DeliveryEditCommand(INDEX_FIRST_PERSON, descriptor);
 
 
         Model expectedModel = new ModelManager(new AddressBook(modelLoggedIn.getAddressBook()),
-            new DeliveryBook(modelLoggedIn.getDeliveryBook()),
-            new UserPrefs(), modelLoggedIn.getUserLoginStatus());
+                new DeliveryBook(modelLoggedIn.getDeliveryBook()),
+                new UserPrefs(), modelLoggedIn.getUserLoginStatus());
 
         assertThrows(CommandException.class, MESSAGE_INVALID_DELIVERY_DATE, () ->
-            editCommand.execute(expectedModel));
+                editCommand.execute(expectedModel));
     }
 
     //need to check if this is ok
@@ -129,20 +129,20 @@ public class DeliveryEditCommandTest {
         Customer invalidCustomer = personBuilder.withCustomerId(TOO_LARGE_CUSTOMER_ID).build();
 
         Delivery editedDelivery =
-            new DeliveryBuilder().withCustomer(invalidCustomer).withOrderDate("2021-12-12")
-                .withNote("TestFF").withName("Vanilla Cake")
-                .withDeliveryDate(INVALID_DELIVERY_DATE).withStatus(VALID_STATUS_SHIPPED).build();
+                new DeliveryBuilder().withCustomer(invalidCustomer).withOrderDate("2021-12-12")
+                        .withNote("TestFF").withName("Vanilla Cake")
+                        .withDeliveryDate(INVALID_DELIVERY_DATE).withStatus(VALID_STATUS_SHIPPED).build();
 
         DeliveryEditDescriptor descriptor = new DeliveryEditDescriptorBuilder(editedDelivery).build();
         DeliveryEditCommand editCommand = new DeliveryEditCommand(INDEX_FIRST_PERSON, descriptor);
 
 
         Model expectedModel = new ModelManager(new AddressBook(modelLoggedIn.getAddressBook()),
-            new DeliveryBook(modelLoggedIn.getDeliveryBook()),
-            new UserPrefs(), modelLoggedIn.getUserLoginStatus());
+                new DeliveryBook(modelLoggedIn.getDeliveryBook()),
+                new UserPrefs(), modelLoggedIn.getUserLoginStatus());
 
         assertThrows(CommandException.class, MESSAGE_INVALID_CUSTOMER_DISPLAYED_INDEX, () ->
-            editCommand.execute(expectedModel));
+                editCommand.execute(expectedModel));
     }
 
     @Test
@@ -154,9 +154,9 @@ public class DeliveryEditCommandTest {
         Delivery validDelivery = new DeliveryBuilder().withCustomer(validCustomer).build();
 
         DeliveryEditCommand deliveryEditCommand = new DeliveryEditCommand(INDEX_FIRST_PERSON, new
-            DeliveryEditDescriptorBuilder(validDelivery).build());
+                DeliveryEditDescriptorBuilder(validDelivery).build());
         assertThrows(CommandException.class, Messages.MESSAGE_USER_NOT_AUTHENTICATED, () ->
-            deliveryEditCommand.execute(modelLoggedOut));
+                deliveryEditCommand.execute(modelLoggedOut));
 
     }
 
@@ -191,7 +191,7 @@ public class DeliveryEditCommandTest {
         DeliveryEditDescriptor deliveryEditDescriptor = new DeliveryEditDescriptor();
         DeliveryEditCommand editCommand = new DeliveryEditCommand(index, deliveryEditDescriptor);
         String expected = DeliveryEditCommand.class.getCanonicalName() + "{id=" + index + ", deliveryEditDescriptor="
-            + deliveryEditDescriptor + "}";
+                + deliveryEditDescriptor + "}";
         assertEquals(expected, editCommand.toString());
     }
 

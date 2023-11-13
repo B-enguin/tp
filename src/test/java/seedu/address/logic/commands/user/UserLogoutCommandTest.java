@@ -4,8 +4,8 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.model.Model.PREDICATE_SHOW_NO_CUSTOMERS;
 import static seedu.address.model.Model.PREDICATE_SHOW_NO_DELIVERIES;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +39,7 @@ public class UserLogoutCommandTest {
         ModelManager expectedModel = new ModelManager(model.getAddressBook(), model.getDeliveryBook(),
                 new UserPrefs(), model.getUserLoginStatus());
         expectedModel.setLoggedInUser(user);
-        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_NO_CUSTOMERS);
+        expectedModel.updateFilteredCustomerList(PREDICATE_SHOW_NO_CUSTOMERS);
         expectedModel.updateFilteredDeliveryList(PREDICATE_SHOW_NO_DELIVERIES);
         expectedModel.setUiListCustomer();
         expectedModel.setLogoutSuccess();

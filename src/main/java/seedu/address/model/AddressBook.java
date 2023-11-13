@@ -7,19 +7,19 @@ import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.person.Customer;
-import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.customer.Customer;
+import seedu.address.model.customer.UniqueCustomerList;
 
 /**
  * Wraps all data at the address-book level
- * Duplicates are not allowed (by .isSamePerson comparison)
+ * Duplicates are not allowed (by .isSameCustomer comparison)
  */
 public class AddressBook implements ReadOnlyBook<Customer> {
 
-    private final UniquePersonList persons;
+    private final UniqueCustomerList customers;
 
     public AddressBook() {
-        persons = new UniquePersonList();
+        customers = new UniqueCustomerList();
     }
 
     /**
@@ -33,11 +33,11 @@ public class AddressBook implements ReadOnlyBook<Customer> {
     //// list overwrite operations
 
     /**
-     * Replaces the contents of the person list with {@code persons}.
-     * {@code persons} must not contain duplicate persons.
+     * Replaces the contents of the customer list with {@code customers}.
+     * {@code customers} must not contain duplicate customers.
      */
-    public void setPersons(List<Customer> customers) {
-        this.persons.setPersons(customers);
+    public void setCustomers(List<Customer> customers) {
+        this.customers.setCustomers(customers);
     }
 
     /**
@@ -46,17 +46,17 @@ public class AddressBook implements ReadOnlyBook<Customer> {
     public void resetData(ReadOnlyBook<Customer> newData) {
         requireNonNull(newData);
 
-        setPersons(newData.getList());
+        setCustomers(newData.getList());
     }
 
-    //// person-level operations
+    //// customer-level operations
 
     /**
-     * Returns true if a person with the same identity as {@code person} exists in the address book.
+     * Returns true if a customer with the same identity as {@code customer} exists in the address book.
      */
-    public boolean hasPerson(Customer customer) {
+    public boolean hasCustomer(Customer customer) {
         requireNonNull(customer);
-        return persons.contains(customer);
+        return customers.contains(customer);
     }
 
     /**
@@ -64,34 +64,35 @@ public class AddressBook implements ReadOnlyBook<Customer> {
      */
     public boolean hasCustomerWithSamePhone(Customer customer) {
         requireNonNull(customer);
-        return persons.containsPhone(customer);
+        return customers.containsPhone(customer);
     }
 
     /**
-     * Adds a person to the address book.
-     * The person must not already exist in the address book.
+     * Adds a customer to the address book.
+     * The customer must not already exist in the address book.
      */
-    public void addPerson(Customer p) {
-        persons.add(p);
+    public void addCustomer(Customer p) {
+        customers.add(p);
     }
 
     /**
-     * Replaces the given person {@code target} in the list with {@code editedPerson}.
+     * Replaces the given customer {@code target} in the list with {@code editedCustomer}.
      * {@code target} must exist in the address book.
-     * The person identity of {@code editedPerson} must not be the same as another existing person in the address book.
+     * The customer identity of {@code editedCustomer} must not be the same as another existing customer in the
+     * address book.
      */
-    public void setPerson(Customer target, Customer editedCustomer) {
+    public void setCustomer(Customer target, Customer editedCustomer) {
         requireNonNull(editedCustomer);
 
-        persons.setPerson(target, editedCustomer);
+        customers.setCustomer(target, editedCustomer);
     }
 
     /**
      * Removes {@code key} from this {@code AddressBook}.
      * {@code key} must exist in the address book.
      */
-    public void removePerson(Customer key) {
-        persons.remove(key);
+    public void removeCustomer(Customer key) {
+        customers.remove(key);
     }
 
     //// util methods
@@ -99,13 +100,13 @@ public class AddressBook implements ReadOnlyBook<Customer> {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .add("persons", persons)
-            .toString();
+                .add("customers", customers)
+                .toString();
     }
 
     @Override
     public ObservableList<Customer> getList() {
-        return persons.asUnmodifiableObservableList();
+        return customers.asUnmodifiableObservableList();
     }
 
     /**
@@ -116,7 +117,7 @@ public class AddressBook implements ReadOnlyBook<Customer> {
      */
     @Override
     public Optional<Customer> getById(int id) {
-        return persons.getById(id);
+        return customers.getById(id);
     }
 
     @Override
@@ -131,11 +132,11 @@ public class AddressBook implements ReadOnlyBook<Customer> {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return persons.equals(otherAddressBook.persons);
+        return customers.equals(otherAddressBook.customers);
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return customers.hashCode();
     }
 }

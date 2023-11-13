@@ -7,6 +7,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 
+import java.util.logging.Logger;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.customer.CustomerEditCommand;
 import seedu.address.logic.commands.customer.CustomerEditCommand.CustomerEditDescriptor;
@@ -21,6 +23,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class CustomerEditCommandParser implements Parser<CustomerEditCommand> {
 
+    private static final Logger logger = Logger.getLogger(CustomerEditCommandParser.class.getName());
+
     /**
      * Parses the given {@code String} of arguments in the context of the CustomerEditCommand
      * and returns an CustomerEditCommand object for execution.
@@ -28,6 +32,9 @@ public class CustomerEditCommandParser implements Parser<CustomerEditCommand> {
      */
     public CustomerEditCommand parse(String args) throws ParseException {
         requireNonNull(args);
+
+        logger.info("Parsing CustomerEditCommand: " + args);
+
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
 
@@ -35,12 +42,27 @@ public class CustomerEditCommandParser implements Parser<CustomerEditCommand> {
 
         try {
             index = ParserUtil.parseIndex(argMultimap.getPreamble());
+            logger.info("Index parsed: " + index);
         } catch (ParseException pe) {
+            logger.warning("Index parse failed. Invalid Command Format.");
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     CustomerEditCommand.MESSAGE_USAGE), pe);
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
+
+        CustomerEditDescriptor customerEditDescriptor = createCustomerEditDescriptor(argMultimap);
+
+        logger.info("CustomerEditDescriptor created: " + customerEditDescriptor);
+
+        return new CustomerEditCommand(index, customerEditDescriptor);
+    }
+
+    /**
+     * Creates and returns a {@code CustomerEditDescriptor} based on the given {@code ArgumentMultimap}.
+     * @throws ParseException if the user input does not conform the expected format
+     */
+    public CustomerEditDescriptor createCustomerEditDescriptor(ArgumentMultimap argMultimap) throws ParseException {
 
         CustomerEditDescriptor customerEditDescriptor = new CustomerEditDescriptor();
 
@@ -57,9 +79,11 @@ public class CustomerEditCommandParser implements Parser<CustomerEditCommand> {
             customerEditDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
         if (!customerEditDescriptor.isAnyFieldEdited()) {
+            logger.warning("No fields provided.");
             throw new ParseException(CustomerEditCommand.MESSAGE_NOT_EDITED);
         }
+        return customerEditDescriptor;
 
-        return new CustomerEditCommand(index, customerEditDescriptor);
+
     }
 }

@@ -62,13 +62,13 @@ activate Model
 Model --> CustomerAddCommand : isLoggedIn
 deactivate Model
 
-CustomerAddCommand -> Model : hasPerson(c)
+CustomerAddCommand -> Model : hasCustomer(c)
 activate Model
 
 Model --> CustomerAddCommand
 deactivate Model
 
-CustomerAddCommand -> Model : addPerson(c)
+CustomerAddCommand -> Model : addCustomer(c)
 activate Model
 
 Model --> CustomerAddCommand

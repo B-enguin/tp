@@ -40,6 +40,7 @@ import seedu.address.logic.parser.customer.CustomerViewCommandParser;
 import seedu.address.logic.parser.delivery.DeliveryCreateNoteCommandParser;
 import seedu.address.logic.parser.delivery.DeliveryEditCommandParser;
 import seedu.address.logic.parser.delivery.DeliveryFindCommandParser;
+import seedu.address.logic.parser.delivery.DeliveryListCommandParser;
 import seedu.address.logic.parser.delivery.DeliveryStatusCommandParser;
 import seedu.address.logic.parser.delivery.DeliveryViewCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -57,7 +58,7 @@ public class AddressBookParser {
      * Used for initial separation of command word and args.
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile(
-            "(?<commandWord>customer \\S+|delivery \\S+|delete \\S+|recover \\S+|\\S+)(?<arguments>.*)"
+        "(?<commandWord>customer \\S+|delivery \\S+|delete \\S+|recover \\S+|\\S+)(?<arguments>.*)"
     );
     private static final Logger logger = LogsCenter.getLogger(AddressBookParser.class);
 
@@ -117,7 +118,7 @@ public class AddressBookParser {
             return new DeliveryViewCommandParser().parse(arguments);
 
         case DeliveryListCommand.COMMAND_WORD:
-            return new DeliveryListParser().parse(arguments);
+            return new DeliveryListCommandParser().parse(arguments);
 
         case DeliveryAddCommand.COMMAND_WORD:
             return new DeliveryAddCommandParser().parse(arguments);

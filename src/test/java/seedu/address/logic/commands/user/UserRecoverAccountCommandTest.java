@@ -5,13 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -82,9 +83,12 @@ public class UserRecoverAccountCommandTest {
         String message = actualCommandResult.getFeedbackToUser();
 
         assertEquals(message, UserRecoverAccountCommand.MESSAGE_SUCCESS_WITH_FLAGS);
-        assertTrue(model.getStoredUser().hasSameUsername(expectedModel.getStoredUser()));
-        assertEquals(model.getStoredUser().getSecretQuestion(), expectedModel.getStoredUser().getSecretQuestion());
-        assertEquals(model.getStoredUser().getAnswer(), expectedModel.getStoredUser().getAnswer());
+        Optional<User> storedUser = model.getStoredUser();
+        assertTrue(storedUser.isPresent());
+        User currentStoredUser = storedUser.get();
+        assertTrue(currentStoredUser.hasSameUsername(expectedModel.getStoredUser().get()));
+        assertEquals(currentStoredUser.getSecretQuestion(), expectedModel.getStoredUser().get().getSecretQuestion());
+        assertEquals(currentStoredUser.getAnswer(), expectedModel.getStoredUser().get().getAnswer());
 
     }
 
@@ -118,7 +122,7 @@ public class UserRecoverAccountCommandTest {
         UserRecoverAccountCommand userRecoverAccountCommand = new UserRecoverAccountCommand();
         String desiredOutput =
                 String.format(UserRecoverAccountCommand.MESSAGE_SUCCESS_WITHOUT_FLAGS, user.getSecretQuestion());
-        desiredOutput += "\n" + "Please answer the question using the following command: "
+        desiredOutput += "\n\n" + "Please answer the question using the following command:\n"
                 + UserRecoverAccountCommand.MESSAGE_USAGE;
 
         assertCommandSuccess(userRecoverAccountCommand, model,

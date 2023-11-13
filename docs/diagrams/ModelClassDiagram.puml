@@ -5,7 +5,7 @@ skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
 
 Package Model as ModelPackage <<Rectangle>>{
-Class "<<interface>>\nReadOnlyBook<T>" as ReadOnlyBook
+
 Class "<<interface>>\nReadOnlyUserPrefs" as ReadOnlyUserPrefs
 Class "<<interface>>\nModel" as Model
 Class AddressBook<Customer>
@@ -13,53 +13,66 @@ Class DeliveryBook<Delivery>
 Class ModelManager
 Class UserPrefs
 
-Class UniqueCustomerList
 Class Customer
 
 
-Class UniqueDeliveryList
+
 Class Delivery
 
 Class User
 
 Class ListItem
 
-Class I #FFFFFF
 }
+
+Class I<<Hidden>> #FFFFFF
+Class H<<Hidden>> #FFFFFF
+Class J<<Hidden>> #FFFFFF
+Class K<<Hidden>> #FFFFFF
+
 
 Class HiddenOutside<<HIDDEN>> #FFFFFF
 HiddenOutside ..> Model
 
-AddressBook .up.|> ReadOnlyAddressBook
+
 
 Model -right-> ReadOnlyUserPrefs
-Model -left-> ReadOnlyBook
+
 ModelManager .up.|> Model
-ModelManager -left-> "1" DeliveryBook
-ModelManager -right-> "1" AddressBook
+ModelManager -up-> "1" DeliveryBook
+ModelManager -up-> "1" AddressBook
 '
 UserPrefs .up.|> ReadOnlyUserPrefs
-AddressBook .up.|> ReadOnlyBook
-DeliveryBook .up.|> ReadOnlyBook
-ModelManager --> "~* uiList" ListItem
-ModelManager --> "1" UserPrefs
-ModelManager --> "1" User
+
+ModelManager -right-> "~* uiList" ListItem
+ListItem -[hidden]down-> J
+ModelManager -right-> "1" UserPrefs
+
+ModelManager -up-> "1" User
+User -[hidden]right-> K
+ModelManager -left-> "~* filteredCustomers" Customer
+Customer-[hidden]left--> H
+
+ModelManager -down-> "~* filteredDeliveries" Delivery
+Delivery -[hidden]left--> I
+
+ModelManager -down-> "~* sortedDeliveries" Delivery
+
 '
-AddressBook *--> "1" UniqueCustomerList
-UniqueCustomerList --> "~* all" Customer
+
+
 '
 '
 '
-DeliveryBook *--> "1" UniqueDeliveryList
-UniqueDeliveryList -down-> "~* all" Delivery
+
+
 '
 '
-Customer -[hidden]down--> I
+
 '
-UniqueCustomerList -[hidden]right-> I
+
 '
 '
-ModelManager --> "~* filteredCustomers" Customer
-ModelManager --> "~* filteredDeliveries" Delivery
-ModelManager --> "~* sortedDeliveries" Delivery
+
+
 @enduml

@@ -12,14 +12,26 @@ import seedu.address.commons.util.ToStringBuilder;
 public class DeliveryNameContainsKeywordsPredicate implements Predicate<Delivery> {
     private final List<String> keywords;
 
+    /**
+     * Creates a DeliveryNameContainsKeywordsPredicate.
+     * @param keywords the list of keywords to search for.
+     */
     public DeliveryNameContainsKeywordsPredicate(List<String> keywords) {
-        this.keywords = keywords;
+        // Create Defensive Copy to prevent modification
+        this.keywords = List.copyOf(keywords);
     }
 
     @Override
     public boolean test(Delivery delivery) {
         return keywords.stream()
                 .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(delivery.getName().deliveryName, keyword));
+    }
+
+    /**
+     * Returns a list of the keywords as {@code String}.
+     */
+    public String getKeywordsAsString() {
+        return keywords.stream().map(keyword -> keyword + " ").reduce("", String::concat).trim();
     }
 
     @Override

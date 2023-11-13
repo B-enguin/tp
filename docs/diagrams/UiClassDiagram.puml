@@ -12,7 +12,7 @@ Class MainWindow
 Class HelpWindow
 Class ResultDisplay
 Class ListPanel
-Class PersonCard
+Class ItemCard
 Class StatusBarFooter
 Class CommandBox
 Class ItemListViewCell
@@ -33,14 +33,14 @@ MainWindow *-down-> "1" ListPanel
 MainWindow *-down-> "1" StatusBarFooter
 MainWindow --> "0..1" HelpWindow
 
-ListPanel -down-> "*" PersonCard
+ListPanel -down-> "*" ItemCard
 
 MainWindow -left-|> UiPart
 
 ResultDisplay --|> UiPart
 CommandBox --|> UiPart
 ListPanel --|> UiPart
-PersonCard --|> UiPart
+ItemCard --|> UiPart
 StatusBarFooter --|> UiPart
 HelpWindow --|> UiPart
 

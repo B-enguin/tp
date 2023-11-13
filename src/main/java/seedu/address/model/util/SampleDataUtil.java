@@ -4,16 +4,16 @@ import javafx.collections.ObservableList;
 import seedu.address.model.AddressBook;
 import seedu.address.model.DeliveryBook;
 import seedu.address.model.ReadOnlyBook;
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Customer;
+import seedu.address.model.customer.Email;
+import seedu.address.model.customer.Name;
+import seedu.address.model.customer.Phone;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.DeliveryDate;
 import seedu.address.model.delivery.DeliveryName;
 import seedu.address.model.delivery.DeliveryStatus;
 import seedu.address.model.delivery.OrderDate;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Customer;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
 
 /**
  * Contains utility methods for populating {@code AddressBook} with sample data.
@@ -42,7 +42,7 @@ public class SampleDataUtil {
     public static ReadOnlyBook<Customer> getSampleAddressBook() {
         AddressBook sampleAb = new AddressBook();
         for (Customer sampleCustomer : getSamplePersons()) {
-            sampleAb.addPerson(sampleCustomer);
+            sampleAb.addCustomer(sampleCustomer);
         }
         return sampleAb;
     }

@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_CUSTOMERS;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +41,7 @@ public class UserLoginCommandTest {
                 new UserPrefs(), model.getUserLoginStatus());
         expectedModel.setLoggedInUser(user);
         expectedModel.setLoginSuccess();
-        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_CUSTOMERS);
+        expectedModel.updateFilteredCustomerList(PREDICATE_SHOW_ALL_CUSTOMERS);
 
         assertCommandSuccess(userLoginCommand, model, UserLoginCommand.MESSAGE_SUCCESS,
                 expectedModel, true);

@@ -86,7 +86,7 @@ public class DeliveryStatusCommandParserTest {
 
     @Test
     public void parse_invalidAllStatus_failure() {
-        assertParseFailure(parser, "1 ALL", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "1 ALL", DeliveryStatus.MESSAGE_CONSTRAINTS);
     }
 
     @Test
@@ -115,5 +115,10 @@ public class DeliveryStatusCommandParserTest {
     public void parse_extraNumberAfterId_failure() {
         assertParseFailure(parser,
             "1 1 " + INVALID_STATUS, MESSAGE_INVALID_FORMAT);
+    }
+
+    @Test
+    public void parse_extraArgs_failure() {
+        assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);
     }
 }

@@ -12,46 +12,54 @@
 <?import javafx.scene.text.Font?>
 
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
-  <GridPane prefHeight="105.0" prefWidth="460.0" HBox.hgrow="ALWAYS">
-    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="150" />
-    </columnConstraints>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-          <VBox alignment="CENTER_LEFT" minHeight="105">
-            <padding>
-              <Insets bottom="5" left="15" right="5" top="5" />
-            </padding>
-            <FlowPane fx:id="tags" />
-            <Label fx:id="title" styleClass="cell_small_label" text="title">
-                  <font>
-                     <Font name="System Bold" size="22.0" />
-                  </font>
-               </Label>
-            <Label fx:id="description" styleClass="cell_small_label" text="description" />
-          </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-              <Label fx:id="mainAccessory" styleClass="cell_big_label" text="accessory">
-                <minWidth>
-                  <!-- Ensures that the label text is never truncated -->
-                  <Region fx:constant="USE_PREF_SIZE" />
-                </minWidth>
-              </Label>
-                  <Label fx:id="accessory" styleClass="cell_big_label" text="accessory">
-                     <minWidth>
-                        <Region fx:constant="USE_PREF_SIZE" />
-                     </minWidth>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets top="25.0" />
-               </HBox.margin>
-            </VBox>
-         </children>
-      </HBox>
-      <rowConstraints>
-         <RowConstraints />
-      </rowConstraints>
-  </GridPane>
+    <GridPane prefWidth="460.0" HBox.hgrow="ALWAYS">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="150"/>
+        </columnConstraints>
+        <padding>
+            <Insets bottom="5" left="5" right="5" top="5"/>
+        </padding>
+        <HBox prefWidth="200.0">
+            <children>
+                <VBox alignment="CENTER_LEFT" minHeight="105.0">
+                    <padding>
+                        <Insets bottom="5" left="15" right="15" top="5"/>
+                    </padding>
+                    <FlowPane fx:id="tags"/>
+                    <Label fx:id="title" styleClass="cell_big_label" text="title">
+                        <font>
+                            <Font name="System Bold" size="13.0"/>
+                        </font>
+                    </Label>
+                    <Region prefHeight="5.0"/>
+                    <Label fx:id="description" styleClass="cell_small_label" text="description"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox alignment="CENTER">
+                    <children>
+                        <Label fx:id="mainAccessory" styleClass="cell_big_label" text="accessory">
+                            <minWidth>
+                                <!-- Ensures that the label text is never truncated -->
+                                <Region fx:constant="USE_PREF_SIZE"/>
+                            </minWidth>
+                            <font>
+                                <Font name="System Normal" size="13.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="accessory" styleClass="cell_small_label" text="accessory">
+                            <minWidth>
+                                <Region fx:constant="USE_PREF_SIZE"/>
+                            </minWidth>
+                        </Label>
+                    </children>
+                    <HBox.margin>
+                        <Insets right="15.0"/>
+                    </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
+        <rowConstraints>
+            <RowConstraints/>
+        </rowConstraints>
+    </GridPane>
 </HBox>

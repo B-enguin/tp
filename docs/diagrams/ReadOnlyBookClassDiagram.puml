@@ -1,0 +1,27 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor MODEL_COLOR
+skinparam classBackgroundColor MODEL_COLOR
+
+Package ReadOnlyBook as ModelPackage <<Rectangle>>{
+Class "<<interface>>\nReadOnlyBook<T>" as ReadOnlyBook
+Class AddressBook<Customer>
+Class DeliveryBook<Delivery>
+Class UniqueCustomerList
+Class UniqueDeliveryList
+Class Customer
+Class Delivery
+}
+
+Class HiddenOutside<<HIDDEN>> #FFFFFF
+HiddenOutside ..> ReadOnlyBook
+
+AddressBook .up.|> ReadOnlyBook
+DeliveryBook .up.|> ReadOnlyBook
+AddressBook -down-> "1" UniqueCustomerList
+UniqueCustomerList -down-> "*" Customer
+DeliveryBook -down-> "1" UniqueDeliveryList
+UniqueDeliveryList -down-> "*" Delivery
+
+@enduml

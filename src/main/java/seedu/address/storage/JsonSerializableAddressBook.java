@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyBook;
-import seedu.address.model.person.Customer;
+import seedu.address.model.customer.Customer;
 
 /**
  * An Immutable AddressBook that is serializable to JSON format.
@@ -21,14 +21,14 @@ class JsonSerializableAddressBook {
 
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
 
-    private final List<JsonAdaptedPerson> persons = new ArrayList<>();
+    private final List<JsonAdaptedCustomer> customers = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonSerializableAddressBook} with the given persons.
      */
     @JsonCreator
-    public JsonSerializableAddressBook(@JsonProperty("persons") List<JsonAdaptedPerson> persons) {
-        this.persons.addAll(persons);
+    public JsonSerializableAddressBook(@JsonProperty("customers") List<JsonAdaptedCustomer> customers) {
+        this.customers.addAll(customers);
     }
 
     /**
@@ -37,7 +37,7 @@ class JsonSerializableAddressBook {
      * @param source future changes to this will not affect the created {@code JsonSerializableAddressBook}.
      */
     public JsonSerializableAddressBook(ReadOnlyBook<Customer> source) {
-        persons.addAll(source.getList().stream().map(JsonAdaptedPerson::new).collect(Collectors.toList()));
+        customers.addAll(source.getList().stream().map(JsonAdaptedCustomer::new).collect(Collectors.toList()));
     }
 
     /**
@@ -48,12 +48,12 @@ class JsonSerializableAddressBook {
     public AddressBook toModelType() throws IllegalValueException {
         AddressBook addressBook = new AddressBook();
         int maxCustomerId = 0;
-        for (JsonAdaptedPerson jsonAdaptedPerson : persons) {
-            Customer customer = jsonAdaptedPerson.toModelType();
-            if (addressBook.hasPerson(customer)) {
+        for (JsonAdaptedCustomer jsonAdaptedCustomer : customers) {
+            Customer customer = jsonAdaptedCustomer.toModelType();
+            if (addressBook.hasCustomer(customer)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
-            addressBook.addPerson(customer);
+            addressBook.addCustomer(customer);
             maxCustomerId = Math.max(maxCustomerId, customer.getCustomerId());
             Customer.setCustomerCount(maxCustomerId);
         }

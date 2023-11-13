@@ -4,12 +4,13 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.UniqueDeliveryList;
-import seedu.address.model.person.Customer;
 
 /**
  * Wraps all data at the book level
@@ -104,8 +105,8 @@ public class DeliveryBook implements ReadOnlyBook<Delivery> {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("deliveries", deliveries)
-                .toString();
+            .add("deliveries", deliveries)
+            .toString();
     }
 
     @Override
@@ -122,6 +123,10 @@ public class DeliveryBook implements ReadOnlyBook<Delivery> {
     @Override
     public Optional<Delivery> getById(int id) {
         return deliveries.getById(id);
+    }
+
+    public Stream<Delivery> getByCustomerId(int id) {
+        return deliveries.getByCustomerId(id);
     }
 
     @Override

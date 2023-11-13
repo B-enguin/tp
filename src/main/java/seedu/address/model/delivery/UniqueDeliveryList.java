@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -114,6 +115,16 @@ public class UniqueDeliveryList implements Iterable<Delivery> {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Retrieves delivery by its id
+     *
+     * @param id The id of the delivery to be retrieved
+     * @return Optional containing the delivery if it exists
+     */
+    public Stream<Delivery> getByCustomerId(int id) {
+        return internalList.stream().filter(d -> d.getCustomerId() == id);
     }
 
     /**

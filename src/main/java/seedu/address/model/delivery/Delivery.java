@@ -4,8 +4,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Customer;
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Customer;
 
 /**
  * Represents a Delivery in the address book.
@@ -21,7 +21,6 @@ public class Delivery {
     private OrderDate orderDate;
     private DeliveryDate deliveryDate;
     private DeliveryStatus status;
-    private Address address; //The address of the delivery, which is automatically tied to Customer's address.
     private Note note;
 
 
@@ -47,31 +46,6 @@ public class Delivery {
         this.deliveryDate = deliveryDate;
         this.status = status;
         this.note = note;
-        this.address = customer.getAddress();
-    }
-
-
-    /**
-     * Constructor for Delivery.
-     *
-     * @param deliveryId   The ID of the delivery.
-     * @param name         The name of the delivery.
-     * @param customer     The customer who ordered the delivery.
-     * @param orderDate    The date the delivery was ordered.
-     * @param deliveryDate The date the delivery will be delivered.
-     * @param status       The status of the delivery.
-     */
-    public Delivery(int deliveryId, DeliveryName name, Customer customer, OrderDate orderDate,
-                    DeliveryDate deliveryDate,
-                    DeliveryStatus status) {
-        Delivery.deliveryCount = Math.max(deliveryCount, deliveryId + 1);
-        this.deliveryId = deliveryId;
-        this.name = name;
-        this.customer = customer;
-        this.orderDate = orderDate;
-        this.deliveryDate = deliveryDate;
-        this.status = status;
-        this.address = customer.getAddress();
     }
 
     /**
@@ -93,7 +67,6 @@ public class Delivery {
         this.orderDate = orderDate;
         this.deliveryDate = deliveryDate;
         this.status = status;
-        this.address = customer.getAddress();
     }
 
 
@@ -119,7 +92,6 @@ public class Delivery {
         this.deliveryDate = deliveryDate;
         this.status = status;
         this.note = note;
-        this.address = customer.getAddress();
     }
 
     public void setOrderDate(OrderDate orderDate) {
@@ -162,20 +134,64 @@ public class Delivery {
         return deliveryDate;
     }
 
+    /**
+     * Returns true if the delivery date matches the delivery date of the delivery.
+     *
+     * @param date The delivery date to check.
+     * @return True if the delivery date matches the delivery date of the delivery.
+     */
+    public boolean isSameDeliveryDate(Date date) {
+        return deliveryDate.equals(date);
+    }
+
+    /**
+     * Returns true if the customer ID matches the customer ID of the delivery.
+     *
+     * @param customerId The customer ID to check.
+     * @return True if the customer ID matches the customer ID of the delivery.
+     */
+    public boolean isSameCustomerIdToDeliver(int customerId) {
+        return customer.isSameCustomerId(customerId);
+    }
+
+    /**
+     * Returns true if the delivery status matches the delivery status of the delivery.
+     *
+     * @param status The delivery status to check.
+     * @return True if the delivery status matches the delivery status of the delivery.
+     */
+    public boolean isSameDeliveryStatus(DeliveryStatus status) {
+        return this.status.equals(status);
+    }
+
     public DeliveryStatus getStatus() {
         return status;
     }
 
     public Address getAddress() {
-        return address;
+        return customer.getAddress();
     }
 
     public Note getNote() {
         return note;
     }
 
+    /**
+     * Sets the delivery count to the specified value.
+     *
+     * @param deliveryCount The value to set the delivery count to.
+     */
     public static void setDeliveryCount(int deliveryCount) {
         Delivery.deliveryCount = deliveryCount;
+    }
+
+    /**
+     * Returns the current delivery count.
+     *
+     * @return The current delivery count.
+     */
+    public static int getDeliveryCount() {
+        return deliveryCount;
     }
 
     /**
@@ -190,7 +206,7 @@ public class Delivery {
         }
 
         return otherDelivery != null
-                && otherDelivery.getDeliveryId() == getDeliveryId();
+            && otherDelivery.getDeliveryId() == getDeliveryId();
     }
 
     /**
@@ -213,30 +229,30 @@ public class Delivery {
         Delivery otherDelivery = (Delivery) other;
 
         return otherDelivery.deliveryId == deliveryId
-                && otherDelivery.deliveryDate.equals(deliveryDate)
-                && otherDelivery.name.equals(name)
-                && otherDelivery.customer.equals(customer)
-                && Objects.equals(otherDelivery.note, note)
-                && otherDelivery.orderDate.equals(orderDate)
-                && otherDelivery.status.equals(status)
-                && otherDelivery.address.equals(address);
+            && otherDelivery.deliveryDate.equals(deliveryDate)
+            && otherDelivery.name.equals(name)
+            && otherDelivery.customer.equals(customer)
+            && Objects.equals(otherDelivery.note, note)
+            && otherDelivery.orderDate.equals(orderDate)
+            && otherDelivery.status.equals(status)
+            && otherDelivery.getAddress().equals(customer.getAddress());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deliveryId, name, customer, orderDate, deliveryDate, address);
+        return Objects.hash(deliveryId, name, customer, orderDate, deliveryDate);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).add("deliveryId", deliveryId)
-                .add("name", name)
-                .add("customer", customer)
-                .add("orderedAt", orderDate)
-                .add("deliveredAt", deliveryDate)
-                .add("address:", address)
-                .add("note:", Optional.ofNullable(note)
-                        .map(n -> String.format("\n Note:%s", n)).orElse(""))
-                .toString();
+            .add("name", name)
+            .add("customer", customer)
+            .add("orderedAt", orderDate)
+            .add("deliveredAt", deliveryDate)
+            .add("address:", customer.getAddress())
+            .add("note:", Optional.ofNullable(note)
+                .map(n -> String.format("\n Note:%s", n)).orElse(""))
+            .toString();
     }
 }

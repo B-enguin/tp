@@ -1,6 +1,7 @@
 package seedu.address.logic.parser.user;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_FIELDS;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.ANSWER_DESC_AARON;
 import static seedu.address.logic.commands.CommandTestUtil.ANSWER_DESC_FOODBEAR;
@@ -68,7 +69,6 @@ public class UserRecoverAccountCommandParserTest {
 
     }
 
-    // test password mismatch
     @Test
     public void parse_passwordMismatch_failure() {
         assertParseFailure(parser, PREAMBLE_WHITESPACE + ANSWER_DESC_AARON
@@ -76,6 +76,33 @@ public class UserRecoverAccountCommandParserTest {
                         // second password is for confirmation
                         + PASSWORD_CONFIRM_DESC_FOODBEAR,
                 UserRecoverAccountCommand.MESSAGE_PASSWORD_MISMATCH);
+    }
+
+    @Test
+    public void parse_duplicatePrefixes_failure() {
+        // multiple answers
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + ANSWER_DESC_AARON
+                        + ANSWER_DESC_FOODBEAR
+                        + PASSWORD_DESC_AARON
+                        // second password is for confirmation
+                        + PASSWORD_CONFIRM_DESC_AARON,
+                MESSAGE_DUPLICATE_FIELDS + "--answer");
+
+        // multiple passwords
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + ANSWER_DESC_AARON
+                        + PASSWORD_DESC_AARON
+                        + PASSWORD_DESC_FOODBEAR
+                        // second password is for confirmation
+                        + PASSWORD_CONFIRM_DESC_AARON,
+                MESSAGE_DUPLICATE_FIELDS + "--password");
+
+        // multiple confirm passwords
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + ANSWER_DESC_AARON
+                        + PASSWORD_DESC_AARON
+                        // second password is for confirmation
+                        + PASSWORD_CONFIRM_DESC_AARON
+                        + PASSWORD_CONFIRM_DESC_FOODBEAR,
+                MESSAGE_DUPLICATE_FIELDS + "--confirmPass");
     }
 
 }

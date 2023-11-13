@@ -6,8 +6,8 @@ import static seedu.address.logic.commands.CommandTestUtil.CUSTOMER_ID_DESC_RICE
 import static seedu.address.logic.commands.CommandTestUtil.DELIVERY_DATE_DESC_MILK;
 import static seedu.address.logic.commands.CommandTestUtil.DELIVERY_DATE_DESC_RICE;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_CUSTOMER_ID_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_DELIVERY_DATE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_DELIVERY_NAME_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_FORMAT_DELIVERY_DATE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NOTE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_STATUS_DESC;
@@ -38,10 +38,10 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.delivery.DeliveryEditCommand;
 import seedu.address.logic.commands.delivery.DeliveryEditCommand.DeliveryEditDescriptor;
+import seedu.address.model.customer.Name;
 import seedu.address.model.delivery.DeliveryDate;
 import seedu.address.model.delivery.DeliveryStatus;
 import seedu.address.model.delivery.Note;
-import seedu.address.model.person.Name;
 import seedu.address.testutil.DeliveryEditDescriptorBuilder;
 
 
@@ -85,7 +85,7 @@ public class DeliveryEditCommandParserTest {
         //invalid customer id
         assertParseFailure(parser, "1" + INVALID_CUSTOMER_ID_DESC, MESSAGE_INVALID_INDEX);
         //invalid delivery date
-        assertParseFailure(parser, "1" + INVALID_DELIVERY_DATE_DESC, DeliveryDate.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "1" + INVALID_FORMAT_DELIVERY_DATE_DESC, DeliveryDate.MESSAGE_CONSTRAINTS);
 
         //invalid status
         assertParseFailure(parser, "1" + INVALID_STATUS_DESC, DeliveryStatus.MESSAGE_CONSTRAINTS);
@@ -98,7 +98,7 @@ public class DeliveryEditCommandParserTest {
 
         // multiple invalid values, but only the first invalid value is captured
         assertParseFailure(parser, "1" + INVALID_NAME_DESC + INVALID_CUSTOMER_ID_DESC + INVALID_NOTE_DESC,
-               Name.MESSAGE_CONSTRAINTS);
+                Name.MESSAGE_CONSTRAINTS);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class DeliveryEditCommandParserTest {
 
         DeliveryEditDescriptor descriptor =
                 new DeliveryEditDescriptorBuilder().withDeliveryName(VALID_NAME_JAMES_MILK)
-                .withStatus(VALID_STATUS_CREATED).build();
+                        .withStatus(VALID_STATUS_CREATED).build();
         DeliveryEditCommand expectedCommand = new DeliveryEditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);

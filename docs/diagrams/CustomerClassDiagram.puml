@@ -3,18 +3,21 @@
 skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
+skinparam classAttributeIconSize 0
 
 Package Customer as ModelPackage <<Rectangle>>{
-Class Customer
+Class Customer {
+<color: #FFFFFF>- customerId: int
+}
 Class Address
 Class Email
 Class Name
 Class Phone
 
-Class I #FFFFFF
+Class I<<HIDDEN>> #FFFFFF
 }
 
-Class HiddenOutside #FFFFFF
+Class HiddenOutside<<HIDDEN>> #FFFFFF
 HiddenOutside .down.> Customer
 
 
@@ -23,5 +26,6 @@ Customer *--> "1" Phone
 Customer *--> "1" Email
 Customer *--> "1" Address
 
+show Customer fields
 
 @enduml

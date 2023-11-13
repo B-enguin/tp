@@ -9,8 +9,8 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_DELIVERY_DATE_2
 import static seedu.address.logic.commands.CommandTestUtil.VALID_DELIVERY_DATE_3;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandListSuccess;
+import static seedu.address.testutil.TypicalCustomers.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalDeliveries.getTypicalDeliveryBook;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +31,13 @@ public class DeliveryListCommandTest {
             DeliveryListCommand.MESSAGE_SUCCESS, model);
     }
 
+
     @Test
     public void execute_listIsFiltered_showsEverything() {
+
+        assertCommandListSuccess(new DeliveryListCommand(null, null, null, null),
+            model, DeliveryListCommand.MESSAGE_SUCCESS, model);
+
         assertCommandListSuccess(new DeliveryListCommand(DeliveryStatus.CREATED, null, null, null), model,
             DeliveryListCommand.MESSAGE_SUCCESS, model);
         assertCommandListSuccess(new DeliveryListCommand(DeliveryStatus.SHIPPED, null, null, null), model,

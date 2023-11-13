@@ -7,6 +7,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PASSWORD_CONFIRM;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SECRET_QUESTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_USER;
 
+import java.util.logging.Logger;
+
 import seedu.address.logic.commands.user.UserUpdateCommand;
 import seedu.address.logic.commands.user.UserUpdateCommand.UserUpdateDescriptor;
 import seedu.address.logic.parser.ArgumentMultimap;
@@ -20,6 +22,9 @@ import seedu.address.model.user.Password;
  * Parses input arguments and creates a new UserUpdateCommand object
  */
 public class UserUpdateCommandParser implements Parser<UserUpdateCommand> {
+
+    private static final Logger logger = Logger.getLogger(UserUpdateCommandParser.class.getName());
+
     /**
      * Parses the given {@code String} of arguments in the context of the UserUpdateCommand
      * and returns a UserUpdateCommand object for execution.
@@ -36,7 +41,8 @@ public class UserUpdateCommandParser implements Parser<UserUpdateCommand> {
 
         UserUpdateDescriptor userUpdateDescriptor = new UserUpdateDescriptor();
 
-        if (!argMultimap.getPreamble().isEmpty()) {
+        if (!argMultimap.isEmptyPreamble()) {
+            logger.severe("Could not parse command");
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UserUpdateCommand.MESSAGE_USAGE));
         }
 
@@ -49,6 +55,7 @@ public class UserUpdateCommandParser implements Parser<UserUpdateCommand> {
         userUpdateDescriptor = parseSecretQuestionAndAnswer(argMultimap, userUpdateDescriptor);
 
         if (!userUpdateDescriptor.isAnyFieldEdited()) {
+            logger.warning("No fields provided");
             throw new ParseException(
                     String.format(UserUpdateCommand.MESSAGE_MISSING_FIELDS, UserUpdateCommand.MESSAGE_USAGE));
         }

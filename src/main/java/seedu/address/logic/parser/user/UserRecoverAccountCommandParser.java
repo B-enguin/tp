@@ -20,6 +20,9 @@ import seedu.address.model.user.Password;
  * Parses input arguments and creates a new UserRecoverAccountCommand object
  */
 public class UserRecoverAccountCommandParser implements Parser<UserRecoverAccountCommand> {
+
+    private ArgumentMultimap argMultimap;
+
     /**
      * Parses the given {@code String} of arguments in the context of the UserRecoverAccountCommand
      * and returns an UserRecoverAccountCommand object for execution.
@@ -28,25 +31,27 @@ public class UserRecoverAccountCommandParser implements Parser<UserRecoverAccoun
      */
     public UserRecoverAccountCommand parse(String args) throws ParseException {
 
-        ArgumentMultimap argMultimap =
+        argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_ANSWER, PREFIX_PASSWORD, PREFIX_PASSWORD_CONFIRM);
 
+        // if no prefixes are present, then view secret question
         if (arePrefixesAbsent(argMultimap, PREFIX_ANSWER, PREFIX_PASSWORD, PREFIX_PASSWORD_CONFIRM)) {
             return new UserRecoverAccountCommand();
         }
 
+        // if not viewing secret question, then all prefixes must be present
         if (!arePrefixesPresent(argMultimap, PREFIX_ANSWER, PREFIX_PASSWORD, PREFIX_PASSWORD_CONFIRM)
-                || !argMultimap.getPreamble().isEmpty()) {
-            // if not viewing secret question, then all prefixes must be present
+                || !argMultimap.isEmptyPreamble()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     UserRecoverAccountCommand.MESSAGE_USAGE));
         }
         // all prefixes present
         // check if password and password confirm are present and matches
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_ANSWER, PREFIX_PASSWORD, PREFIX_PASSWORD_CONFIRM);
-        Password password = ParserUtil.parsePassword(argMultimap.getValue(PREFIX_PASSWORD).get());
-        Password confirmPassword = ParserUtil.parsePassword(argMultimap.getValue(PREFIX_PASSWORD_CONFIRM).get());
-        String answer = ParserUtil.parseAnswer(argMultimap.getValue(PREFIX_ANSWER).get());
+        Password password = parsePassword();
+        Password confirmPassword = parseConfirmPassword();
+        String answer = parseAnswer();
+
         if (!password.equals(confirmPassword)) {
             throw new ParseException(UserRecoverAccountCommand.MESSAGE_PASSWORD_MISMATCH);
         }
@@ -67,4 +72,17 @@ public class UserRecoverAccountCommandParser implements Parser<UserRecoverAccoun
     private static boolean arePrefixesAbsent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isEmpty());
     }
+
+    private Password parsePassword() throws ParseException {
+        return ParserUtil.parsePassword(argMultimap.getValue(PREFIX_PASSWORD).get());
+    }
+
+    private Password parseConfirmPassword() throws ParseException {
+        return ParserUtil.parsePassword(argMultimap.getValue(PREFIX_PASSWORD_CONFIRM).get());
+    }
+
+    private String parseAnswer() throws ParseException {
+        return ParserUtil.parseAnswer(argMultimap.getValue(PREFIX_ANSWER).get());
+    }
+
 }

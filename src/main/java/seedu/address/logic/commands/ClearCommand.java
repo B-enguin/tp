@@ -29,7 +29,7 @@ public class ClearCommand extends Command {
 
         model.setAddressBook(new AddressBook());
         model.setDeliveryBook(new DeliveryBook());
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_CUSTOMERS);
+        model.updateFilteredCustomerList(PREDICATE_SHOW_ALL_CUSTOMERS);
         return new CommandResult(MESSAGE_SUCCESS, true);
     }
 }

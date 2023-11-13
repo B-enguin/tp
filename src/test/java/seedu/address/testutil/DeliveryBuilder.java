@@ -2,14 +2,14 @@ package seedu.address.testutil;
 
 import java.time.LocalDate;
 
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.DeliveryDate;
 import seedu.address.model.delivery.DeliveryName;
 import seedu.address.model.delivery.DeliveryStatus;
 import seedu.address.model.delivery.Note;
 import seedu.address.model.delivery.OrderDate;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Customer;
 
 /**
  * A utility class to help with building Delivery objects.

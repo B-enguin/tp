@@ -1,5 +1,6 @@
 package seedu.address.model.delivery;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.TypicalDeliveries.GABRIELS_MILK;
@@ -8,10 +9,11 @@ import static seedu.address.testutil.TypicalDeliveries.GAMBES_RICE;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.testutil.DeliveryBuilder;
-import seedu.address.testutil.TypicalPersons;
+import seedu.address.testutil.TypicalCustomers;
 
 
 public class DeliveryTest {
+
 
     @Test
     public void deliveryId_success() {
@@ -27,6 +29,16 @@ public class DeliveryTest {
         Delivery delivery1 = new DeliveryBuilder().autoBuild();
 
         assertFalse(delivery.getDeliveryId() == delivery1.getDeliveryId());
+    }
+
+    @Test
+    public void setDeliveryCount_success() {
+        Delivery delivery = new DeliveryBuilder().autoBuild();
+        Delivery delivery1 = new DeliveryBuilder().autoBuild();
+        Delivery delivery2 = new DeliveryBuilder().autoBuild();
+
+        Delivery.setDeliveryCount(1);
+        assertEquals(1, Delivery.getDeliveryCount());
     }
 
     @Test
@@ -69,9 +81,9 @@ public class DeliveryTest {
 
     @Test
     public void correctAddress() {
-        Delivery delivery = new DeliveryBuilder().withCustomer(TypicalPersons.ALICE).build();
+        Delivery delivery = new DeliveryBuilder().withCustomer(TypicalCustomers.ALICE).build();
 
-        assertTrue(delivery.getAddress().equals(TypicalPersons.ALICE.getAddress()));
+        assertTrue(delivery.getAddress().equals(TypicalCustomers.ALICE.getAddress()));
     }
 
     @Test
@@ -91,7 +103,7 @@ public class DeliveryTest {
         assertTrue(GABRIELS_MILK.isSameDelivery(editedGabrielsMilk));
 
         // same id, different customer -> returns true
-        editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withCustomer(TypicalPersons.BOB).build();
+        editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withCustomer(TypicalCustomers.BOB).build();
         assertTrue(GABRIELS_MILK.isSameDelivery(editedGabrielsMilk));
 
         // different id, all other attributes same -> returns false
@@ -100,8 +112,8 @@ public class DeliveryTest {
 
         // different id, all other attributes different -> returns false
         editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withName("Gabriel Milk Updated")
-                .withStatus(DeliveryStatus.COMPLETED).withCustomer(TypicalPersons.BOB).withOrderDate("2019-12-12")
-                .withDeliveryDate("2024-12-12").autoBuild();
+            .withStatus(DeliveryStatus.COMPLETED).withCustomer(TypicalCustomers.BOB).withOrderDate("2019-12-12")
+            .withDeliveryDate("2024-12-12").autoBuild();
         assertFalse(GABRIELS_MILK.isSameDelivery(editedGabrielsMilk));
     }
 
@@ -136,7 +148,7 @@ public class DeliveryTest {
         assertFalse(GABRIELS_MILK.equals(editedGabrielsMilk));
 
         // different customer -> returns false
-        editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withCustomer(TypicalPersons.BOB).build();
+        editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withCustomer(TypicalCustomers.BOB).build();
         assertFalse(GABRIELS_MILK.equals(editedGabrielsMilk));
 
         // different id -> returns false
@@ -145,17 +157,17 @@ public class DeliveryTest {
 
         // same id, different attributes -> returns false
         editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withName("Gabriel Milk Updated")
-                .withStatus(DeliveryStatus.COMPLETED).withCustomer(TypicalPersons.BOB).build();
+            .withStatus(DeliveryStatus.COMPLETED).withCustomer(TypicalCustomers.BOB).build();
         assertFalse(GABRIELS_MILK.equals(editedGabrielsMilk));
 
         // different id, all other attributes different -> returns false
         editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withName("Gabriel Milk Updated")
-                .withStatus(DeliveryStatus.COMPLETED).withCustomer(TypicalPersons.BOB).withOrderDate("2019-12-12")
-                .withDeliveryDate("2024-12-12").autoBuild();
+            .withStatus(DeliveryStatus.COMPLETED).withCustomer(TypicalCustomers.BOB).withOrderDate("2019-12-12")
+            .withDeliveryDate("2024-12-12").autoBuild();
         assertFalse(GABRIELS_MILK.isSameDelivery(editedGabrielsMilk));
 
         // different delivery address, all other attributes same -> returns false
-        editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withCustomer(TypicalPersons.BOB).build();
+        editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withCustomer(TypicalCustomers.BOB).build();
         assertFalse(GABRIELS_MILK.equals(editedGabrielsMilk));
 
         // different expected delivery date, all other attributes same -> returns false
@@ -168,7 +180,7 @@ public class DeliveryTest {
 
         // different delivery note, all other attributes same -> returns false
         editedGabrielsMilk = new DeliveryBuilder(GABRIELS_MILK).withNote(
-                "Different note").build();
+            "Different note").build();
         assertFalse(GABRIELS_MILK.equals(editedGabrielsMilk));
     }
 }

@@ -18,7 +18,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 [[github](https://github.com/b-enguin)]
 [[portfolio](team/b-enguin.md)]
 
-* Role: Member
+* Role: Developer
 
 ### Lim Jian Yang
 
@@ -36,7 +36,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](http://github.com/zhonghan721)] [[portfolio](team/zhonghan721.md)]
 
-* Role: Member
+* Role: Developer
 
 ### Julius Gambe
 

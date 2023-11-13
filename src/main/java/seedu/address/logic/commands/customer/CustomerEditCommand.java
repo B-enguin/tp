@@ -6,11 +6,11 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_CUSTOMERS;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
@@ -19,39 +19,61 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Customer;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Customer;
+import seedu.address.model.customer.Email;
+import seedu.address.model.customer.Name;
+import seedu.address.model.customer.Phone;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.DeliveryDate;
+import seedu.address.model.delivery.DeliveryName;
+import seedu.address.model.delivery.DeliveryStatus;
+import seedu.address.model.delivery.Note;
+import seedu.address.model.delivery.OrderDate;
 
 /**
  * Edits the details of an existing customer in the address book.
  */
 public class CustomerEditCommand extends CustomerCommand {
 
+    /**
+     * The command word.
+     */
     public static final String COMMAND_WORD = CustomerCommand.COMMAND_WORD + " " + "edit";
 
+    /**
+     * The text displayed to show what the command does and how to use it.
+     */
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
-        + "by the CUSTOMER_ID used in the displayed person list. "
-        + "Existing values will be overwritten by the input values.\n"
-        + "Parameters: CUSTOMER_ID (must be a positive integer) "
+        + "by the customer ID used in the displayed person list. "
+        + "Existing values will be overwritten by the input values.\n\n"
+        + "Parameters: CUSTOMER_ID (must be a positive integer and less than 2147483648) "
         + "[" + PREFIX_NAME + " NAME] "
         + "[" + PREFIX_PHONE + " PHONE] "
         + "[" + PREFIX_EMAIL + " EMAIL] "
-        + "[" + PREFIX_ADDRESS + " ADDRESS]\n"
+        + "[" + PREFIX_ADDRESS + " ADDRESS]\n\n"
         + "Example: " + COMMAND_WORD + " 1 "
         + PREFIX_PHONE + " 91234567 "
         + PREFIX_EMAIL + " johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
+    /**
+     * The text to the message displayed when the Customer is edited successfuly.
+     */
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Customer:\n\n%1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This customer already exists in the customer database.";
 
+    private static final Logger logger = Logger.getLogger(CustomerEditCommand.class.getName());
     private final Index targetIndex;
+
+    /**
+     * The details to edit the person with.
+     */
     private final CustomerEditDescriptor customerEditDescriptor;
 
     /**
+     * Creates a CustomerEditCommand to edit the customers.
+     *
      * @param targetIndex            of the person in the filtered person list to edit
      * @param customerEditDescriptor details to edit the person with
      */
@@ -63,46 +85,59 @@ public class CustomerEditCommand extends CustomerCommand {
         this.customerEditDescriptor = new CustomerEditDescriptor(customerEditDescriptor);
     }
 
+    /**
+     * Executes the CustomerEditCommand.
+     *
+     * @param model {@code Model} which the command should operate on.
+     * @return The command result along with the message to be displayed to the user.
+     * @throws CommandException If the user is not logged in or if the customer does not exist or if the edited
+     *                          person is the same.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+
+        logger.info("Executing CustomerEditCommand: "
+                + "Customer ID: " + targetIndex.getOneBased() + "\n"
+                + "CustomerEditDescriptor: " + customerEditDescriptor.toString() + "\n");
         // User cannot perform this operation before logging in
         if (!model.getUserLoginStatus()) {
+            logger.warning("User is not logged in.\n");
             throw new CommandException(MESSAGE_USER_NOT_AUTHENTICATED);
         }
 
-        List<Customer> lastShownList = model.getFilteredPersonList();
+        model.showAllFilteredCustomerList();
+        model.getFilteredCustomerList();
 
-        boolean found = false;
-        Customer customerToEdit = null;
-        Customer editedCustomer = null;
+        Optional<Customer> targetCustomer = model.getCustomer(targetIndex.getOneBased());
 
-        for (Customer customer : lastShownList) {
-            if (customer.getCustomerId() == targetIndex.getOneBased()) {
-                found = true;
-                customerToEdit = customer;
-                editedCustomer = createEditedCustomer(customerToEdit, customerEditDescriptor);
-                break;
-            }
-        }
-        boolean isNull = customerToEdit == null || editedCustomer == null || !found;
-
-        if (isNull) {
+        if (targetCustomer.isEmpty()) {
+            logger.warning("Customer to be edited does not exist.\n");
             throw new CommandException(Messages.MESSAGE_INVALID_CUSTOMER_DISPLAYED_INDEX);
-
-            // checks if the customer to edit has the same phone as another customer,
-            // else check if the new phone is not already in the list
-            // (because the list will always have a customer with the same customerId as the editedCustomer,
-            // so using model.hasPerson will always return true)
-        } else if (!customerToEdit.hasSamePhone(editedCustomer) && model.hasCustomerWithSamePhone(editedCustomer)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
-        } else {
-            model.setPerson(customerToEdit, editedCustomer);
-            model.updateFilteredPersonList(PREDICATE_SHOW_ALL_CUSTOMERS);
-            return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS,
-                Messages.format(editedCustomer)), true);
         }
+
+        Customer customerToEdit = targetCustomer.get();
+        Customer editedCustomer = createEditedCustomer(customerToEdit, customerEditDescriptor);
+
+        if (!customerToEdit.hasSamePhone(editedCustomer) && model.hasCustomerWithSamePhone(editedCustomer)) {
+            logger.warning("Customer to be edited already exist.(has the same phone number as another customer)."
+                    + "\n");
+            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        }
+
+        assert customerToEdit != null : "Customer to be edited should exist.";
+        assert editedCustomer != null : "Edited Customer should exist.";
+
+        logger.info("Customer to be edited: " + customerToEdit.toString() + "\n");
+        logger.info("Edited Customer: " + editedCustomer.toString() + "\n");
+
+        model.setCustomer(customerToEdit, editedCustomer);
+        model.showAllFilteredCustomerList();
+
+        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS,
+                Messages.format(editedCustomer)), true);
+
 
     }
 
@@ -120,8 +155,54 @@ public class CustomerEditCommand extends CustomerCommand {
         Email updatedEmail = customerEditDescriptor.getEmail().orElse(customerToEdit.getEmail());
         Address updatedAddress = customerEditDescriptor.getAddress().orElse(customerToEdit.getAddress());
 
+        logger.info("Creating edited customer with the following details: "
+                + "Name: " + updatedName + "\n"
+                + "Phone: " + updatedPhone + "\n"
+                + "Email: " + updatedEmail + "\n"
+                + "Address: " + updatedAddress + "\n");
+
         return new Customer(customerToEdit.getCustomerId(), updatedName, updatedPhone,
-            updatedEmail, updatedAddress);
+                updatedEmail, updatedAddress);
+    }
+
+    /**
+     * Updates all the deliveries associated with the customer with new customer details.
+     */
+    protected static void updateDelivery(Model model, Customer editedCustomer) {
+        int customerId = editedCustomer.getCustomerId();
+        Stream<Delivery> deliveries = model.getDeliveryByCustomerId(customerId);
+        deliveries.forEach(d -> {
+            Delivery editedDelivery = createEditedDelivery(d, editedCustomer);
+            model.setDelivery(d, editedDelivery);
+        });
+    }
+
+    /**
+     * Creates and returns a {@code Delivery} with the customer details edited.
+     *
+     * @param deliveryToEdit         {@code Delivery} which the command edits.
+     * @param editedCustomer         {@code Customer} which the delivery is associated with.
+     */
+    private static Delivery createEditedDelivery(Delivery deliveryToEdit, Customer editedCustomer) {
+
+        assert deliveryToEdit != null;
+
+        DeliveryName deliveryName = deliveryToEdit.getName();
+        assert deliveryName != null;
+
+        OrderDate orderDate = deliveryToEdit.getOrderDate();
+        assert orderDate != null;
+
+        DeliveryDate deliveryDate = deliveryToEdit.getDeliveryDate();
+        assert deliveryDate != null;
+
+        DeliveryStatus deliveryStatus = deliveryToEdit.getStatus();
+        assert deliveryStatus != null;
+
+        Note note = deliveryToEdit.getNote();
+
+        return new Delivery(deliveryToEdit.getDeliveryId(), deliveryName, editedCustomer, orderDate,
+                deliveryDate, deliveryStatus, note);
     }
 
     @Override
@@ -137,15 +218,15 @@ public class CustomerEditCommand extends CustomerCommand {
 
         CustomerEditCommand otherEditCommand = (CustomerEditCommand) other;
         return targetIndex.equals(otherEditCommand.targetIndex)
-            && customerEditDescriptor.equals(otherEditCommand.customerEditDescriptor);
+                && customerEditDescriptor.equals(otherEditCommand.customerEditDescriptor);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .add("id", targetIndex)
-            .add("customerEditDescriptor", customerEditDescriptor)
-            .toString();
+                .add("id", targetIndex)
+                .add("customerEditDescriptor", customerEditDescriptor)
+                .toString();
     }
 
     /**
@@ -183,6 +264,10 @@ public class CustomerEditCommand extends CustomerCommand {
 
         public void setCustomerId(int customerId) {
             this.customerId = customerId;
+        }
+
+        public int getCustomerId() {
+            return customerId;
         }
 
         public void setName(Name name) {
@@ -230,19 +315,20 @@ public class CustomerEditCommand extends CustomerCommand {
 
             CustomerEditDescriptor otherCustomerEditDescriptor = (CustomerEditDescriptor) other;
             return Objects.equals(name, otherCustomerEditDescriptor.name)
-                && Objects.equals(phone, otherCustomerEditDescriptor.phone)
-                && Objects.equals(email, otherCustomerEditDescriptor.email)
-                && Objects.equals(address, otherCustomerEditDescriptor.address);
+                    && Objects.equals(phone, otherCustomerEditDescriptor.phone)
+                    && Objects.equals(email, otherCustomerEditDescriptor.email)
+                    && Objects.equals(address, otherCustomerEditDescriptor.address);
         }
 
         @Override
         public String toString() {
             return new ToStringBuilder(this)
-                .add("name", name)
-                .add("phone", phone)
-                .add("email", email)
-                .add("address", address)
-                .toString();
+                    .add("customerId", customerId)
+                    .add("name", name)
+                    .add("phone", phone)
+                    .add("email", email)
+                    .add("address", address)
+                    .toString();
         }
     }
 }

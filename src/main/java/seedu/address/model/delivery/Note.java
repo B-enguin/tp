@@ -9,7 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Note {
 
     public static final String MESSAGE_CONSTRAINTS =
-        "Note should not be a non-empty alphanumeric string";
+        "Note should be a non-empty alphanumeric string";
     public final String note;
 
     /**

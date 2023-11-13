@@ -50,12 +50,12 @@ import seedu.address.logic.commands.user.UserRegisterCommand;
 import seedu.address.logic.commands.user.UserUpdateCommand;
 import seedu.address.logic.commands.user.UserUpdateCommand.UserUpdateDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.customer.Customer;
+import seedu.address.model.customer.NameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.DeliveryNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.DeliveryStatus;
 import seedu.address.model.delivery.Note;
-import seedu.address.model.person.Customer;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.user.User;
 import seedu.address.testutil.CustomerBuilder;
 import seedu.address.testutil.CustomerEditDescriptorBuilder;
@@ -66,7 +66,6 @@ import seedu.address.testutil.DeliveryEditDescriptorBuilder;
 import seedu.address.testutil.DeliveryUtil;
 import seedu.address.testutil.UpdateUserDescriptorBuilder;
 import seedu.address.testutil.UserBuilder;
-
 
 
 public class AddressBookParserTest {
@@ -131,7 +130,7 @@ public class AddressBookParserTest {
         CustomerEditCommand command = (CustomerEditCommand) parser
                 .parseCommand(CustomerEditCommand.COMMAND_WORD + " "
                         + INDEX_FIRST_PERSON.getOneBased() + " "
-                        + CustomerUtil.getEditPersonDescriptorDetails(descriptor));
+                        + CustomerUtil.getEditCustomerDescriptorDetails(descriptor));
 
         assertEquals(new CustomerEditCommand(INDEX_FIRST_PERSON, descriptor), command);
     }
@@ -223,7 +222,7 @@ public class AddressBookParserTest {
         // Cannot wrap lines due to Separator Wrap not allowing lambda on newline
         assertThrows(
                 ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser
-                         .parseCommand("invalidPrefix list"));
+                        .parseCommand("invalidPrefix list"));
     }
 
     @Test

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalCustomers.ALICE;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +26,8 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyBook;
 import seedu.address.model.ReadOnlyUserPrefs;
+import seedu.address.model.customer.Customer;
 import seedu.address.model.delivery.Delivery;
-import seedu.address.model.person.Customer;
 import seedu.address.model.user.User;
 import seedu.address.testutil.CustomerBuilder;
 import seedu.address.ui.ListItem;
@@ -34,27 +35,27 @@ import seedu.address.ui.ListItem;
 public class CustomerAddCommandTest {
 
     @Test
-    public void constructor_nullPerson_throwsNullPointerException() {
+    public void constructor_nullCustomer_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new CustomerAddCommand(null));
     }
 
     @Test
-    public void execute_personAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
+    public void execute_customerAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingCustomerAdded modelStub = new ModelStubAcceptingCustomerAdded();
         Customer validCustomer = new CustomerBuilder().build();
 
         CommandResult commandResult = new CustomerAddCommand(validCustomer).execute(modelStub);
 
         assertEquals(String.format(CustomerAddCommand.MESSAGE_SUCCESS, Messages.format(validCustomer)),
                 commandResult.getFeedbackToUser());
-        assertEquals(Arrays.asList(validCustomer), modelStub.personsAdded);
+        assertEquals(Arrays.asList(validCustomer), modelStub.customersAdded);
     }
 
     @Test
-    public void execute_duplicatePerson_throwsCommandException() {
+    public void execute_duplicateCustomer_throwsCommandException() {
         Customer validCustomer = new CustomerBuilder().build();
         CustomerAddCommand customerAddCommand = new CustomerAddCommand(validCustomer);
-        ModelStub modelStub = new ModelStubWithPerson(validCustomer);
+        ModelStub modelStub = new ModelStubWithCustomer(validCustomer);
 
 
         assertThrows(CommandException.class,
@@ -63,8 +64,8 @@ public class CustomerAddCommandTest {
     }
 
     @Test
-    public void execute_personAcceptedByModelLoggedOut_addFailure() throws Exception {
-        ModelStubAcceptingPersonAddedLoggedOut modelStub = new ModelStubAcceptingPersonAddedLoggedOut();
+    public void execute_customerAcceptedByModelLoggedOut_addFailure() throws Exception {
+        ModelStubAcceptingCustomerAddedLoggedOut modelStub = new ModelStubAcceptingCustomerAddedLoggedOut();
         Customer validCustomer = new CustomerBuilder().build();
 
         CustomerAddCommand customerAddCommand = new CustomerAddCommand(validCustomer);
@@ -93,7 +94,7 @@ public class CustomerAddCommandTest {
         // null -> returns false
         assertFalse(addAliceCommand.equals(null));
 
-        // different person -> returns false
+        // different customer -> returns false
         assertFalse(addAliceCommand.equals(addBobCommand));
     }
 
@@ -154,7 +155,7 @@ public class CustomerAddCommandTest {
         }
 
         @Override
-        public void addPerson(Customer customer) {
+        public void addCustomer(Customer customer) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -174,12 +175,7 @@ public class CustomerAddCommandTest {
         }
 
         @Override
-        public Customer getCustomerUsingFilteredList(int id) {
-            return null;
-        }
-
-        @Override
-        public boolean hasPerson(Customer customer) {
+        public boolean hasCustomer(Customer customer) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -189,22 +185,58 @@ public class CustomerAddCommandTest {
         }
 
         @Override
-        public void deletePerson(Customer target) {
+        public void deleteCustomer(Customer target) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void setPerson(Customer target, Customer editedCustomer) {
+        public void setCustomer(Customer target, Customer editedCustomer) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public ObservableList<Customer> getFilteredPersonList() {
+        public ObservableList<Customer> getFilteredCustomerList() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void updateFilteredPersonList(Predicate<Customer> predicate) {
+        public void updateFilteredCustomerList(Predicate<Customer> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Resets the customer list to all customers.
+         */
+        @Override
+        public void showAllFilteredCustomerList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Resets the customer list to show no customers.
+         */
+        @Override
+        public void clearFilteredCustomerList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Returns the number of customers in the filtered customer list.
+         *
+         * @return the number of customers in the filtered customer list.
+         */
+        @Override
+        public int getFilteredCustomerListSize() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Returns true if the filtered customer list is empty.
+         *
+         * @return true if the filtered customer list is empty.
+         */
+        @Override
+        public boolean isFilteredCustomerListEmpty() {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -234,6 +266,11 @@ public class CustomerAddCommandTest {
         }
 
         @Override
+        public Stream<Delivery> getDeliveryByCustomerId(int id) {
+            throw new AssertionError("This method should not be called.");
+        };
+
+        @Override
         public boolean hasDelivery(Delivery delivery) {
             throw new AssertionError("This method should not be called.");
         }
@@ -258,6 +295,52 @@ public class CustomerAddCommandTest {
             throw new AssertionError("This method should not be called.");
         }
 
+        /**
+         * Resets the delivery list to show all deliveries.
+         */
+        @Override
+        public void showAllFilteredDeliveryList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Resets the delivery list to show no deliveries.
+         */
+        @Override
+        public void clearFilteredDeliveryList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Returns the number of deliveries in the filtered delivery list.
+         *
+         * @return the number of deliveries in the filtered delivery list.
+         */
+        @Override
+        public int getFilteredDeliveryListSize() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Returns true if the filtered delivery list is empty.
+         *
+         * @return true if the filtered delivery list is empty.
+         */
+        @Override
+        public boolean isFilteredDeliveryListEmpty() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        /**
+         * Returns the number of deliveries in the sorted delivery list.
+         *
+         * @return the number of deliveries in the sorted delivery list.
+         */
+        @Override
+        public boolean isSortedDeliveryListEmpty() {
+            throw new AssertionError("This method should not be called.");
+        }
+
         @Override
         public ObservableList<Delivery> getFilteredDeliveryList() {
             throw new AssertionError("This method should not be called.");
@@ -267,6 +350,7 @@ public class CustomerAddCommandTest {
         public ObservableList<Delivery> getSortedDeliveryList() {
             throw new AssertionError("This method should not be called.");
         }
+
         @Override
         public Delivery getDeliveryUsingFilteredList(int id) {
             throw new AssertionError("This method should not be called.");
@@ -278,7 +362,7 @@ public class CustomerAddCommandTest {
         }
 
         @Override
-        public void sortFilteredDeliveryList(Comparator<Delivery> comparator) {
+        public void updateSortedDeliveryList(Comparator<Delivery> comparator) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -302,7 +386,7 @@ public class CustomerAddCommandTest {
         }
 
         @Override
-        public User getStoredUser() {
+        public Optional<User> getStoredUser() {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -339,18 +423,18 @@ public class CustomerAddCommandTest {
     }
 
     /**
-     * A Model stub that contains a single person.
+     * A Model stub that contains a single customer.
      */
-    private class ModelStubWithPerson extends ModelStub {
+    private class ModelStubWithCustomer extends ModelStub {
         private final Customer customer;
 
-        ModelStubWithPerson(Customer customer) {
+        ModelStubWithCustomer(Customer customer) {
             requireNonNull(customer);
             this.customer = customer;
         }
 
         @Override
-        public boolean hasPerson(Customer customer) {
+        public boolean hasCustomer(Customer customer) {
             requireNonNull(customer);
             return this.customer.isSameCustomer(customer);
         }
@@ -368,21 +452,21 @@ public class CustomerAddCommandTest {
     }
 
     /**
-     * A Model stub that always accept the person being added.
+     * A Model stub that always accept the customer being added.
      */
-    private class ModelStubAcceptingPersonAdded extends ModelStub {
-        final ArrayList<Customer> personsAdded = new ArrayList<>();
+    private class ModelStubAcceptingCustomerAdded extends ModelStub {
+        final ArrayList<Customer> customersAdded = new ArrayList<>();
 
         @Override
-        public boolean hasPerson(Customer customer) {
+        public boolean hasCustomer(Customer customer) {
             requireNonNull(customer);
-            return personsAdded.stream().anyMatch(customer::isSameCustomer);
+            return customersAdded.stream().anyMatch(customer::isSameCustomer);
         }
 
         @Override
-        public void addPerson(Customer customer) {
+        public void addCustomer(Customer customer) {
             requireNonNull(customer);
-            personsAdded.add(customer);
+            customersAdded.add(customer);
         }
 
         @Override
@@ -396,19 +480,19 @@ public class CustomerAddCommandTest {
         }
     }
 
-    private class ModelStubAcceptingPersonAddedLoggedOut extends ModelStub {
-        final ArrayList<Customer> personsAdded = new ArrayList<>();
+    private class ModelStubAcceptingCustomerAddedLoggedOut extends ModelStub {
+        final ArrayList<Customer> customerAdded = new ArrayList<>();
 
         @Override
-        public boolean hasPerson(Customer customer) {
+        public boolean hasCustomer(Customer customer) {
             requireNonNull(customer);
-            return personsAdded.stream().anyMatch(customer::isSameCustomer);
+            return customerAdded.stream().anyMatch(customer::isSameCustomer);
         }
 
         @Override
-        public void addPerson(Customer customer) {
+        public void addCustomer(Customer customer) {
             requireNonNull(customer);
-            personsAdded.add(customer);
+            customerAdded.add(customer);
         }
 
         @Override

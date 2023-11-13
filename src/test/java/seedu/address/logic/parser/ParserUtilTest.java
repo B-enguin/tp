@@ -8,10 +8,11 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Phone;
+import seedu.address.model.customer.Address;
+import seedu.address.model.customer.Email;
+import seedu.address.model.customer.Name;
+import seedu.address.model.customer.Phone;
+import seedu.address.model.delivery.DeliveryDate;
 
 public class ParserUtilTest {
     private static final String INVALID_NAME = "R@chel";
@@ -37,7 +38,7 @@ public class ParserUtilTest {
     @Test
     public void parseIndex_outOfRangeInput_throwsParseException() {
         assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, ()
-            -> ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1)));
+                -> ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1)));
     }
 
     @Test
@@ -139,5 +140,61 @@ public class ParserUtilTest {
         String emailWithWhitespace = WHITESPACE + VALID_EMAIL + WHITESPACE;
         Email expectedEmail = new Email(VALID_EMAIL);
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
+    }
+
+    @Test
+    public void parseSecretQuestion_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseSecretQuestion((String) null));
+    }
+
+    @Test
+    public void parseSecretQuestion_emptyString_throwsParseException() {
+        String testString = "";
+        assertThrows(ParseException.class, () -> ParserUtil.parseSecretQuestion(testString));
+    }
+
+    @Test
+    public void parseSecretQuestion_validValueWithoutWhitespace_returnsSecretQuestion() throws Exception {
+        String testString = "What is your favourite colour?";
+        assertEquals(testString, ParserUtil.parseSecretQuestion(testString));
+    }
+
+    @Test
+    public void parseAnswer_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseAnswer((String) null));
+    }
+
+    @Test
+    public void parseAnswer_emptyString_throwsParseException() {
+        String testString = "";
+        assertThrows(ParseException.class, () -> ParserUtil.parseAnswer(testString));
+    }
+
+    @Test
+    public void parseAnswer_validValueWithoutWhitespace_returnsAnswer() throws Exception {
+        String testString = "Blue";
+        assertEquals(testString, ParserUtil.parseAnswer(testString));
+    }
+
+    @Test
+    public void parseDeliveryDate_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseDeliveryDate((String) null));
+    }
+
+    @Test
+    public void parseDeliveryDate_beforeToday_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryDate("0000-13-01"));
+    }
+
+    @Test
+    public void parseDeliveryDate_invalidMonth_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseDeliveryDate("9999-13-01"));
+    }
+
+    @Test
+    public void parseDeliveryDate_validValueWithoutWhitespace_returnsDeliveryDate() throws Exception {
+        String testString = "9999-12-15";
+        DeliveryDate expectedDeliveryDate = new DeliveryDate(testString);
+        assertEquals(expectedDeliveryDate, ParserUtil.parseDeliveryDate(testString));
     }
 }
