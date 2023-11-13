@@ -13,7 +13,6 @@ if () then ([user is already logged out])
 else ([else])
     :User logout command is executed successfully.
     User is now logged out.;
-    :Hide Customer and Delivery List;
 endif
 
 stop

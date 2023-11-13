@@ -43,13 +43,13 @@ activate Model
 Model --> UserLogoutCommand
 deactivate Model
 
-UserLogoutCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_NO_CUSTOMERS)
+UserLogoutCommand -> Model : clearFilteredDeliveryList()
 activate Model
 
 Model --> UserLogoutCommand
 deactivate Model
 
-UserLogoutCommand -> Model : updateFilteredDeliveryList(PREDICATE_SHOW_NO_DELIVERIES)
+UserLogoutCommand -> Model : clearFilteredCustomerList()
 activate Model
 
 Model --> UserLogoutCommand
